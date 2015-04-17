@@ -642,7 +642,7 @@ function jsonFromFile(filePath) {
 //  Cocoa UI
 //--------------------------------------
 
-function createAlertBase () {
+function createAlertBase (addButtons) {
   var alert = [COSAlertWindow new];
 
   if (typeof iconName !== 'undefined' && iconName != null) {
@@ -650,9 +650,11 @@ function createAlertBase () {
   	var icon = [[NSImage alloc] initByReferencingFile:iconPath]
   	[alert setIcon:icon]
   }
-
-  [alert addButtonWithTitle: 'OK'];
-  [alert addButtonWithTitle: 'Cancel'];
+  
+  if (typeof addButtons === 'undefined' || addButtons == true) {
+	  [alert addButtonWithTitle: 'OK'];
+	  [alert addButtonWithTitle: 'Cancel'];
+  }
 
   return alert;
 }
@@ -884,6 +886,32 @@ function objectsAreEqual(layer1, layer2) {
 		tree2 = layer2.treeAsDictionary()
 	return [tree1 isEqualToDictionary:tree2]
 }
+
+
+//--------------------------------------
+//  Managing manifest.json
+//--------------------------------------
+
+function getManifestJSON() {
+	var manifestFilePath = [[plugin url] path] + "/Contents/Sketch/manifest.json";
+	return jsonFromFile(manifestFilePath)
+}
+
+function getCommandForIdentifier(identifier) {
+	var manifestJSON = getManifestJSON(),
+		commands = manifestJSON.commands,
+		commandID = [NSString stringWithFormat:@"%@", identifier]
+		predicate = [NSPredicate predicateWithFormat:@"identifier == %@", commandID],
+		filteredArray = [commands filteredArrayUsingPredicate:predicate];
+		return ([filteredArray count] == 0) ? null : [filteredArray firstObject];
+}
+
+function getShortcutForIdentifier(identifier) {
+	var command = getCommandForIdentifier(identifier)
+	if (command != null)  return command.shortcut
+	return null
+}
+
 
 
 //--------------------------------------
