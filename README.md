@@ -1,6 +1,6 @@
 ![Icon](http://silverux.com/sketchplugins/userflows/assets/icon_crop.png)
 # User Flows
-A plugin for generating user-flow diagrams from Artboards in [Sketch](http://www.bohemiancoding.com/sketch/).  
+A plugin for generating user walkthroughs from Artboards in [Sketch](http://www.bohemiancoding.com/sketch/).  
 
 ##### Example Output  
 ![UserFlows Example](http://silverux.com/sketchplugins/userflows/assets/exampleflow.jpg)
