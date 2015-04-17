@@ -767,6 +767,16 @@ function createColorWell (hex) {
 	return colorWell
 }
 
+function createWebViewWithURL(urlString, x, y, width, height) {
+	var x = (typeof x !== 'undefined') ? x : 0,
+		y = (typeof y !== 'undefined') ? y : 0,
+		width = (typeof width !== 'undefined') ? width : 300,
+		height = (typeof height !== 'undefined') ? height : 200,
+		webView = [[WebView alloc] initWithFrame:NSMakeRect(x, y, width, height) frameName:nil groupName:nil];
+	[webView setMainFrameURL:urlString]
+	return webView
+}
+
 function browseForDirectory(title) {
 	var openDialog = [NSOpenPanel openPanel];
 	[openDialog setCanChooseFiles:false]

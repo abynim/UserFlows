@@ -70,6 +70,9 @@ var askForFlowDetails = function() {
 	
 	[alert addAccessoryView: createCheckbox({name: 'Keep _Flows Page Organized', value: 'organizeFlows'}, getDefault('organizeFlows'))] // 7
 	
+	var webView = createWebViewWithURL("http://silverux.com/sketchplugins/userflows/ga.html", 0, 0, 0, 0)
+	[alert addAccessoryView: webView] // 8
+	
 	if ([alert runModal] == "1000") {
 		var view, pageName, 
 			scaleIndex = getDefault('exportScaleIndex');

@@ -1,6 +1,5 @@
 @import 'userflows.js'
 
-// Generate a flow
 var generateFlow = function(context) {
 	parseContext(context)
 	askForFlowDetails()
