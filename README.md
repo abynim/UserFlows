@@ -1,7 +1,7 @@
 # UserFlows.sketchplugin
-Generate user-flow diagrams from Artboards in Sketch.
+Generate user-flow diagrams from Artboards in Sketch.  
 
-## Example
+##### Example Output  
 ![UserFlows Example](http://silverux.com/sketchplugins/userflows/assets/exampleflow.jpg)
 
 ## Demo
