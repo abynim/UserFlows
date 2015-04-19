@@ -6,7 +6,7 @@ A plugin for generating user walkthroughs from Artboards in [Sketch](http://www.
 ![UserFlows Example](http://silverux.com/sketchplugins/userflows/assets/exampleflow.jpg)
 
 ## Demo
-[![Video](http://silverux.com/sketchplugins/userflows/assets/video_title.png)](https://vimeo.com/abynim/userflows)  
+[![Video](http://silverux.com/sketchplugins/userflows/assets/video_title_1.png)](https://vimeo.com/abynim/userflows)  
 [Watch on Vimeo](https://vimeo.com/abynim/userflows)
 
 ## Supported Versions
