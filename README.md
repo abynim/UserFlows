@@ -1,13 +1,12 @@
-![Icon](http://silverux.com/sketchplugins/userflows/assets/icon_crop.png)
 # User Flows
 A plugin for generating user walkthroughs from Artboards in [Sketch](http://www.bohemiancoding.com/sketch/).  
-
-##### Example Output  
-![UserFlows Example](http://silverux.com/sketchplugins/userflows/assets/exampleflow.jpg)
 
 ## Demo
 [![Video](http://silverux.com/sketchplugins/userflows/assets/video_title_1.png)](https://vimeo.com/abynim/userflows)  
 [Watch on Vimeo](https://vimeo.com/abynim/userflows)
+
+##### Example Output  
+![UserFlows Example](http://silverux.com/sketchplugins/userflows/assets/exampleflow.jpg)
 
 ## Supported Versions
 UserFlows is only supported in Sketch 3.3 or later. To check what version you have installed, go to `Sketch` > `About Sketch`.  
