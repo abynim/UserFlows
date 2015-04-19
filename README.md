@@ -6,8 +6,8 @@ A plugin for generating user walkthroughs from Artboards in [Sketch](http://www.
 ![UserFlows Example](http://silverux.com/sketchplugins/userflows/assets/exampleflow.jpg)
 
 ## Demo
-[![Video](https://i.vimeocdn.com/video/515230130.jpg?mw=1920)](https://vimeo.com/125210768)  
-[Watch on Vimeo](https://vimeo.com/125210768)
+[![Video](http://silverux.com/sketchplugins/userflows/assets/video_title.png)](https://vimeo.com/abynim/userflows)  
+[Watch on Vimeo](https://vimeo.com/abynim/userflows)
 
 ## Supported Versions
 UserFlows is only supported in Sketch 3.3 or later. To check what version you have installed, go to `Sketch` > `About Sketch`.  
