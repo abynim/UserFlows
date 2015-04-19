@@ -31,7 +31,7 @@ _Note: The sequence of screens in a flow is based on the `x` position of your Ar
 
 #### Settings
 To manage settings for the plugin, go to `Plugins` > `User Flows` > `_Settings`.  
-![Settings Dialog](http://silverux.com/sketchplugins/userflows/assets/settings_dialog.png)
+![Settings Dialog](http://silverux.com/sketchplugins/userflows/assets/settings_dialog1.png)
 
 ## Shortcut
 Once you've installed the plugin you can trigger it using: `control` + `shift` + `f`.

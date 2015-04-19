@@ -6,7 +6,8 @@ var userDefaults = {
 	flowIndicatorColor:"#F5A623",
 	organizeFlows:1,
 	showModifiedDate:1,
-	minimumTapArea:44.0
+	minimumTapArea:44.0,
+	fullName:""
 }
 
 var scaleOptions = ['1x', '2x'];
@@ -87,7 +88,8 @@ var askForFlowDetails = function() {
 			organizeFlows: checkedAtIndex(alert, 7),
 			exportToScale: scaleIndex + 1,
 			flowIndicatorColor: getDefault('flowIndicatorColor'),
-			minimumTapArea: getDefault('minimumTapArea')
+			minimumTapArea: getDefault('minimumTapArea'),
+			modifiedBy: getDefault('fullName')
 		}
 		// Save Defaults
 		setDefault('flowsPageName', pageName)
@@ -113,21 +115,19 @@ var generateFlowWithSettings = function(s) {
 		minimumTapArea = s.minimumTapArea,
 		flowLabel, flowFrame, optimalPosition, flowDescriptionLabel, modifiedDateLabel;
 	
-	// if(s.showModifiedDate == 1) {	
-	// 		if (s.flowDescription != "") flowDescription += "\n--------\n"
-	// 		flowDescription += "Modified on " + getCurrentDateAsString()
-	// 	}
-	
 	// get artboards from selection	
-	var ab, selectedObjectRect, artboardAndRect;
+	var ab, selectedObjectRect, artboardAndRect, abID,
+	uniqueArtboards = [];
 	var loop = [selection objectEnumerator]
 	while (item = [loop nextObject]) {
 		ab = getParentArtboard(item);
-		if (![ab hasBackgroundColor]) setArtboardColor(ab, 'FFFFFF')
-		selectedObjectRect = isArtboard(item) ? {x:0,y:0,width:0,height:0} : addPaddingIfRequired(getFrame(item, ab), minimumTapArea);
-		artboardAndRect = {artboard:ab, selectionRect:selectedObjectRect}
-		if(![selectedArtboards containsObject:artboardAndRect]) {
+		abID = [ab objectID];
+		if(uniqueArtboards.indexOf(abID) == -1) {
+			if (![ab hasBackgroundColor]) setArtboardColor(ab, 'FFFFFF')
+			selectedObjectRect = isArtboard(item) ? {x:0,y:0,width:0,height:0} : addPaddingIfRequired(getFrame(item, ab), minimumTapArea);
+			artboardAndRect = {artboard:ab, selectionRect:selectedObjectRect}
 			[selectedArtboards addObject:artboardAndRect];
+			uniqueArtboards.push(abID);
 		}
 	}
 	
@@ -146,25 +146,26 @@ var generateFlowWithSettings = function(s) {
 	flowFrame = getRect(flowBoard)
 	[currentCommand setValue:1 forKey:@"isUserFlow" onLayer:flowBoard forPluginIdentifier:pluginDomain]
 	
-	// setup flow name and description labels	
-	flowDescriptionLabel = addText("**Flow_Meta", flowBoard, 12*exportScale);
-	flowLabel = addText(flowName, flowBoard, 18*exportScale);
-	
+	// setup flow name, description, and date labels
 	if(s.showModifiedDate == 1) {
-		modifiedDateLabel = addText("Modified Date", flowBoard, 9*exportScale);
+		modifiedDateLabel = addText("_Modified Date", flowBoard, 9*exportScale);
 		setColor(modifiedDateLabel, '999999')
 		[modifiedDateLabel setIsLocked:true];
 		setPosition(modifiedDateLabel, outerPadding, outerPadding)
 		setSize(modifiedDateLabel, 10, 10)
 	}
+	if(flowDescription != "") {
+		flowDescriptionLabel = addText("_Description", flowBoard, 12*exportScale);
+		setColor(flowDescriptionLabel, '999999')
+		[flowDescriptionLabel setIsLocked:true];
+		setPosition(flowDescriptionLabel, outerPadding, outerPadding)
+		setSize(flowDescriptionLabel, 10, 10)
+	}
 	
-	setColor(flowDescriptionLabel, '999999')
-	[flowDescriptionLabel setIsLocked:true];
+	flowLabel = addText(flowName, flowBoard, 18*exportScale);
 	[flowLabel setIsLocked:true];
 	setPosition(flowLabel, outerPadding, outerPadding);
 	setSize(flowLabel, 10, 10)
-	setPosition(flowDescriptionLabel, outerPadding, outerPadding)
-	setSize(flowDescriptionLabel, 10, 10)
 	
 	// create images for artboards and populate the flow artboard
 	var artboard, screenImage, screenLayer, screenFrame, aWidth, aHeight, selectionRect, hitAreaLayer, hitAreaFrame, arrowContainer, textLayer, textFrame, screenContainer, screenY, arrow, arrowStartPoint, arrowEndPoint, arrowY, screenNumber = 0;
@@ -232,24 +233,28 @@ var generateFlowWithSettings = function(s) {
 	[flowLabel setStringValue:flowName];
 	[flowLabel adjustFrameToFit];
 	var flowLabelFrame = getFrame(flowLabel);
+	var descriptionLabelHeight = 0
 	
-	setSize(flowDescriptionLabel, flowWidth-(outerPadding*2), 10);
-	[flowDescriptionLabel setTextBehaviour:1];
-	[flowDescriptionLabel setStringValue:flowDescription];
-	[flowDescriptionLabel adjustFrameToFit];
-	setPosition(flowDescriptionLabel, outerPadding, outerPadding+flowLabelFrame.height + 14)
-	var descriptionLabelFrame = getFrame(flowDescriptionLabel);
+	if(flowDescription != "") {
+		setSize(flowDescriptionLabel, flowWidth-(outerPadding*2), 10);
+		[flowDescriptionLabel setTextBehaviour:1];
+		[flowDescriptionLabel setStringValue:flowDescription];
+		[flowDescriptionLabel adjustFrameToFit];
+		setPosition(flowDescriptionLabel, outerPadding, outerPadding+flowLabelFrame.height + 14)
+		descriptionLabelHeight = getFrame(flowDescriptionLabel).height + 10;
+	}
 	
 	if(s.showModifiedDate == 1) {
 		var modifiedOnText = "Modified on " + getCurrentDateAsString();
+		if(s.modifiedBy != "") modifiedOnText += " by " + s.modifiedBy;
 		setSize(modifiedDateLabel, flowWidth-(outerPadding*2), 10);
 		[modifiedDateLabel setTextBehaviour:1];
 		[modifiedDateLabel setStringValue:modifiedOnText];
 		[modifiedDateLabel adjustFrameToFit];
-		setPosition(modifiedDateLabel, outerPadding, outerPadding+flowLabelFrame.height + 14+descriptionLabelFrame.height + 10)
+		setPosition(modifiedDateLabel, outerPadding, outerPadding+flowLabelFrame.height + 14 + descriptionLabelHeight)
 	}
 	
-	var flowInfoHeight = (s.showModifiedDate == 1) ? flowLabelFrame.height + descriptionLabelFrame.height + 10 + getFrame(modifiedDateLabel).height + 14 : flowLabelFrame.height + descriptionLabelFrame.height + 14;
+	var flowInfoHeight = (s.showModifiedDate == 1) ? flowLabelFrame.height + 14 + descriptionLabelHeight + getFrame(modifiedDateLabel).height : flowLabelFrame.height + 14 + descriptionLabelHeight;
 	
 	setPosition(flowGroup, flowLabelFrame.x, flowInfoHeight+(outerPadding*2))
 	setSize(flowBoard, flowWidth, flowHeight+flowInfoHeight+outerPadding)
@@ -319,7 +324,7 @@ var showSettingsDialog = function() {
 	initDefaults(userDefaults)
 	
 	var alert = createAlertBase(),
-		versionText = "Version " + [plugin version] + "  -  © Aby Nimbalkar";
+		versionText = "Version " + [plugin version] + "  -  © Aby Nimbalkar - aby@silverux.com";
 	[alert setMessageText: 'User Flow Settings']
 	[alert setInformativeText: versionText]
 	
@@ -330,24 +335,21 @@ var showSettingsDialog = function() {
 	
 	[alert addAccessoryView: createSeparator()] // 2
 	
-	[alert addTextLabelWithValue: 'Minimum Tap Area'] // 3
-	[alert addAccessoryView: createTextArea(getDefault('minimumTapArea')+"px", 50, 23)] // 4
-	
-	[alert addAccessoryView: createSeparator()] // 5
-	
-	[alert addTextLabelWithValue: 'Color of Flow Indicators'] // 6
+	[alert addTextLabelWithValue: 'Color of Flow Indicators'] // 3
 	var colorWell = createColorWell(getDefault('flowIndicatorColor'))
-	[alert addAccessoryView: colorWell] // 7
+	[alert addAccessoryView: colorWell] // 4
 	
-	[alert addAccessoryView: createSeparator()] // 8
+	[alert addTextLabelWithValue: 'Minimum Tap Area'] // 5
+	[alert addAccessoryView: createTextArea(getDefault('minimumTapArea')+"px", 50, 23)] // 6
 	
-	[alert addAccessoryView: createCheckbox({name: 'Show Date on Flows', value: 'showModifiedDate'}, getDefault('showModifiedDate'))] // 9
+	[alert addAccessoryView: createSeparator()] // 7
 	
-	[alert addAccessoryView: createSeparator()] // 10
+	[alert addTextLabelWithValue: 'Your Name'] // 8
+	[alert addTextFieldWithValue: getDefault('fullName')] // 9
 	
-	[alert addTextLabelWithValue: 'Feedback: aby@silverux.com'] // 11
+	[alert addAccessoryView: createCheckbox({name: 'Show Date and Name on Flows', value: 'showModifiedDate'}, getDefault('showModifiedDate'))] // 10
 	
-	[alert addAccessoryView: createSeparator()] // 12
+	[alert addAccessoryView: createSeparator()] // 11
 	
 	[alert addButtonWithTitle: 'Reset Defaults'];
 	
@@ -360,8 +362,9 @@ var showSettingsDialog = function() {
 			newHex = NSColorToHex(newColor)
 		setDefault('exportScaleIndex', scaleIndex)
 		setDefault('flowIndicatorColor', newHex)
-		setDefault('minimumTapArea', parseFloat(valueAtIndex(alert, 4)))
-		setDefault('showModifiedDate', checkedAtIndex(alert, 9))
+		setDefault('minimumTapArea', parseFloat(valueAtIndex(alert, 6)))
+		setDefault('fullName', valueAtIndex(alert, 9))
+		setDefault('showModifiedDate', checkedAtIndex(alert, 10))
 	} else if (response == "1002") {
 		resetDefaults(userDefaults)
 	}
