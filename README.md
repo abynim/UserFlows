@@ -13,7 +13,7 @@ UserFlows is only supported in Sketch 3.3 or later. To check what version you ha
 ![About Sketch](http://silverux.com/ig-auth/assets/sketchsquares-8a.png)
 
 ## Installation  
-[Download](https://github.com/abynim/UserFlows.sketchplugin/archive/master.zip) and extract the contents of this repository into your `Plugins` folder. If you don't know where your plugins folder is, [follow these steps](http://bohemiancoding.com/sketch/support/developer/01-introduction/01.html) to find it.
+[Download](https://github.com/abynim/UserFlows.sketchplugin/archive/master.zip) and extract the contents of this repository. Then double-click the UserFlows.sketchplugin bundle to install the plugin. Remember, this will only work if you are working with Sketch 3.3 or later.
 
 ## Usage
 
