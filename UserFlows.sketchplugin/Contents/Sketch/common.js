@@ -243,48 +243,52 @@ function getParentArtboard(layer){
 
 function getAllArtboardsInDoc() {
 	var pages = [doc pages],
-		allArtboards = [NSMutableArray new],
+		allArtboards = [NSArray array],
 		artboardsInPage;
-	var loop = [pages objectEnumerator]
+	var loop = [pages objectEnumerator];
 	while (page = [loop nextObject]) {
 		artboardsInPage = [page artboards]
-		allArtboards.addObjectsFromArray(artboardsInPage)
+		if (artboardsInPage != nil && [artboardsInPage count] != 0) allArtboards = [allArtboards arrayByAddingObjectsFromArray:artboardsInPage]
 	}
 	return allArtboards;
 }
 
 function getAllArtboardNames(withPrefix, includePrefixInName) {
-	var artboardNames = [NSMutableArray array],
+	var artboardNames = [NSArray array],
 		pages = [doc pages],
 		prefix = withPrefix ? withPrefix : '',
 		p, a, name;
 		
-	var loop = [pages objectEnumerator]
+	var loop = [pages objectEnumerator];
 	while (p = [loop nextObject]) {
-		var artboards = [p artboards]
-		var loop2 = [artboards objectEnumerator]
+		var artboards = [p artboards];
+		var loop2 = [artboards objectEnumerator];
 		while (a = [loop2 nextObject]) {
 			name = [a name];
 			if(prefix != '' && ![name hasPrefix:prefix]) continue;
 			if(!includePrefixInName) name = [name substringFromIndex:prefix.length];
-			if(![artboardNames containsObject:name]) [artboardNames addObject:name];
+			if(![artboardNames containsObject:name]) {
+				artboardNames = [artboardNames arrayByAddingObject:name];
+			}
 		}
 	}
 	return artboardNames;
 }
 
 function getAllPageNames(withPrefix, includePrefixInName) {
-	var pageNames = [NSMutableArray array],
+	var pageNames = [NSArray array],
 		pages = [doc pages],
 		prefix = withPrefix ? withPrefix : '',
 		p, name;
 		
-	var loop = [pages objectEnumerator]
+	var loop = [pages objectEnumerator];
 	while (p = [loop nextObject]) {
 		name = [p name];
 		if(prefix != '' && ![name hasPrefix:prefix]) continue;
 		if(!includePrefixInName) name = [name substringFromIndex:prefix.length];
-		if(![pageNames containsObject:name]) [pageNames addObject:name];
+		if(![pageNames containsObject:name]) {
+			pageNames = [pageNames arrayByAddingObject:name];
+		}
 	}
 	return pageNames;
 }

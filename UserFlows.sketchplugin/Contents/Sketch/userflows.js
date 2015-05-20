@@ -29,16 +29,17 @@ var askForFlowDetails = function() {
 	
 	// suggest presiously used Flow Names
 	var allArtboards = getAllArtboardsInDoc(),
-		flowArtboardNames = [NSMutableArray new],
+		flowArtboardNames = [NSArray new],
 		flowArtboardName;
 	
-	flowArtboardNames.addObject("")
+	flowArtboardNames = [flowArtboardNames arrayByAddingObject:""]
 	var loop = [allArtboards objectEnumerator]
 	while (artboard = [loop nextObject]) {
 		if ([currentCommand valueForKey:@"isUserFlow" onLayer:artboard forPluginIdentifier:pluginDomain] == 1) {
 			flowArtboardName = [artboard name]
-			if (![flowArtboardNames containsObject:flowArtboardName] && flowArtboardName != "Untitled Flow")
-				flowArtboardNames.addObject(flowArtboardName)
+			if (![flowArtboardNames containsObject:flowArtboardName] && flowArtboardName != "Untitled Flow") {
+				flowArtboardNames = [flowArtboardNames arrayByAddingObject:flowArtboardName]
+			}
 		}
 	}
 	
@@ -54,15 +55,18 @@ var askForFlowDetails = function() {
 	
 	[alert addAccessoryView: createSeparator()] // 4
 	
-	var pageNames = [NSMutableArray new],
+	var pageNames = [NSArray new],
 		pages = [doc pages], pName;
-	pageNames.addObject("_Flows")
+
+	pageNames = [pageNames arrayByAddingObject:"_Flows"]
 	var loop = [pages objectEnumerator]
 	while (page = [loop nextObject]) {
 		pName = [page name]
-		if (pName != "_Flows") pageNames.addObject(pName)
+		if (pName != "_Flows") {
+			pageNames = [pageNames arrayByAddingObject:pName]
+		}
 	}
-	pageNames.addObject("[New Page]")
+	pageNames = [pageNames arrayByAddingObject:"[New Page]"]
 	
 	var lastSelectedPageName = getDefault('flowsPageName'),
 		lastSelectedPageIndex = [pageNames containsObject:lastSelectedPageName] ? [pageNames indexOfObject:lastSelectedPageName] : 0
@@ -73,7 +77,7 @@ var askForFlowDetails = function() {
 	
 	var webView = createWebViewWithURL("http://silverux.com/sketchplugins/userflows/ga.html", 0, 0, 0, 0)
 	[alert addAccessoryView: webView] // 8
-	
+
 	if ([alert runModal] == "1000") {
 		var view, pageName, 
 			scaleIndex = getDefault('exportScaleIndex');
@@ -104,7 +108,7 @@ var generateFlowWithSettings = function(s) {
 	var exportScale = s.exportToScale,
 		spacing = 50*exportScale,
 		outerPadding = 40*exportScale,
-		selectedArtboards = [NSMutableArray array],
+		selectedArtboards = [NSArray array],
 		flowBoard = [MSArtboardGroup new],
 		flowWidth = outerPadding, 
 		flowHeight = 0,
@@ -126,7 +130,7 @@ var generateFlowWithSettings = function(s) {
 			if (![ab hasBackgroundColor]) setArtboardColor(ab, 'FFFFFF')
 			selectedObjectRect = isArtboard(item) ? {x:0,y:0,width:0,height:0} : addPaddingIfRequired(getFrame(item, ab), minimumTapArea);
 			artboardAndRect = {artboard:ab, selectionRect:selectedObjectRect}
-			[selectedArtboards addObject:artboardAndRect];
+			selectedArtboards = [selectedArtboards arrayByAddingObject:artboardAndRect]
 			uniqueArtboards.push(abID);
 		}
 	}
