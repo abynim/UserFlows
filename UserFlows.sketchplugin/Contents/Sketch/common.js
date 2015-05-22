@@ -486,8 +486,8 @@ function flattenLayerToBitmap(layer, keepOriginal, scale) {
 		scale = (typeof scale !== 'undefined') ? scale : 1;
 	
 	var tempFolderPath = getTempFolderPath()
-	var filePath = tempFolderPath + "/temp.png";
-	exportLayerToPath(layer, filePath, scale)
+	var filePath = tempFolderPath + "/temp.pdf";
+	exportLayerToPath(layer, filePath, scale, "pdf")
 	
 	var bmp = addBitmap(filePath, parent, "Bitmap")
 	setPosition(bmp, layerRect.x, layerRect.y, true)
