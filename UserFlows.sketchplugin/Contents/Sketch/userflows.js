@@ -7,10 +7,12 @@ var userDefaults = {
 	organizeFlows:1,
 	showModifiedDate:1,
 	minimumTapArea:44.0,
-	fullName:""
+	fullName:"",
+	exportFormat:"PDF"
 }
 
 var scaleOptions = ['1x', '2x'];
+var formatOptions = [NSArray arrayWithObjects:"PNG", "JPG", "PDF", "TIFF", nil]
 iconName = "icon.png"
 
 var askForFlowDetails = function() {
@@ -106,6 +108,7 @@ var askForFlowDetails = function() {
 var generateFlowWithSettings = function(s) {
 	
 	var exportScale = s.exportToScale,
+		exportFormat = getDefault('exportFormat').toLowerCase(),
 		spacing = 50*exportScale,
 		outerPadding = 40*exportScale,
 		selectedArtboards = [NSArray array],
@@ -147,6 +150,7 @@ var generateFlowWithSettings = function(s) {
 	optimalPosition = getOptimalPositionForNewArtboardInPage()
 	setPosition(flowBoard, optimalPosition.x, optimalPosition.y)
 	setArtboardColor(flowBoard, 'FFFFFF')
+
 	flowFrame = getRect(flowBoard)
 	[currentCommand setValue:1 forKey:@"isUserFlow" onLayer:flowBoard forPluginIdentifier:pluginDomain]
 	
@@ -194,7 +198,7 @@ var generateFlowWithSettings = function(s) {
 		textFrame = getFrame(textLayer)
 		screenY = textFrame.height+10
 	
-		screenLayer = flattenLayerToBitmap(artboard, true, exportScale)
+		screenLayer = flattenLayerToBitmap(artboard, true, exportScale, exportFormat)
 		setPosition(screenLayer, 0, screenY, true)
 		removeLayer(screenLayer)
 		[screenContainer addLayers:[screenLayer]]
@@ -303,6 +307,9 @@ var generateFlowWithSettings = function(s) {
 	[flowBoard resizeRoot:false];
 	
 	makeExportable(flowBoard)
+	var exportSize = [[[[flowBoard exportOptions] sizes] array] lastObject]
+	exportSize.format = exportFormat
+
 	[flowBoard select:true byExpandingSelection:false];
 	
 	// zoom to fit new flowboard
@@ -333,9 +340,19 @@ var showSettingsDialog = function() {
 	[alert setInformativeText: versionText]
 	
 	var lastSelectedExportScaleIndex = getDefault('exportScaleIndex')
-	[alert addTextLabelWithValue: 'Export Artboards at'] // 0
+	[alert addTextLabelWithValue: 'Artboard Export Options'] // 0
 	var radioButtons = createRadioButtons(scaleOptions, 1, scaleOptions.length, "Scale Options", lastSelectedExportScaleIndex)
-	[alert addAccessoryView: radioButtons] // 1
+
+	var lastSelectedFormat = getDefault('exportFormat'),
+		lastSelectedFormatIndex = [formatOptions indexOfObject:lastSelectedFormat]
+	var formatDropdown = createDropDown(formatOptions, lastSelectedFormatIndex)
+	[formatDropdown setFrame:NSMakeRect(100,1,70,22)]
+
+	var exportOptionsView = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 300, 30)];
+	[exportOptionsView addSubview:radioButtons]
+	[exportOptionsView addSubview:formatDropdown]
+
+	[alert addAccessoryView: exportOptionsView] // 1
 	
 	[alert addAccessoryView: createSeparator()] // 2
 	
@@ -361,14 +378,17 @@ var showSettingsDialog = function() {
 	
 	if (response == "1000") {
 		scaleIndex = [[radioButtons selectedCell] tag]-100;
-		
+
+
 		var newColor = [colorWell color],
+			exportFormat = [formatDropdown titleOfSelectedItem],
 			newHex = NSColorToHex(newColor)
 		setDefault('exportScaleIndex', scaleIndex)
 		setDefault('flowIndicatorColor', newHex)
 		setDefault('minimumTapArea', parseFloat(valueAtIndex(alert, 6)))
 		setDefault('fullName', valueAtIndex(alert, 9))
 		setDefault('showModifiedDate', checkedAtIndex(alert, 10))
+		setDefault('exportFormat', exportFormat)
 	} else if (response == "1002") {
 		resetDefaults(userDefaults)
 	}
