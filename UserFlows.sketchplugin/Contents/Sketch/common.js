@@ -478,16 +478,17 @@ function hexToMSColor(hex) {
 //  Working with Bitmaps
 //--------------------------------------
 
-function flattenLayerToBitmap(layer, keepOriginal, scale) {
+function flattenLayerToBitmap(layer, keepOriginal, scale, format) {
 	var dup = [layer duplicate],
 		parent = [layer parentGroup],
 		layerRect = getRect(layer),
 		keepOriginal = (typeof keepOriginal !== 'undefined') ? keepOriginal : false,
+		format = (typeof format !== 'undefined') ? format : "png",
 		scale = (typeof scale !== 'undefined') ? scale : 1;
 	
 	var tempFolderPath = getTempFolderPath()
-	var filePath = tempFolderPath + "/temp.png";
-	exportLayerToPath(layer, filePath, scale)
+	var filePath = tempFolderPath + "/temp."+format;
+	exportLayerToPath(layer, filePath, scale, format)
 	
 	var bmp = addBitmap(filePath, parent, "Bitmap")
 	setPosition(bmp, layerRect.x, layerRect.y, true)
