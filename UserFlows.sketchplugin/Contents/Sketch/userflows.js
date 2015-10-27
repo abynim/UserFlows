@@ -12,7 +12,7 @@ var userDefaults = {
 }
 
 var scaleOptions = ['1x', '2x'];
-var formatOptions = [NSArray arrayWithObjects:"PNG", "JPG", "PDF", "TIFF", nil]
+var formatOptions = [NSArray arrayWithObjects:"PNG", "JPG", "TIFF", nil]
 iconName = "icon.png"
 
 var askForFlowDetails = function() {
@@ -137,7 +137,7 @@ var generateFlowWithSettings = function(s) {
 			uniqueArtboards.push(abID);
 		}
 	}
-	
+
 	// sort artboards by x position
 	selectedArtboards = [selectedArtboards sortedArrayUsingDescriptors:[
 		[NSSortDescriptor sortDescriptorWithKey:@"artboard.absoluteRect.rulerX" ascending:true]
@@ -162,6 +162,7 @@ var generateFlowWithSettings = function(s) {
 		setPosition(modifiedDateLabel, outerPadding, outerPadding)
 		setSize(modifiedDateLabel, 10, 10)
 	}
+
 	if(flowDescription != "") {
 		flowDescriptionLabel = addText("_Description", flowBoard, 12*exportScale);
 		setColor(flowDescriptionLabel, '999999')
@@ -301,7 +302,6 @@ var generateFlowWithSettings = function(s) {
 			setPosition(flowBoard, optimalPosition.x, optimalPosition.y)
 		}
 	}
-	
 	
 	[flowBoard setConstrainProportions:false];
 	[flowBoard resizeRoot:false];

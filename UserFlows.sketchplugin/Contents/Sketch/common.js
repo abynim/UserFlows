@@ -17,7 +17,10 @@ var app = [NSApplication sharedApplication],
 	scriptFolder,
 	pluginDomain,
 	helperAppName,
-	iconName;
+	iconName,
+	SKVersion3_3 = "3.3",
+	SKVersion3_4 = "3.4",
+	sketchVersion = getMajorVersion();
 
 
 //--------------------------------------
@@ -40,7 +43,10 @@ function parseContext(context) {
 	scriptFolder = [scriptPath stringByDeletingLastPathComponent]
 }
 
-
+function getMajorVersion() {
+	const version = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]
+    return (version+"").substr(0, 3)
+}
 	
 //--------------------------------------
 //  User interaction
@@ -109,35 +115,55 @@ function addArtboard(name, rect, page) {
 }
 
 function addBitmap(filePath, parent, name) {
-	var parent = parent ? parent : stage,
-		layer = [MSBitmapLayer new];
-	
-	if(![parent documentData]) {
-		showDialog("Before adding a Bitmap, add its parent to the document.")
-		return
+
+	if (sketchVersion == SKVersion3_4) {
+		var parent = parent ? parent : stage;	
+		if(![parent documentData]) {
+			showDialog("Before adding a Bitmap, add its parent to the document.")
+			return
+		}
+		
+		var layer = [MSBitmapLayer bitmapLayerWithImageFromPath:filePath]
+		if(!name) name = "Bitmap"
+		[layer setName:name]
+		[parent addLayers:[layer]]
+
+		return layer
+
+	} 
+	else {
+		var parent = parent ? parent : stage,
+			layer = [MSBitmapLayer new];
+		
+		if(![parent documentData]) {
+			showDialog("Before adding a Bitmap, add its parent to the document.")
+			return
+		}
+		
+		if(!name) name = "Bitmap"
+		[layer setName:name]
+		[parent addLayers:[layer]]
+			
+		var image = [[NSImage alloc] initWithContentsOfFile:filePath]
+		if(image) {
+			var originalImageSize = [image size],
+				fills = [[layer style] fills];
+			
+			[layer setConstrainProportions:false]
+			[fills addNewStylePart]
+			[[fills firstObject] setIsEnabled:false]
+			[layer setRawImage:image convertColourspace:false collection:[[doc documentData] images]]
+			[[layer frame] setWidth:originalImageSize.width]
+			[[layer frame] setHeight:originalImageSize.height]
+			[layer setConstrainProportions:true]
+		} else {
+			showDialog("Image file could not be found!")
+		}
+		return layer;
 	}
 	
-	if(!name) name = "Bitmap"
-	[layer setName:name]
-	[parent addLayers:[layer]]
-		
-	var image = [[NSImage alloc] initWithContentsOfFile:filePath]
-	if(image) {
-		var originalImageSize = [image size],
-			fills = [[layer style] fills];
-		
-		[layer setConstrainProportions:false]
-		[fills addNewStylePart]
-		[[fills firstObject] setIsEnabled:false]
-		[layer setRawImage:image convertColourspace:false collection:[[doc documentData] images]]
-		[[layer frame] setWidth:originalImageSize.width]
-		[[layer frame] setHeight:originalImageSize.height]
-		[layer setConstrainProportions:true]
-	} else {
-		showDialog("Image file could not be found!")
-	}
-	return layer;
 }
+
 
 function addLine(name, parent, startPoint, endPoint, thickness, hex, alpha, blendMode) {
 	var parent = parent ? parent : stage,
@@ -603,11 +629,21 @@ function getTopRightCornerOfPage(page, marginX, marginY) {
 }
 
 function getOptimalPositionForNewArtboardInPage(page) {
-	var page = (typeof page !== 'undefined') ? page : currentPage,
-		spacing = 160,
-		contentBounds = [page contentBounds],
-		right = [contentBounds x] + [contentBounds width] + spacing
-	return {x:right, y:[contentBounds y]}
+	if (sketchVersion == SKVersion3_4) {
+		var page = (typeof page !== 'undefined') ? page : currentPage,
+			spacing = 160,
+			contentBounds = [page contentBounds],
+			right = contentBounds.origin.x + CGRectGetWidth(contentBounds) + spacing
+		return {x:right, y:contentBounds.origin.y}
+
+	} else {
+		var page = (typeof page !== 'undefined') ? page : currentPage,
+			spacing = 160,
+			contentBounds = [page contentBounds],
+			right = [contentBounds x] + [contentBounds width] + spacing
+		return {x:right, y:[contentBounds y]}
+	}
+	
 }
 
 
