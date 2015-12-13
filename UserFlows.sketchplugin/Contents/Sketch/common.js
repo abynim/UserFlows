@@ -43,9 +43,18 @@ function parseContext(context) {
 	scriptFolder = [scriptPath stringByDeletingLastPathComponent]
 }
 
-function getMajorVersion() {
+function getSketchVersionNumber() {
 	const version = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]
-    return (version+"").substr(0, 3)
+	var versionNumber = version.stringByReplacingOccurrencesOfString_withString(".", "") + ""
+	while(versionNumber.length != 3) {
+		versionNumber += "0"
+	}
+	return parseInt(versionNumber)
+}
+
+function getMajorVersion() {
+	const version = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"] + ""
+    return version.substr(0, 3)
 }
 	
 //--------------------------------------
@@ -555,7 +564,7 @@ function exportLayerToPath(layer, path, scale, format, suffix) {
 	exportSize.scale = scale
 	exportSize.name = suffix
 	exportSize.format = format
-	var slice = [MSSliceMaker sliceFromExportSize:exportSize layer:layer inRect:rect]
+	var slice = getSketchVersionNumber() >= 344 ? [MSSliceMaker sliceFromExportSize:exportSize layer:layer inRect:rect useIDForName:false] : [MSSliceMaker sliceFromExportSize:exportSize layer:layer inRect:rect]
 	[doc saveArtboardOrSlice:slice toFile: path]
 	[exportSize remove]
 	slice = nil
