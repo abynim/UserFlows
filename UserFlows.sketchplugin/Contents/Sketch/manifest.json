@@ -10,9 +10,16 @@
     },
 	{
       "script" : "_handlers.cocoascript",
+      "handler" : "editArtboardDescription",
+      "shortcut" : "ctrl shift d",
+      "name" : "Edit Artboard Description",
+      "identifier" : "editArtboardDescription"
+    },
+  {
+      "script" : "_handlers.cocoascript",
       "handler" : "editSettings",
       "shortcut" : "",
-      "name" : "_Settings",
+      "name" : "Settings",
       "identifier" : "editSettings"
     }
   ],
@@ -24,7 +31,9 @@
   "menu" : {
     "items" : [
       "generateFlow",
-	  "editSettings"
+      "editArtboardDescription",
+      "-",
+      "editSettings"
     ]
   },
   "compatibleVersion" : 3.3,

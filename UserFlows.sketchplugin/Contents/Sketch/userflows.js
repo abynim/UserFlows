@@ -52,7 +52,7 @@ var askForFlowDetails = function() {
     	[alert addAccessoryView: createSelect(flowArtboardNames, 0)] // 1
 	}
 	
-	[alert addTextLabelWithValue: 'Description'] // 2
+	[alert addTextLabelWithValue: 'Flow Description'] // 2
 	[alert addAccessoryView: createTextArea("", 300, 100)] // 3
 	
 	[alert addAccessoryView: createSeparator()] // 4
@@ -177,7 +177,7 @@ var generateFlowWithSettings = function(s) {
 	setSize(flowLabel, 10, 10)
 	
 	// create images for artboards and populate the flow artboard
-	var artboard, screenImage, screenLayer, screenFrame, aWidth, aHeight, selectionRect, hitAreaLayer, hitAreaFrame, arrowContainer, textLayer, textFrame, screenContainer, screenY, arrow, arrowStartPoint, arrowEndPoint, arrowY, screenNumber = 0;
+	var artboard, screenImage, screenLayer, screenFrame, aWidth, aHeight, selectionRect, hitAreaLayer, hitAreaFrame, arrowContainer, textLayer, textFrame, screenContainer, screenY, arrow, arrowStartPoint, arrowEndPoint, arrowY, screenDescription, screenDescriptionLayer, screenNumber = 0;
 	
 	loop = [selectedArtboards objectEnumerator]
 	while (ar = [loop nextObject]) {
@@ -197,14 +197,14 @@ var generateFlowWithSettings = function(s) {
 		[textLayer setTextBehaviour:1]
 		[textLayer setStringValue:screenNumber + ": " + [artboard name]]
 		textFrame = getFrame(textLayer)
-		screenY = textFrame.height+10
+		screenY = textFrame.height+12
 	
 		screenLayer = flattenLayerToBitmap(artboard, true, exportScale, exportFormat)
 		setPosition(screenLayer, 0, screenY, true)
 		removeLayer(screenLayer)
 		[screenContainer addLayers:[screenLayer]]
 		setShadow(screenLayer)
-	
+
 		// add hit area layer
 		if(selectionRect.width != 0 && selectionRect.height != 0) {
 			arrowContainer = addGroup("Flow Indicator", screenContainer)
@@ -224,7 +224,18 @@ var generateFlowWithSettings = function(s) {
 		
 			[arrowContainer resizeRoot:false];
 		}
-	
+
+		screenDescription = [currentCommand valueForKey:@"artboardDescription" onLayer:artboard forPluginIdentifier:pluginDomain]
+		if (screenDescription) {
+			screenY += getFrame(screenLayer).height + 20
+			screenDescriptionLayer = addText('Artboard Description', screenContainer, 12*exportScale)
+			setPosition(screenDescriptionLayer, 0, screenY)
+			setSize(screenDescriptionLayer, aWidth, 10)
+			[screenDescriptionLayer setTextBehaviour:1]
+			[screenDescriptionLayer setStringValue:screenDescription]
+			[screenDescriptionLayer adjustFrameToFit]
+		}
+
 		[screenContainer resizeRoot:false];
 		flowWidth += getFrame(screenContainer).width + spacing
 		flowHeight = Math.max(flowHeight, getFrame(screenContainer).height)
@@ -392,4 +403,30 @@ var showSettingsDialog = function() {
 	} else if (response == "1002") {
 		resetDefaults(userDefaults)
 	}
+}
+
+var showArtboardDescription = function() {
+
+	if(!currentArtboard) {
+		showDialog("Select an Artboard!")
+		return
+	}
+	
+	var alert = createAlertBase(false)
+	[alert addButtonWithTitle: 'Save'];
+	[alert addButtonWithTitle: 'Cancel'];
+	
+	[alert setMessageText: 'Artboard: ' + [currentArtboard name]]
+
+	var screenDescription = [currentCommand valueForKey:@"artboardDescription" onLayer:currentArtboard forPluginIdentifier:pluginDomain] || ""
+	[alert addTextLabelWithValue: 'Description'] // 0
+	[alert addAccessoryView: createTextArea(screenDescription, 300, 160)] // 1
+
+	if ([alert runModal] == "1000") {
+
+		var artboardDesc = valueAtIndex(alert, 1)
+		[currentCommand setValue:artboardDesc forKey:@"artboardDescription" onLayer:currentArtboard forPluginIdentifier:pluginDomain]
+
+	}
+
 }

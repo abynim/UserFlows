@@ -26,8 +26,13 @@ UserFlows is only supported in Sketch 3.3 or later. To check what version you ha
 
 _Note: The sequence of screens in a flow is based on the `x` position of your Artboards. Sketch does not allow event-tracking (yet) so it's not possible to determine the order in which layers or Artboards were selected, although that would be ideal._
 
+#### Artboard Description
+1. To enter a description for an artboard, select it and go to `Plugins` > `User Flows` > `Edit Artboard Description`.  
+2. The description entered here will be added to the exported flow, and positioned below the artboard image.
+![Description Dialog](http://silverux.com/sketchplugins/userflows/assets/artboard_description.png)
+
 #### Settings
-To manage settings for the plugin, go to `Plugins` > `User Flows` > `_Settings`.  
+To manage settings for the plugin, go to `Plugins` > `User Flows` > `Settings`.  
 ![Settings Dialog](http://silverux.com/sketchplugins/userflows/assets/settings_dialog1.png)
 
 ## Shortcut

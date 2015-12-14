@@ -9,3 +9,8 @@ var editSettings = function(context) {
 	parseContext(context)
 	showSettingsDialog()
 }
+
+var editArtboardDescription = function(context) {
+	parseContext(context)
+	showArtboardDescription()
+}
