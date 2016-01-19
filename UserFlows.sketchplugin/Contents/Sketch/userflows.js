@@ -77,9 +77,6 @@ var askForFlowDetails = function() {
 	
 	[alert addAccessoryView: createCheckbox({name: 'Keep _Flows Page Organized', value: 'organizeFlows'}, getDefault('organizeFlows'))] // 7
 	
-	var webView = createWebViewWithURL("http://silverux.com/sketchplugins/userflows/ga.html", 0, 0, 0, 0)
-	[alert addAccessoryView: webView] // 8
-
 	if ([alert runModal] == "1000") {
 		var view, pageName, 
 			scaleIndex = getDefault('exportScaleIndex');
@@ -137,7 +134,7 @@ var generateFlowWithSettings = function(s) {
 			uniqueArtboards.push(abID);
 		}
 	}
-
+	
 	// sort artboards by x position
 	selectedArtboards = [selectedArtboards sortedArrayUsingDescriptors:[
 		[NSSortDescriptor sortDescriptorWithKey:@"artboard.absoluteRect.rulerX" ascending:true]
@@ -189,7 +186,7 @@ var generateFlowWithSettings = function(s) {
 		
 		screenContainer = addGroup([artboard name], flowGroup)
 		setPosition(screenContainer, flowWidth, outerPadding)
-		
+
 		screenNumber++;
 		textLayer = addText([artboard name], screenContainer, 12*exportScale)
 		setPosition(textLayer, 0, 0)
@@ -222,7 +219,7 @@ var generateFlowWithSettings = function(s) {
 
 			[[arrow firstLayer] setEndDecorationType:1]
 		
-			[arrowContainer resizeRoot:false];
+			[arrowContainer resizeToFitChildrenWithOption:0];
 		}
 
 		screenDescription = [currentCommand valueForKey:@"artboardDescription" onLayer:artboard forPluginIdentifier:pluginDomain]
@@ -236,25 +233,25 @@ var generateFlowWithSettings = function(s) {
 			[screenDescriptionLayer adjustFrameToFit]
 		}
 
-		[screenContainer resizeRoot:false];
+		[screenContainer resizeToFitChildrenWithOption:0];
 		flowWidth += getFrame(screenContainer).width + spacing
 		flowHeight = Math.max(flowHeight, getFrame(screenContainer).height)
 	}
 
 	// update flow artboard dimensions and add it to current page
-	[flowGroup resizeRoot:false];
+	[flowGroup resizeToFitChildrenWithOption:0];
 	[flowGroup setHasClickThrough:true];
 	
 	flowWidth -= (spacing-outerPadding)
 	flowHeight += (outerPadding*2);
-	
+
 	setSize(flowLabel, flowWidth-(outerPadding*2), 10);
 	[flowLabel setTextBehaviour:1];
 	[flowLabel setStringValue:flowName];
 	[flowLabel adjustFrameToFit];
 	var flowLabelFrame = getFrame(flowLabel);
 	var descriptionLabelHeight = 0
-	
+
 	if(flowDescription != "") {
 		setSize(flowDescriptionLabel, flowWidth-(outerPadding*2), 10);
 		[flowDescriptionLabel setTextBehaviour:1];
@@ -263,7 +260,7 @@ var generateFlowWithSettings = function(s) {
 		setPosition(flowDescriptionLabel, outerPadding, outerPadding+flowLabelFrame.height + 14)
 		descriptionLabelHeight = getFrame(flowDescriptionLabel).height + 10;
 	}
-	
+
 	if(s.showModifiedDate == 1) {
 		var modifiedOnText = "Modified on " + getCurrentDateAsString();
 		if(s.modifiedBy != "") modifiedOnText += " by " + s.modifiedBy;
@@ -279,7 +276,7 @@ var generateFlowWithSettings = function(s) {
 	setPosition(flowGroup, flowLabelFrame.x, flowInfoHeight+(outerPadding*2))
 	setSize(flowBoard, flowWidth, flowHeight+flowInfoHeight+outerPadding)
 
-	[flowGroup resizeRoot:false];
+	[flowGroup resizeToFitChildrenWithOption:0];
 	
 	// move flow to another page if required
 	if (s.exportToPage != [currentPage name]) {
@@ -313,18 +310,17 @@ var generateFlowWithSettings = function(s) {
 			setPosition(flowBoard, optimalPosition.x, optimalPosition.y)
 		}
 	}
-	
-	[flowBoard setConstrainProportions:false];
-	[flowBoard resizeRoot:false];
-	
-	makeExportable(flowBoard)
-	var exportSize = [[[[flowBoard exportOptions] sizes] array] lastObject]
-	exportSize.format = exportFormat
 
+	[flowBoard setConstrainProportions:false];
+	[flowBoard resizeToFitChildrenWithOption:0];
+
+	makeExportable(flowBoard, exportFormat)
 	[flowBoard select:true byExpandingSelection:false];
-	
+
 	// zoom to fit new flowboard
 	[[doc currentView] zoomToFitRect:[[flowBoard absoluteRect] rect]];
+
+	log("Flow generated. Flow artboard: " + flowBoard)
 }
 
 var addPaddingIfRequired = function(rect, minDimensions) {
