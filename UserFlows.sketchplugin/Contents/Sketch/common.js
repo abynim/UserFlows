@@ -125,7 +125,7 @@ function addArtboard(name, rect, page) {
 
 function addBitmap(filePath, parent, name) {
 
-	if (sketchVersion == SKVersion3_4) {
+	if (getSketchVersionNumber() >= 340) {
 		var parent = parent ? parent : stage;	
 		if(![parent documentData]) {
 			showDialog("Before adding a Bitmap, add its parent to the document.")
@@ -520,14 +520,12 @@ function flattenLayerToBitmap(layer, keepOriginal, scale, format) {
 		keepOriginal = (typeof keepOriginal !== 'undefined') ? keepOriginal : false,
 		format = (typeof format !== 'undefined') ? format : "png",
 		scale = (typeof scale !== 'undefined') ? scale : 1;
-	
+
 	var tempFolderPath = getTempFolderPath()
 	var filePath = tempFolderPath + "/temp."+format;
 	exportLayerToPath(layer, filePath, scale, format)
-	
 	var bmp = addBitmap(filePath, parent, "Bitmap")
 	setPosition(bmp, layerRect.x, layerRect.y, true)
-	
 	if(!keepOriginal) removeLayer(layer)
 	removeLayer(dup)
 	cleanUpTempFolder(tempFolderPath)
@@ -545,8 +543,18 @@ function desaturateBitmap(bmpLayer) {
 //  Exporting Layers and Artboards
 //--------------------------------------
 
-function makeExportable(layer) {
-	return [[layer exportOptions] addExportSize];
+function makeExportable(layer, format) {
+
+	var format = (typeof format !== 'undefined') ? format : "png"
+	if (getSketchVersionNumber() >= 350) {
+		var slice = layer.exportOptions().addExportFormat()
+		slice.setFileFormat(format)
+		return slice
+	}
+
+	var slice = layer.exportOptions().addExportSize()
+	slice.setFormat(format)
+	return slice
 }
 
 function removeExportOptions(layer) {
@@ -554,9 +562,31 @@ function removeExportOptions(layer) {
 }
 
 function exportLayerToPath(layer, path, scale, format, suffix) {
+
+	if(getSketchVersionNumber() >= 350) {
+
+		var rect = layer.absoluteRect().rect(),
+			slice = [MSExportRequest requestWithRect:rect scale:scale],
+			layerName = layer.name() + ((typeof suffix !== 'undefined') ? suffix : ""),
+			format = (typeof format !== 'undefined') ? format : "png";
+
+		slice.setShouldTrim(0)
+		slice.setSaveForWeb(1)
+		slice.configureForLayer(layer)
+		slice.setName(layerName)
+		slice.setFormat(format)
+		doc.saveArtboardOrSlice_toFile(slice, path)
+
+		return {
+		    x: Math.round(rect.origin.x),
+		    y: Math.round(rect.origin.y),
+		    width: Math.round(rect.size.width),
+		    height: Math.round(rect.size.height)
+		}
+	}
+
 	[[layer exportOptions] addExportSize]
 	var exportSize = [[[[layer exportOptions] sizes] array] lastObject],
-		//rect = [layer absoluteDirtyRect],
 		rect = [[layer absoluteRect] rect],
 		scale = (typeof scale !== 'undefined') ? scale : 1,
 		suffix = (typeof suffix !== 'undefined') ? suffix : "",
@@ -638,7 +668,7 @@ function getTopRightCornerOfPage(page, marginX, marginY) {
 }
 
 function getOptimalPositionForNewArtboardInPage(page) {
-	if (sketchVersion == SKVersion3_4) {
+	if (getSketchVersionNumber() >= 344) {
 		var page = (typeof page !== 'undefined') ? page : currentPage,
 			spacing = 160,
 			contentBounds = [page contentBounds],
