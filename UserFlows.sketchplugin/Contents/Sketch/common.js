@@ -20,7 +20,8 @@ var app = [NSApplication sharedApplication],
 	iconName,
 	SKVersion3_3 = "3.3",
 	SKVersion3_4 = "3.4",
-	sketchVersion = getMajorVersion();
+	sketchVersion = getMajorVersion(),
+	sketchVersionNumber = getSketchVersionNumber();
 
 
 //--------------------------------------
@@ -125,7 +126,7 @@ function addArtboard(name, rect, page) {
 
 function addBitmap(filePath, parent, name) {
 
-	if (getSketchVersionNumber() >= 340) {
+	if (sketchVersionNumber >= 340) {
 		var parent = parent ? parent : stage;	
 		if(![parent documentData]) {
 			showDialog("Before adding a Bitmap, add its parent to the document.")
@@ -352,10 +353,16 @@ function setColor(layer, hex, alpha, blendMode) {
     [layer setTextColor: color];
   }
   else if( isShape(layer) ) {
-    var fills = [[layer style] fills];
-    if([fills count] <= 0) [fills addNewStylePart];
-    [[[layer style] fill] setColor: color];
-	[[[[layer style] fill] contextSettings] setBlendMode:blendMode];
+  	if (sketchVersionNumber >= 380) {
+  		var fill = layer.style().addStylePartOfType(0);
+  		fill.setColor(color);
+  		fill.contextSettings().setBlendMode(blendMode);
+  	} else {
+  		var fills = [[layer style] fills];
+	    if([fills count] <= 0) [fills addNewStylePart];
+	    [[[layer style] fill] setColor: color];
+		[[[[layer style] fill] contextSettings] setBlendMode:blendMode];
+  	}
   }
 }
 
@@ -401,17 +408,23 @@ function setBorder(layer, thickness, position, hex, alpha, blendMode) {
 	
 	[color setAlpha: alpha];
 	if( !isText(layer) ) {
-		var borders = [[layer style] borders];
-	    if([borders count] <= 0) [borders addNewStylePart];
-		var border = [[layer style] border];
-	    [border setColor: color];
-		[border setPosition: position];
-		[border setThickness: thickness];
-		[[border contextSettings] setBlendMode:blendMode]
+
+		var border;
+  		if (sketchVersionNumber >= 380) {
+  			border = layer.style().addStylePartOfType(1);
+  		} else {
+  			var borders = [[layer style] borders];
+	    	if([borders count] <= 0) [borders addNewStylePart];
+			border = [[layer style] border];
+		}
+	    border.setColor(color);
+		border.setPosition(position);
+		border.setThickness(thickness);
+		border.contextSettings().setBlendMode(blendMode);
 	}
 }
 
-function setShadow(layer, offsetX, offsetY, blurRadius, spread, hex, alpha, blendMode) {
+function setShadow(layer, offsetX, offsetY, blurRadius, spread, hex, alpha, blendMode, inner) {
 	var offsetX = (typeof offsetX !== 'undefined') ? offsetX : 0,
 		offsetY = (typeof offsetY !== 'undefined') ? offsetY : 2,
 		blurRadius = (typeof blurRadius !== 'undefined') ? blurRadius : 4,
@@ -419,18 +432,26 @@ function setShadow(layer, offsetX, offsetY, blurRadius, spread, hex, alpha, blen
 		hex = (typeof hex !== 'undefined') ? hex : '000000',
 		color = hexToMSColor(hex),
 		alpha = (typeof alpha !== 'undefined') ? alpha : .5,
-		blendMode = (typeof blendMode !== 'undefined') ? blendMode : 0;
+		blendMode = (typeof blendMode !== 'undefined') ? blendMode : 0,
+		inner = (typeof inner !== 'undefined') ? inner : 0;
 		
 		[color setAlpha: alpha];
 
-		var shadows = [[layer style] shadows];
-		if([shadows count] <= 0) [shadows addNewStylePart];
-		[[[layer style] shadow] setColor: color];
-		[[[[layer style] shadow] contextSettings] setBlendMode:blendMode];
-		[[[layer style] shadow] setOffsetX: offsetX];
-		[[[layer style] shadow] setOffsetY: offsetY];
-		[[[layer style] shadow] setBlurRadius: blurRadius];
-		[[[layer style] shadow] setSpread: spread];
+		var newShadow;
+  		if (sketchVersionNumber >= 380) {
+  			newShadow = layer.style().addStylePartOfType((inner ? 3 : 2));
+  		} else {
+  			var shadows = [[layer style] shadows];
+			if([shadows count] <= 0) [shadows addNewStylePart];
+			newShadow = inner ? layer.style().innserShadow() : layer.style().shadow();
+  		}
+		
+		newShadow.setColor(color);
+		newShadow.contextSettings().setBlendMode(blendMode);
+		newShadow.setOffsetX(offsetX);
+		newShadow.setOffsetY(offsetY);
+		newShadow.setBlurRadius(blurRadius);
+		newShadow.setSpread(spread);
 		
 }
 
@@ -546,7 +567,7 @@ function desaturateBitmap(bmpLayer) {
 function makeExportable(layer, format) {
 
 	var format = (typeof format !== 'undefined') ? format : "png"
-	if (getSketchVersionNumber() >= 350) {
+	if (sketchVersionNumber >= 350) {
 		var slice = layer.exportOptions().addExportFormat()
 		slice.setFileFormat(format)
 		return slice
@@ -563,7 +584,7 @@ function removeExportOptions(layer) {
 
 function exportLayerToPath(layer, path, scale, format, suffix) {
 
-	if(getSketchVersionNumber() >= 350) {
+	if(sketchVersionNumber >= 350) {
 
 		var rect = layer.absoluteRect().rect(),
 			slice = [MSExportRequest requestWithRect:rect scale:scale],
@@ -594,7 +615,7 @@ function exportLayerToPath(layer, path, scale, format, suffix) {
 	exportSize.scale = scale
 	exportSize.name = suffix
 	exportSize.format = format
-	var slice = getSketchVersionNumber() >= 344 ? [MSSliceMaker sliceFromExportSize:exportSize layer:layer inRect:rect useIDForName:false] : [MSSliceMaker sliceFromExportSize:exportSize layer:layer inRect:rect]
+	var slice = sketchVersionNumber >= 344 ? [MSSliceMaker sliceFromExportSize:exportSize layer:layer inRect:rect useIDForName:false] : [MSSliceMaker sliceFromExportSize:exportSize layer:layer inRect:rect]
 	[doc saveArtboardOrSlice:slice toFile: path]
 	[exportSize remove]
 	slice = nil
@@ -668,7 +689,7 @@ function getTopRightCornerOfPage(page, marginX, marginY) {
 }
 
 function getOptimalPositionForNewArtboardInPage(page) {
-	if (getSketchVersionNumber() >= 344) {
+	if (sketchVersionNumber >= 344) {
 		var page = (typeof page !== 'undefined') ? page : currentPage,
 			spacing = 160,
 			contentBounds = [page contentBounds],
