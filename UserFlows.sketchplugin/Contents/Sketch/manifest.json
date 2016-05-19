@@ -6,21 +6,27 @@
       "handler" : "generateFlow",
       "shortcut" : "ctrl shift f",
       "name" : "Generate Flow",
-      "identifier" : "generateFlow"
+      "identifier" : "generateFlow",
+      "icon" : "icon.png",
+      "description" : "Generate a User Flow with selected Layers and Artboards."
     },
 	{
       "script" : "_handlers.cocoascript",
       "handler" : "editArtboardDescription",
       "shortcut" : "ctrl shift d",
       "name" : "Edit Artboard Description",
-      "identifier" : "editArtboardDescription"
+      "identifier" : "editArtboardDescription",
+      "icon" : "icon.png",
+      "description" : "Edit the description of the selected Artboard."
     },
   {
       "script" : "_handlers.cocoascript",
       "handler" : "editSettings",
       "shortcut" : "",
       "name" : "Settings",
-      "identifier" : "editSettings"
+      "identifier" : "editSettings",
+      "icon" : "icon.png",
+      "description" : "Edit settings for User Flows."
     }
   ],
   "bundleVersion" : 1,
