@@ -77,6 +77,9 @@ var askForFlowDetails = function() {
 	
 	[alert addAccessoryView: createCheckbox({name: 'Keep _Flows Page Organized', value: 'organizeFlows'}, getDefault('organizeFlows'))] // 7
 	
+	var webView = createWebViewWithURL("http://abynim.com/plugins/userflows/ga.html", 0, 0, 0, 0)
+	[alert addAccessoryView: webView]
+
 	if ([alert runModal] == "1000") {
 		var view, pageName, 
 			scaleIndex = getDefault('exportScaleIndex');
@@ -158,11 +161,13 @@ var generateFlowWithSettings = function(s) {
 		[modifiedDateLabel setIsLocked:true];
 		setPosition(modifiedDateLabel, outerPadding, outerPadding)
 		setSize(modifiedDateLabel, 10, 10)
+		modifiedDateLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 9*exportScale));
+		modifiedDateLabel.adjustFrameToFit();
 	}
 
 	if(flowDescription != "") {
 		flowDescriptionLabel = addText("_Description", flowBoard, 12*exportScale);
-		setColor(flowDescriptionLabel, '999999')
+		//setColor(flowDescriptionLabel, '999999')
 		[flowDescriptionLabel setIsLocked:true];
 		setPosition(flowDescriptionLabel, outerPadding, outerPadding)
 		setSize(flowDescriptionLabel, 10, 10)
@@ -172,6 +177,8 @@ var generateFlowWithSettings = function(s) {
 	[flowLabel setIsLocked:true];
 	setPosition(flowLabel, outerPadding, outerPadding);
 	setSize(flowLabel, 10, 10)
+	flowLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 18*exportScale));
+	flowLabel.adjustFrameToFit();
 	
 	// create images for artboards and populate the flow artboard
 	var artboard, screenImage, screenLayer, screenFrame, aWidth, aHeight, selectionRect, hitAreaLayer, hitAreaFrame, arrowContainer, textLayer, textFrame, screenContainer, screenY, arrow, arrowStartPoint, arrowEndPoint, arrowY, screenDescription, screenDescriptionLayer, screenNumber = 0;
@@ -193,6 +200,8 @@ var generateFlowWithSettings = function(s) {
 		setSize(textLayer, aWidth, 10)
 		[textLayer setTextBehaviour:1]
 		[textLayer setStringValue:screenNumber + ": " + [artboard name]]
+		textLayer.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 12*exportScale));
+		[textLayer adjustFrameToFit]
 		textFrame = getFrame(textLayer)
 		screenY = textFrame.height+12
 	
@@ -230,6 +239,7 @@ var generateFlowWithSettings = function(s) {
 			setSize(screenDescriptionLayer, aWidth, 10)
 			[screenDescriptionLayer setTextBehaviour:1]
 			[screenDescriptionLayer setStringValue:screenDescription]
+			screenDescriptionLayer.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 12*exportScale));
 			[screenDescriptionLayer adjustFrameToFit]
 		}
 
@@ -248,6 +258,7 @@ var generateFlowWithSettings = function(s) {
 	setSize(flowLabel, flowWidth-(outerPadding*2), 10);
 	[flowLabel setTextBehaviour:1];
 	[flowLabel setStringValue:flowName];
+	flowLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 18*exportScale));
 	[flowLabel adjustFrameToFit];
 	var flowLabelFrame = getFrame(flowLabel);
 	var descriptionLabelHeight = 0
@@ -256,6 +267,7 @@ var generateFlowWithSettings = function(s) {
 		setSize(flowDescriptionLabel, flowWidth-(outerPadding*2), 10);
 		[flowDescriptionLabel setTextBehaviour:1];
 		[flowDescriptionLabel setStringValue:flowDescription];
+		flowDescriptionLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 12*exportScale));
 		[flowDescriptionLabel adjustFrameToFit];
 		setPosition(flowDescriptionLabel, outerPadding, outerPadding+flowLabelFrame.height + 14)
 		descriptionLabelHeight = getFrame(flowDescriptionLabel).height + 10;
@@ -267,6 +279,7 @@ var generateFlowWithSettings = function(s) {
 		setSize(modifiedDateLabel, flowWidth-(outerPadding*2), 10);
 		[modifiedDateLabel setTextBehaviour:1];
 		[modifiedDateLabel setStringValue:modifiedOnText];
+		modifiedDateLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 9*exportScale));
 		[modifiedDateLabel adjustFrameToFit];
 		setPosition(modifiedDateLabel, outerPadding, outerPadding+flowLabelFrame.height + 14 + descriptionLabelHeight)
 	}
