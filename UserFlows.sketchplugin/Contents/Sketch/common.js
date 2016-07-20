@@ -133,7 +133,12 @@ function addBitmap(filePath, parent, name) {
 			return
 		}
 		
-		var layer = [MSBitmapLayer bitmapLayerWithImageFromPath:filePath]
+		var layer;
+		if (sketchVersionNumber >= 390) {
+			layer = [MSBitmapLayer bitmapLayerWithImageFromPath:[NSURL fileURLWithPath:filePath]];
+		} else {
+		 	layer = [MSBitmapLayer bitmapLayerWithImageFromPath:filePath];
+		}
 		if(!name) name = "Bitmap"
 		[layer setName:name]
 		[parent addLayers:[layer]]
@@ -215,18 +220,30 @@ function addLayer(name, type, parent) {
 }
 
 function addGroup(name, parent) {
-  return addLayer(name, 'group', parent);
+	var newGroup = MSLayerGroup.new();
+	newGroup.removeFromParent();
+	newGroup.setName(name);
+	parent.addLayers([newGroup]);
+	return newGroup;
+  // return addLayer(name, 'group', parent);
 }
 
 function addShape(name, parent) {
-  return addLayer(name, 'rectangle', parent);
+	var path = NSBezierPath.bezierPathWithRect(NSMakeRect(0,0,100,100)),
+		newRectangle = MSShapeGroup.shapeWithBezierPath(path);
+	newRectangle.setName(name);
+	parent.addLayers([newRectangle]);
+	return newRectangle;
+  // return addLayer(name, 'rectangle', parent);
 }
 
 function addText(name, parent, fontSize) {
-	var fontSize = (typeof fontSize !== 'undefined') ? fontSize : 12
-  		textLayer = addLayer(name, 'text', parent);
-	[textLayer setFontSize:fontSize]
-	return textLayer;
+	var newTextLayer = MSTextLayer.new(),
+		fontSize = (typeof fontSize !== 'undefined') ? fontSize : 12
+	newTextLayer.setName(name);
+	newTextLayer.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", fontSize));
+	parent.addLayers([newTextLayer]);
+	return newTextLayer
 }
 
 function removeLayer(layer) {
@@ -417,6 +434,7 @@ function setBorder(layer, thickness, position, hex, alpha, blendMode) {
 	    	if([borders count] <= 0) [borders addNewStylePart];
 			border = [[layer style] border];
 		}
+
 	    border.setColor(color);
 		border.setPosition(position);
 		border.setThickness(thickness);
