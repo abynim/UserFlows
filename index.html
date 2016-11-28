@@ -1,97 +1,206 @@
 <!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="UTF-8">
-    <title>Userflows.sketchplugin by abynim</title>
+<html lang="en">
+
+<head>
+
+    <meta property="og:title" content="User Flows" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://abynim.github.io/UserFlows" />
+    <meta property="og:description" content="Generate flow diagrams from Artboards in Sketch." />
+    <meta property="og:image" content="img/uf-logo-300.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="300" />
+    <meta property="og:image:height" content="300" />
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-  </head>
-  <body>
-    <section class="page-header">
-      <h1 class="project-name">Userflows.sketchplugin</h1>
-      <h2 class="project-tagline">Generate user-flow diagrams from artboards in Sketch</h2>
-      <a href="https://github.com/abynim/UserFlows" class="btn">View on GitHub</a>
-      <a href="https://github.com/abynim/UserFlows/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/abynim/UserFlows/tarball/master" class="btn">Download .tar.gz</a>
+    <meta name="description" content="Generate flow diagrams from Artboards in Sketch.">
+    <meta name="author" content="User Flows">
+
+    <title>User Flows - Generate flow diagrams from Artboards in Sketch.</title>
+
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" />
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+
+    <link href="css/uf.css" rel="stylesheet">
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css?family=Droid+Serif:400i" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body id="page-top" class="index">
+
+    <header>
+        <div class="container">
+            <img class="logo" src="img/uf-logo@2x.png">
+            <h1>User Flows</h1>
+            <p class="intro-version">Version 2.0</p>
+            <div class="row">
+                <div class="col-md-2 col-xs-1"></div>
+                <div class="col-md-8 col-xs-10">
+                    <p class="intro-heading">A plugin for generating flow diagrams from Artboards in Sketch.</p>
+                </div>
+                <div class="col-md-2 col-xs-1"></div>
+            </div>
+
+            <div class="download-plugin">
+                <div class="download-button"><a href="https://github.com/abynim/UserFlows/archive/v2.zip" >Download Plugin</a></div>
+                <p class="intro-version">Double-click the .sketchplugin file to install.</p>
+            </div>
+            
+        </div>
+    </header>
+
+    <section class="container">
+        <div class="row">
+            <div class="col-md-2 col-xs-1"></div>
+            <div class="col-md-8 col-xs-10 text-center">
+                <h2>Define Links</h2>
+                <p>To define a link between two artboards – select a layer and the destination artboard, then run the <strong>Define Link</strong> command <code>(Cmd Shift K)</code>.</p>
+            </div>
+            <div class="col-md-2 col-xs-1"></div>
+        </div>
+        <div class="embed-responsive embed-responsive-16by9 demo-video">
+            <iframe src="https://player.vimeo.com/video/191329873?autoplay=1&loop=1&title=0&byline=0&portrait=0" style="height:98%;" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+        </div>
     </section>
 
-    <section class="main-content">
-      <h1>
-<a id="user-flows" class="anchor" href="#user-flows" aria-hidden="true"><span class="octicon octicon-link"></span></a>User Flows</h1>
+    <section class="container">
+        <div class="row">
+            <div class="col-md-2 col-xs-1"></div>
+            <div class="col-md-8 col-xs-10 text-center">
+                <h2>Add Conditional Logic</h2>
+                <p>Easily show conditional flow logic by creating and managing <em>Conditions</em> through the plugin. To add conditions run the <strong>Add/Edit Conditions</strong> command <code>(Cmd Shift D)</code>. To edit an existing set of conditions, select the artboard and run the same command.</p>
+            </div>
+            <div class="col-md-2 col-xs-1"></div>
+        </div>
+        <div class="embed-responsive embed-responsive-16by9 demo-video">
+            <iframe src="https://player.vimeo.com/video/193127744?autoplay=1&loop=1&title=0&byline=0&portrait=0" style="height:99%;" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+        </div>
+    </section>
 
-<p>A plugin for generating user walkthroughs from Artboards in <a href="http://www.bohemiancoding.com/sketch/">Sketch</a>.  </p>
+    <section class="container">
+        <div class="row">
+            <div class="col-md-1 col-xs-1"></div>
+            <div class="col-md-10 col-xs-10 text-center">
+                <h2>Generate Flow Diagrams</h2>
+                <p>With all your links defined, run the <strong>Generate Flow Diagram</strong> command <code>(Cmd Shift F)</code>. Select the starting screen, enter the details of the flow, and click Generate.</p>
+            </div>
+            <div class="col-md-1 col-xs-1"></div>
+        </div>
+        <div class="embed-responsive embed-responsive-16by9 demo-video">
+            <iframe src="https://player.vimeo.com/video/191424163?autoplay=1&loop=1&title=0&byline=0&portrait=0" style="height:99%;" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+        </div>
+    </section>
 
-<h2>
-<a id="demo" class="anchor" href="#demo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Demo</h2>
+    <section class="container">
+        <div class="row">
+            <div class="col-md-1 col-xs-1"></div>
+            <div class="col-md-10 col-xs-10 text-center">
+                <h2>Show or Hide Connections</h2>
+                <p>Get a quick overview of your flow by drawing connections overlaid on top of your artboards. When you make a change, simply run the command again to redraw <code>(Cmd Shift 9)</code>. You can also hide the connections altogether <code>(Cmd Shift 0)</code>.</p>
+            </div>
+            <div class="col-md-1 col-xs-1"></div>
+        </div>
+        <div class="embed-responsive embed-responsive-16by9 demo-video">
+            <iframe src="https://player.vimeo.com/video/191425996?autoplay=1&loop=1&title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+        </div>
+    </section>
 
-<p><a href="https://vimeo.com/abynim/userflows"><img src="http://silverux.com/sketchplugins/userflows/assets/video_title_1.png" alt="Video"></a><br>
-<a href="https://vimeo.com/abynim/userflows">Watch on Vimeo</a></p>
+    <section class="container">
+        <div class="row">
+            <div class="col-sm-3 col-xs-1"></div>
+            <div class="col-sm-6 col-xs-10 text-center">
+                <h2>Customize Your Diagrams</h2>
+                <p>Generate diagrams at your preferred resolution, adjust colors, or add your name to exported flows.</p>
+            </div>
+            <div class="col-sm-3 col-xs-1"></div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <img class="img-responsive center-block" src="img/settings-dialog.png">
+            </div>
+        </div>
+    </section>
 
-<h5>
-<a id="example-output" class="anchor" href="#example-output" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example Output</h5>
+    <section class="container-fluid open-source">
+        <div class="row">
+            <div class="col-sm-3 col-xs-1"></div>
+            <div class="col-sm-6 col-xs-10 text-center">
+                <h2><img class="open-source-icon" src="img/open-source-icon@2x.png"> Open Source</h2>
+                <p>Fork the repository on Github to contribute.</p>
 
-<p><img src="http://silverux.com/sketchplugins/userflows/assets/exampleflow.jpg" alt="UserFlows Example"></p>
+                <ul class="list-inline github-buttons">
 
-<h2>
-<a id="supported-versions" class="anchor" href="#supported-versions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Supported Versions</h2>
+                    <li><a class="github-button" href="https://github.com/abynim/UserFlows" data-icon="octicon-star" data-style="mega" data-count-href="/abynim/UserFlows/stargazers" data-count-api="/repos/abynim/UserFlows#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star abynim/UserFlows on GitHub">Star</a></li>
 
-<p>UserFlows is only supported in Sketch 3.3 or later. To check what version you have installed, go to <code>Sketch</code> &gt; <code>About Sketch</code>.<br>
-<img src="http://silverux.com/ig-auth/assets/sketchsquares-8a.png" alt="About Sketch"></p>
+                    <li><a class="github-button" href="https://github.com/abynim/UserFlows/fork" data-icon="octicon-repo-forked" data-style="mega" data-count-href="/abynim/UserFlows/network" data-count-api="/repos/abynim/UserFlows#forks_count" data-count-aria-label="# forks on GitHub" aria-label="Fork abynim/UserFlows on GitHub">Fork</a></li>
 
-<h2>
-<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+                    <li><a class="github-button" href="https://github.com/abynim/UserFlows/issues" data-icon="octicon-issue-opened" data-style="mega" data-count-api="/repos/abynim/UserFlows#open_issues_count" data-count-aria-label="# issues on GitHub" aria-label="Issue abynim/UserFlows on GitHub">Issue</a></li>
+                </ul>
 
-<p><a href="https://github.com/abynim/UserFlows.sketchplugin/archive/master.zip">Download</a> and extract the contents of this repository into your <code>Plugins</code> folder. If you don't know where your plugins folder is, <a href="http://bohemiancoding.com/sketch/support/developer/01-introduction/01.html">follow these steps</a> to find it.</p>
+                <p>To report bugs or request features, either <a href="https://github.com/abynim/UserFlows/issues">create an Issue</a> on Github or send me a message on Twitter <a href="https://twitter.com/abynim">@abynim</a>.</p>
 
-<h2>
-<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+            </div>
+            <div class="col-sm-3 col-xs-1"></div>
+        </div>
+    </section>
 
-<h4>
-<a id="generate-flows" class="anchor" href="#generate-flows" aria-hidden="true"><span class="octicon octicon-link"></span></a>Generate Flows</h4>
-
-<ol>
-<li>Select Layers that you want to use as hotspots (one Layer or Group per Artboard).</li>
-<li>If you don't need hotspots, select the Artboard itself.</li>
-<li>Run the plugin from <code>Plugins</code> &gt; <code>User Flows</code> &gt; <code>Generate a Flow</code>.
-<img src="http://silverux.com/sketchplugins/userflows/assets/generate_flow_dialog1.png" alt="Generate Flow Dialog">
-</li>
-<li>Enter details for the flow and hit <code>Generate</code>.</li>
-</ol>
-
-<p><em>Note: The sequence of screens in a flow is based on the <code>x</code> position of your Artboards. Sketch does not allow event-tracking (yet) so it's not possible to determine the order in which layers or Artboards were selected, although that would be ideal.</em></p>
-
-<h4>
-<a id="settings" class="anchor" href="#settings" aria-hidden="true"><span class="octicon octicon-link"></span></a>Settings</h4>
-
-<p>To manage settings for the plugin, go to <code>Plugins</code> &gt; <code>User Flows</code> &gt; <code>_Settings</code>.<br>
-<img src="http://silverux.com/sketchplugins/userflows/assets/settings_dialog1.png" alt="Settings Dialog"></p>
-
-<h2>
-<a id="shortcut" class="anchor" href="#shortcut" aria-hidden="true"><span class="octicon octicon-link"></span></a>Shortcut</h2>
-
-<p>Once you've installed the plugin you can trigger it using: <code>control</code> + <code>shift</code> + <code>f</code>.</p>
-
-<h2>
-<a id="bugs-features-and-feedback" class="anchor" href="#bugs-features-and-feedback" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bugs, Features and Feedback</h2>
-
-<p>If you encounter bugs, or think of some awesome enhancements, please create an Issue on Github or send a message on Twitter <a href="http://twitter.com/abynim">@abynim</a>.</p>
-
-<hr>
-
-<p>MIT License © Aby Nimbalkar. I'm on <a href="http://twitter.com/abynim">Twitter</a> and <a href="http://tw.linkedin.com/in/abynim/">LinkedIn</a>.</p>
-
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/abynim/UserFlows">Userflows.sketchplugin</a> is maintained by <a href="https://github.com/abynim">abynim</a>.</span>
-
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-      </footer>
+    <section class="container social">
+        <div class="row">
+            <div class="col-sm-3 col-xs-1"></div>
+            <div class="col-sm-6 col-xs-10 text-center">
+                <h3>Spread the word</h3>
+                <ul class="list-inline social-buttons">
+                    <li><a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fabynim.github.io%2FUserFlows&amp;t=User%20Flows" title="Share on Facebook" target="_blank" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fabynim.github.io%2FUserFlows&amp;t=User%20Flows'); return false;" class="fb-link"><i class="fa fa-facebook fa-lg"></i></a>
+                    </li>
+                    <li><a href="https://twitter.com/intent/tweet?source=http%3A%2F%2Fabynim.github.io%2FUserFlows&amp;text=User%20Flows%20-%20Generate%20user%20walkthroughs%20from%20Artboards%20in%20Sketch:%20http%3A%2F%2Fabynim.github.io%2FUserFlows&amp;via=abynim" target="_blank" title="Tweet" class="tw-link"><i class="fa fa-twitter fa-lg"></i></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-sm-3 col-xs-1"></div>
+        </div>
 
     </section>
 
-  
-  </body>
+    <footer>
+        <div class="container-fluid">
+            <div class="row text-center">
+                <div class="col-xs-12">
+                    <span class="intro-version">MIT License &copy; Aby Nimbalkar.</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <script src="js/jqBootstrapValidation.js"></script>
+
+    <script src="js/isInViewport.min.js"></script>
+    <script src="js/uf.js"></script>
+
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga'); 
+        ga('create', 'UA-69865649-1', 'auto'); 
+        ga('send', 'pageview');
+    </script>
+
+</body>
+
 </html>
-

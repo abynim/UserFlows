@@ -1,0 +1,218 @@
+html, body {
+    background-color: #f5f5f5;
+    color: rgb(35, 35, 35);
+    font-family: "Open Sans", sans-serif;
+}
+
+.fluid-max-width {
+    max-width: 970px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.main-content {
+    margin-top: 48px;
+}
+
+@media (min-width: 1200px) {
+  .container {
+    width: 970px;
+  }
+}
+
+h1 {
+    font-size: 30px;
+    font-weight: 300;
+    line-height: 41px;
+    color: #f2f2f2;
+    text-shadow: 0px 2px 4px rgba(0,0,0,0.80);
+}
+.logo {
+    width: 288px;
+    height: auto;
+    margin-top: 60px;
+}
+.intro-heading {
+    font-size: 17px;
+    line-height: 25px;
+    font-weight: 300;
+    color: #9B9B9B;
+    letter-spacing: -0.31px;
+    text-shadow: 0px 1px 2px rgba(0,0,0,0.50);
+    margin-top: 16px;
+    margin-bottom: 60px;
+}
+.intro-version {
+    font-weight: 400;
+    font-size: 13px;
+    color: #717475;
+    letter-spacing: -0.14px;
+}
+.download-plugin {
+    margin-bottom: 100px;
+}
+.download-button {
+    margin-bottom: 25px;
+}
+.download-button a {
+    font-family: 'Droid Serif', serif;
+    font-style: italic;
+    font-size: 22px;
+    color: #121212;
+    letter-spacing: -0.31px;
+    background: #FFFFFF;
+    border: 1px solid #FFFFFF;
+    border-radius: 5px;
+    padding: 15px 25px;
+}
+.demo-video {
+    margin-top: 30px;
+}
+.video-wrapper {
+    background-color: #f5f5f5;
+}
+
+.open-source {
+    background-color: #fff;
+    border-top: 1px solid #D2D2D2;
+    border-bottom: 1px solid #D2D2D2;
+    margin-top: 100px;
+    padding-bottom: 80px;
+}
+.open-source h2 {
+    margin-top: 80px;
+}
+.open-source-icon {
+    width:40px;
+    height: auto;
+    margin: 10px;
+}
+.github-buttons {
+    margin: 22px;
+}
+@media (min-width:768px) {
+    h1 {
+        font-size: 48px;
+        font-weight: 300;
+        line-height: 65px;
+    }
+  .intro-heading {
+    font-size: 28px;
+    line-height: 42px;
+    margin-top: 30px;
+  }
+  .fluid-max-width {
+    margin-right: auto;
+    margin-left: 20px;
+  }
+  .logo {
+    margin-top: 130px;
+  }
+}
+h2 {
+    font-family: 'Droid Serif', serif;
+    font-style: italic;
+    font-size: 28px;
+    color: #121212;
+    letter-spacing: 0px;
+    line-height: 38px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    margin-top: 140px;
+    margin-bottom: 20px;
+}
+h3 {
+    font-family: 'Droid Serif', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: #222328;
+    letter-spacing: 0px;
+    line-height: 30.399999618530273px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    margin-bottom: 20px;
+    margin-top: 30px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+header {
+    background-color: #1E1D1C;
+    text-align: center;
+}
+
+p {
+    font-size: 18px;
+    color: #333333;
+    letter-spacing: -0.2px;
+    line-height: 29px;
+}
+
+code {
+    color: #E25112;
+    background-attachment: scroll;
+    background-clip: border-box;
+    background-origin: padding-box;
+    background-size: auto;
+    border: none;
+    border-radius: 3.1875px;
+    display: inline;
+    font-family: Monaco, Menlo, Consolas, 'Courier New', monospace;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: normal;
+    height: auto;
+    line-height: 20.799999237060547px;
+    padding-bottom: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 2px;
+    text-decoration: none;
+    white-space: normal;
+    width: auto;
+    white-space: nowrap;
+    word-wrap: break-word;
+}
+a {
+    cursor: pointer;
+    color: rgb(2, 132, 200);
+}
+a:hover {
+    color: rgb(7, 170, 255);
+    text-decoration: none;
+}
+
+.social {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+ul.social-buttons li a {
+    text-align: center;
+    display: block;
+    height: 50px;
+    width: 80px;
+    border-radius: 50px;
+    font-size: 20px;
+    line-height: 50px;
+    color: #fff;
+    outline: 0;
+    -webkit-transition: all .3s;
+    -moz-transition: all .3s;
+    transition: all .3s
+}
+ul.social-buttons li a.fb-link {
+    background: #3B5999;
+}
+ul.social-buttons li a.tw-link {
+    background: #00ACEE;
+}
+ul.social-buttons li a.fb-link:hover, ul.social-buttons li a.fb-link:focus, ul.social-buttons li a.fb-link:active {
+    background: #314572;
+}
+ul.social-buttons li a.tw-link:hover, ul.social-buttons li a.tw-link:focus, ul.social-buttons li a.tw-link:active {
+    background: #239AC8;
+}
+
+footer {
+    padding-bottom: 150px;
+}
