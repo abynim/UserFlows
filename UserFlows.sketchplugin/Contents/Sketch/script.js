@@ -1078,6 +1078,37 @@ var editShortcuts = function(context) {
 	}
 }
 
+var checkForUpdates = function(context) {
+
+	parseContext(context);
+
+	context.document.showMessage("Checking for updates...");
+
+	var json = NSJSONSerialization.JSONObjectWithData_options_error(NSData.dataWithContentsOfURL(NSURL.URLWithString("https://abynim.github.io/UserFlows/version.json")), 0, nil),
+		currentVersion = json.valueForKey("currentVersion"),
+		currentVersionAsInt = getVersionNumberFromString(currentVersion),
+		installedVersion = context.plugin.version(),
+		installedVersionAsInt = getVersionNumberFromString(installedVersion),
+		updateAvailable = currentVersionAsInt > installedVersionAsInt,
+		updateAlert = getAlertWindow();
+
+		updateAlert.setMessageText(updateAvailable ? "An update is available." : "You're good.");
+		if (updateAvailable) {
+			updateAlert.setInformativeText("The most recent version is " + currentVersion + " and you have version " + installedVersion + ". Please download and install the plugin again from the website.");
+			updateAlert.addButtonWithTitle("Update Now");
+			updateAlert.addButtonWithTitle("Later");
+		} else {
+			updateAlert.setInformativeText("You have the most recent version of UserFlows installed 👍");
+			updateAlert.addButtonWithTitle("Done");
+		}
+
+		var response = updateAlert.runModal();
+		if (updateAvailable && response == "1000") {
+			var websiteURL = NSURL.URLWithString(json.valueForKey("websiteURL"));
+			NSWorkspace.sharedWorkspace().openURL(websiteURL);
+		}
+	
+}
 
 var showAlert = function(message, info, primaryButtonText, secondaryButtonText) {
 	var alert = getAlertWindow();
@@ -1107,6 +1138,14 @@ var getAlertWindow = function() {
 		alert.setIcon(iconImage);
 	}
 	return alert;
+}
+
+var getVersionNumberFromString = function(versionString) {
+	var versionNumber = versionString.stringByReplacingOccurrencesOfString_withString(".", "") + ""
+	while(versionNumber.length != 3) {
+		versionNumber += "0"
+	}
+	return parseInt(versionNumber)
 }
 
 var logEvent = function(event, props) {

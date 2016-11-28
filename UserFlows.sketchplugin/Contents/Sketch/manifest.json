@@ -132,6 +132,16 @@
       "handlers" : {
         "run" : "editShortcuts"
       }
+    },
+    {
+      "script" : "script.js",
+      "shortcut" : "",
+      "name" : "Check for Updates...",
+      "identifier" : "checkForUpdates",
+      "icon" : "icon.png",
+      "handlers" : {
+        "run" : "checkForUpdates"
+      }
     }
   ],
   "menu" : {
@@ -149,7 +159,8 @@
       "goBackToLink",
       "-",
       "editSettings",
-      "editShortcuts"
+      "editShortcuts",
+      "checkForUpdates"
     ]
   },
   "compatibleVersion" : 4.1,
