@@ -168,7 +168,7 @@
   "identifier" : "com.abynim.sketchplugins.userflows",
   "version" : "2.0",
   "description" : "Generate user-flow diagrams from artboards in Sketch",
-  "homepage" : "https:\/\/github.com\/abynim\/UserFlow.sketchplugin",
+  "homepage" : "https:\/\/github.com\/abynim\/UserFlows",
   "authorEmail" : "abynimbalkar@gmail.com",
   "name" : "User Flows"
 }
