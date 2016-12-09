@@ -3,6 +3,7 @@ var kKeepOrganizedKey = "com.abynim.userflows.keepOrganized";
 var kExportScaleKey = "com.abynim.userflows.exportScale";
 var kExportFormatKey = "com.abynim.userflows.exportFormat";
 var kShowModifiedDateKey = "com.abynim.userflows.showModifiedDate";
+var kLockDefaultKey = "com.abynim.userflows.lockDefault";
 var kFlowIndicatorColorKey = "com.abynim.userflows.flowIndicatorColor";
 var kFlowBackgroundKey = "com.abynim.userflows.backgroundColor";
 var kMinTapAreaKey = "com.abynim.userflows.minTapArea";
@@ -447,6 +448,7 @@ var generateFlow = function(context) {
 			exportFormat = NSUserDefaults.standardUserDefaults().objectForKey(kExportFormatKey) || "pdf",
 			modifiedBy = NSUserDefaults.standardUserDefaults().objectForKey(kFullNameKey),
 			showModifiedDate = NSUserDefaults.standardUserDefaults().objectForKey(kShowModifiedDateKey) || false,
+			lockDefault = NSUserDefaults.standardUserDefaults().objectForKey(kLockDefaultKey) || true,
 			flowBackground = NSUserDefaults.standardUserDefaults().objectForKey(kFlowBackgroundKey) || "Light",
 			flowName = nameField.stringValue(),
 			flowDescription = descriptionField.stringValue(),
@@ -571,7 +573,7 @@ var generateFlow = function(context) {
 		var connectionsGroup = MSLayerGroup.groupFromLayers(connectionLayers);
 		connectionsGroup.setName("Connections");
 		artboardBitmapLayers.push(connectionsGroup);
-		connectionsGroup.setIsLocked(1);
+		connectionsGroup.setIsLocked(lockDefault);
 
 		var groupBounds = CGRectZero;
 		for (var i = 0; i < artboardBitmapLayers.length; i++) {
@@ -597,7 +599,7 @@ var generateFlow = function(context) {
 		flowNameLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 18*exportScale));
 		flowNameLabel.setTextColor(primaryTextColor);
 		flowNameLabel.adjustFrameToFit();
-		flowNameLabel.setIsLocked(1);
+		flowNameLabel.setIsLocked(lockDefault);
 		flowBoard.addLayers([flowNameLabel]);
 
 		var yPos = outerPadding + flowNameLabel.frame().height() + 14;
@@ -613,7 +615,7 @@ var generateFlow = function(context) {
 			flowDescriptionLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 12*exportScale));
 			flowDescriptionLabel.setTextColor(secondaryTextColor);
 			flowDescriptionLabel.adjustFrameToFit();
-			flowDescriptionLabel.setIsLocked(1);
+			flowDescriptionLabel.setIsLocked(lockDefault);
 			flowBoard.addLayers([flowDescriptionLabel]);
 			yPos = flowDescriptionLabel.frame().y() + flowDescriptionLabel.frame().height();
 		}
@@ -638,7 +640,7 @@ var generateFlow = function(context) {
 			modifiedDateLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 12*exportScale));
 			modifiedDateLabel.setTextColor(secondaryTextColor);
 			modifiedDateLabel.adjustFrameToFit();
-			modifiedDateLabel.setIsLocked(1);
+			modifiedDateLabel.setIsLocked(lockDefault);
 			flowBoard.addLayers([modifiedDateLabel]);
 		}
 
@@ -767,7 +769,7 @@ var redrawConnections = function(context) {
 	var connectionLayers = MSLayerArray.arrayWithLayers(drawConnections(connections, doc.currentPage(), 1));
 	connectionsGroup = MSLayerGroup.groupFromLayers(connectionLayers);
 	connectionsGroup.setName("Connections");
-	connectionsGroup.setIsLocked(1);
+	connectionsGroup.setIsLocked(lockDefault);
 	context.command.setValue_forKey_onLayer_forPluginIdentifier(true, "isConnectionsContainer", connectionsGroup, kPluginDomain);
 	doc.currentPage().deselectAllLayers();
 
@@ -972,6 +974,14 @@ var editSettings = function(context) {
 	showNameCheckbox.setState(showName);
 	settingsWindow.addAccessoryView(showNameCheckbox);
 
+	var lockDefault = NSUserDefaults.standardUserDefaults().objectForKey(kLockDefaultKey) || 1;
+	var lockDefaultCheckbox = NSButton.alloc().initWithFrame(NSMakeRect(0,0,400,22));
+	lockDefaultCheckbox.setButtonType(NSSwitchButton);
+	lockDefaultCheckbox.setBezelStyle(0);
+	lockDefaultCheckbox.setTitle("Lock flows by default");
+	lockDefaultCheckbox.setState(lockDefault);
+	settingsWindow.addAccessoryView(lockDefaultCheckbox);
+
 	// ------------
 	var separator = NSBox.alloc().initWithFrame(NSMakeRect(0,0,300,10));
 	separator.setBoxType(2);
@@ -991,6 +1001,7 @@ var editSettings = function(context) {
 		NSUserDefaults.standardUserDefaults().setObject_forKey(parseInt(tapAreaField.stringValue()), kMinTapAreaKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(userNameField.stringValue(), kFullNameKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(showNameCheckbox.state(), kShowModifiedDateKey);
+		NSUserDefaults.standardUserDefaults().setObject_forKey(lockDefaultCheckbox.state(), kLockDefaultKey);
 		applySettings(context);
 		logEvent("settingsChanged", { 
 			exportScale : exportScale, 
@@ -1009,6 +1020,7 @@ var editSettings = function(context) {
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kMinTapAreaKey);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kFullNameKey);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kShowModifiedDateKey);
+		NSUserDefaults.standardUserDefaults().removeObjectForKey(kLockDefaultKey);
 		applySettings(context);
 		logEvent("settingsReset", nil);
 
