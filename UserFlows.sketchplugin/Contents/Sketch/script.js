@@ -9,6 +9,8 @@ var kMinTapAreaKey = "com.abynim.userflows.minTapArea";
 var kFullNameKey = "com.abynim.userflows.fullName";
 var kUUIDKey = "com.abynim.userflows.uuid";
 var kShowConnectionsKey = "com.abynim.userflows.showConnections";
+var kShowsLinkRectsKey = "com.abynim.userflows.showsLinkRects";
+var kStrokeWidthKey = "com.abynim.userflows.strokeWidth";
 var kConditionalArtboardKey = "com.abynim.userflows.conditionalArtboard";
 var linkLayerPredicate;
 var iconImage;
@@ -24,16 +26,16 @@ var defineLink = function(context) {
 	if (selection.count() != 2) {
 		validSelection = false;
 	} else {
-		if (selection.firstObject().className() == "MSArtboardGroup") {
+		if (selection.firstObject().className() == "MSArtboardGroup" || selection.firstObject().className() == "MSSymbolMaster") {
 			destArtboard = selection.firstObject();
 			linkLayer = selection.lastObject();
 		}
-		else if(selection.lastObject().className() == "MSArtboardGroup") {
+		else if(selection.lastObject().className() == "MSArtboardGroup" || selection.lastObject().className() == "MSSymbolMaster") {
 			destArtboard = selection.lastObject();
 			linkLayer = selection.firstObject();
 		}
 
-		if (!destArtboard || linkLayer.className() == "MSArtboardGroup" || linkLayer.parentArtboard() == destArtboard) {
+		if (!destArtboard || linkLayer.className() == "MSArtboardGroup" || linkLayer.className() == "MSSymbolMaster" || linkLayer.parentArtboard() == destArtboard) {
 			validSelection = false;
 		}
 	}
@@ -286,7 +288,6 @@ var addCondition = function(context) {
 			redrawConnections(context);
 		}
 	}
-
 }
 
 
@@ -383,9 +384,12 @@ var generateFlow = function(context) {
 	}
 
 	var artboardsWithLinks = linkLayers.valueForKeyPath("@distinctUnionOfObjects.parentArtboard");
-	var artboardNames = artboardsWithLinks.valueForKeyPath("@unionOfObjects.name");
 	var artboardsDropdown = NSPopUpButton.alloc().initWithFrame(NSMakeRect(0,0,300,25));
-	artboardsDropdown.addItemsWithTitles(artboardNames);
+	var loop = artboardsWithLinks.objectEnumerator(), artboardWithLinks, menuItem;
+	while (artboardWithLinks = loop.nextObject()) {
+		menuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent(artboardWithLinks.name(), nil, "");
+		artboardsDropdown.menu().addItem(menuItem);
+	}
 
 	var homeScreenID = context.command.valueForKey_onLayer_forPluginIdentifier("homeScreenID", doc.currentPage(), kPluginDomain);
 	if (homeScreenID) {
@@ -783,6 +787,8 @@ var drawConnections = function(connections, parent, exportScale) {
 	var connectionsCount = connections.length,
 		flowIndicatorColor = NSUserDefaults.standardUserDefaults().objectForKey(kFlowIndicatorColorKey) || "#F5A623",
 		minimumTapArea = NSUserDefaults.standardUserDefaults().objectForKey(kMinTapAreaKey) || 44,
+		showLinkRects = NSUserDefaults.standardUserDefaults().objectForKey(kShowsLinkRectsKey) || 1,
+		strokeWidth = NSUserDefaults.standardUserDefaults().objectForKey(kStrokeWidthKey) || 3,
 		connectionLayers = [],
 		hitAreaColor = MSImmutableColor.colorWithSVGString("#000000").newMutableCounterpart(),
 		hitAreaBorderColor = MSImmutableColor.colorWithSVGString(flowIndicatorColor).newMutableCounterpart(),
@@ -802,7 +808,7 @@ var drawConnections = function(connections, parent, exportScale) {
 			linkRect = NSInsetRect(linkRect, 0, (linkRect.size.height-minimumTapArea)/2);
 		}
 
-		if (connection.linkIsCondition != 1) {
+		if (showLinkRects == 1 && connection.linkIsCondition != 1) {
 			path = NSBezierPath.bezierPathWithRect(linkRect);
 			hitAreaLayer = MSShapeGroup.shapeWithBezierPath(path);
 			hitAreaLayer.style().addStylePartOfType(0).setColor(hitAreaColor);
@@ -855,12 +861,12 @@ var drawConnections = function(connections, parent, exportScale) {
 		lineLayer.setName("Flow arrow");
 		hitAreaBorder = lineLayer.style().addStylePartOfType(1);
 		hitAreaBorder.setColor(hitAreaBorderColor);
-		hitAreaBorder.setThickness(3*exportScale);
+		hitAreaBorder.setThickness(strokeWidth*exportScale);
 		hitAreaBorder.setPosition(0);
 		parent.addLayers([lineLayer]);
 		connectionLayers.push(lineLayer);
 
-		var arrowSize = 12;
+		var arrowSize = Math.max(12, strokeWidth*3);
 		path = NSBezierPath.bezierPath();
 		path.moveToPoint(NSMakePoint(dropPoint.x+(arrowSize*0.6), dropPoint.y));
 		path.lineToPoint(NSMakePoint(dropPoint.x-arrowSize, dropPoint.y+(arrowSize*0.6)));
@@ -939,18 +945,34 @@ var editSettings = function(context) {
 	bgDropdown.selectItemAtIndex(selectedIndex);
 	settingsWindow.addAccessoryView(bgDropdown);
 
-	settingsWindow.addTextLabelWithValue("Flow Indicators");
-	var flowIndicatorColorWell = NSColorWell.alloc().initWithFrame(NSMakeRect(0,0,44,23));
+	settingsWindow.addTextLabelWithValue("Flow Indicator Stroke");
+	var flowIndicatorColorWell = NSColorWell.alloc().initWithFrame(NSMakeRect(56,0,44,23));
 	var flowIndicatorColorHex = NSUserDefaults.standardUserDefaults().objectForKey(kFlowIndicatorColorKey) || "#F5A623"
 	var flowIndicatorColor = MSImmutableColor.colorWithSVGString(flowIndicatorColorHex).NSColorWithColorSpace(NSColorSpace.deviceRGBColorSpace())
 	flowIndicatorColorWell.setColor(flowIndicatorColor);
-	settingsWindow.addAccessoryView(flowIndicatorColorWell);
 
-	settingsWindow.addTextLabelWithValue("Minimum Tap Area");
+	var strokeWidth = NSUserDefaults.standardUserDefaults().objectForKey(kStrokeWidthKey) || 3;
+	var strokeWidthField = NSTextField.alloc().initWithFrame(NSMakeRect(0,0,50,23));
+	strokeWidthField.setStringValue(strokeWidth + "px");
+
+	var flowIndicatorOptionsView = NSView.alloc().initWithFrame(NSMakeRect(0,0,300,23));
+	flowIndicatorOptionsView.addSubview(flowIndicatorColorWell);
+	flowIndicatorOptionsView.addSubview(strokeWidthField);
+	settingsWindow.addAccessoryView(flowIndicatorOptionsView);
+
+	settingsWindow.addTextLabelWithValue("Minimum Link Area");
 	var tapAreaField = NSTextField.alloc().initWithFrame(NSMakeRect(0,0,50,23));
 	var minimumTapArea = NSUserDefaults.standardUserDefaults().objectForKey(kMinTapAreaKey) || 44;
 	tapAreaField.setStringValue(minimumTapArea + "pt");
 	settingsWindow.addAccessoryView(tapAreaField);
+
+	var showLinkRects = NSUserDefaults.standardUserDefaults().objectForKey(kShowsLinkRectsKey) || 1;
+	var showLinksCheckbox = NSButton.alloc().initWithFrame(NSMakeRect(0,0,300,22));
+	showLinksCheckbox.setButtonType(NSSwitchButton);
+	showLinksCheckbox.setBezelStyle(0);
+	showLinksCheckbox.setTitle("Draw borders around link layers");
+	showLinksCheckbox.setState(showLinkRects);
+	settingsWindow.addAccessoryView(showLinksCheckbox);
 
 	// ------------
 	var separator = NSBox.alloc().initWithFrame(NSMakeRect(0,0,300,10));
@@ -988,7 +1010,9 @@ var editSettings = function(context) {
 		NSUserDefaults.standardUserDefaults().setObject_forKey(formatDropdown.titleOfSelectedItem(), kExportFormatKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(bgDropdown.titleOfSelectedItem(), kFlowBackgroundKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(flowIndicatorColor, kFlowIndicatorColorKey);
+		NSUserDefaults.standardUserDefaults().setObject_forKey(parseInt(strokeWidthField.stringValue()), kStrokeWidthKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(parseInt(tapAreaField.stringValue()), kMinTapAreaKey);
+		NSUserDefaults.standardUserDefaults().setObject_forKey(showLinksCheckbox.state(), kShowsLinkRectsKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(userNameField.stringValue(), kFullNameKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(showNameCheckbox.state(), kShowModifiedDateKey);
 		applySettings(context);
@@ -1006,7 +1030,9 @@ var editSettings = function(context) {
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kExportFormatKey);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kFlowBackgroundKey);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kFlowIndicatorColorKey);
+		NSUserDefaults.standardUserDefaults().removeObjectForKey(kStrokeWidthKey);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kMinTapAreaKey);
+		NSUserDefaults.standardUserDefaults().removeObjectForKey(kShowsLinkRectsKey);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kFullNameKey);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kShowModifiedDateKey);
 		applySettings(context);
