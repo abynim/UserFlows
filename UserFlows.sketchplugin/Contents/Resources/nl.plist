@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>menu-defineLink</key>
+	<string>Maak relatie aan</string>
+	<key>menu-removeLink</key>
+	<string>Verwijder relatie</string>
+	<key>menu-addCondition</key>
+	<string>Uitzondering toevoegen/aanpassen</string>
+	<key>menu-generateFlow</key>
+	<string>Genereer flow diagram</string>
+	<key>menu-updateFlow</key>
+	<string>Update flow diagram</string>
+	<key>menu-showConnections</key>
+	<string>Toon verbindingen</string>
+	<key>menu-hideConnections</key>
+	<string>Verberg verbindingen</string>
+	<key>menu-gotoDestinationArtboard</key>
+	<string>Ga naar verbonden artboard</string>
+	<key>menu-goBackToLink</key>
+	<string>Ga terug naar verbonden laag</string>
+	<key>menu-editSettings</key>
+	<string>Instellingen...</string>
+	<key>menu-editShortcuts</key>
+	<string>Toetsenbord snelkoppelingen...</string>
+	<key>menu-editLanguage</key>
+	<string>Taal...</string>
+	<key>menu-checkForUpdates</key>
+	<string>Controleer op updates...</string>
+	<key>manifest-description</key>
+	<string>Genereer user-flow diagrammen van artboards in Sketch.</string>
+	<key>defineLink-invalidSelectionTitle</key>
+	<string>Ongeldige selectie</string>
+	<key>defineLink-invalidSelectionMessage</key>
+	<string>Selecteer een laag of group als beginpunt, selecteer vervolgens het artboard als eindpunt, voer daarna deze actie opnieuw uit.</string>
+	<key>defineLink-linkDefined</key>
+	<string>Relatie aangemaakt:</string>
+	<key>removeLink-invalidSelectionMessage</key>
+	<string>Selecteer een laag die al als beginpunt functioneert om de verbinding te verwijderen</string>
+	<key>removeLink-linkRemoved</key>
+	<string>Verbinding verwijderd</string>
+	<key>removeLink-linksRemoved</key>
+	<string>Verbindingen verwijderd</string>
+	<key>addCondition-title</key>
+	<string>Uitzondering toevoegen of aanpassen</string>
+	<key>addCondition-saveAndAdd</key>
+	<string>Opslaan + toevoegen</string>
+	<key>addCondition-ifConditionPlaceholder</key>
+	<string>Bijv: Als gebruiker is ingelogd</string>
+	<key>addCondition-else</key>
+	<string>Zo niet...</string>
+	<key>addCondition-conditionArtboardName</key>
+	<string>Uitzonderingen</string>
+	<key>addCondition-conditionGroupName</key>
+	<string>Uitzondering</string>
+	<key>gotoArtboard-invalidSelectionTitle</key>
+	<string>Invalid Selection</string>
+	<key>gotoArtboard-invalidSelectionMessage</key>
+	<string>Selecteeg een laag die je als beginpint hebt gemaakt, voer daarna deze actie opnieuw uit.</string>
+	<key>generateFlow-message</key>
+	<string>Genereer een User Flow</string>
+	<key>generateFlow-startFrom</key>
+	<string>Begin bij:</string>
+	<key>generateFlow-noLinksTitle</key>
+	<string>Geen relaties gelegd!</string>
+	<key>generateFlow-noLinksMessage</key>
+	<string>Deze pagina heeft geen link-lagen. Maak This page has no link layers defined. Define at least one link layer by going to `Plugins &gt; User Flows &gt; Define Link`</string>
+	<key>generateFlow-flowName</key>
+	<string>Naam van flow</string>
+	<key>generateFlow-description</key>
+	<string>Omschrijving van flow </string>
+	<key>generateFlow-newPage</key>
+	<string>Nieuwe pagina</string>
+	<key>generateFlow-keepOrganized</key>
+	<string>Keep _Flows Page Organized</string>
+	<key>generateFlow-flowGroupName</key>
+	<string>Flow groep</string>
+	<key>generateFlow-connectionsGroupName</key>
+	<string>Verbindingen</string>
+	<key>generateFlow-modifiedOnDate</key>
+	<string>Aangepast op %date%</string>
+	<key>generateFlow-modifiedBy</key>
+	<string>Aangepast op %date% door %user%</string>
+	<key>generateFlow-modifiedDate</key>
+	<string>Datum laatst aangepast</string>
+	<key>generateFlow-saveButtonTitle</key>
+	<string>Genereer diagram</string>
+	<key>settings-restoreDefaults</key>
+	<string>Herstel naar originele instellingen</string>
+	<key>settings-title</key>
+	<string>User Flows instellingen</string>
+	<key>settings-exportOptions</key>
+	<string>Exporteeropties voor artboard</string>
+	<key>settings-scaleOptions</key>
+	<string>Opties voor schalen</string>
+	<key>settings-flowBackground</key>
+	<string>Flow achtergrond</string>
+	<key>settings-bgLight</key>
+	<string>Licht</string>
+	<key>settings-bgDark</key>
+	<string>Donker</string>
+	<key>settings-flowIndicatorStroke</key>
+	<string>Flow Indicator Stroke</string>
+	<key>settings-minArea</key>
+	<string>Minimale grootte van beginpunt</string>
+	<key>settings-drawBorders</key>
+	<string>Teken randen rondom het beginpunt</string>
+	<key>settings-yourName</key>
+	<string>Je naam</string>
+	<key>settings-showDate</key>
+	<string>Toon datum en naam op de diagrammen</string>
+	<key>settings-connectionCurved</key>
+	<string>Curved</string>
+	<key>settings-connectionStraight</key>
+	<string>Straight</string>
+	<key>shortcuts-title</key>
+	<string>User Flows toetsenbord Shortcuts</string>
+	<key>shortcuts-message</key>
+	<string>Snelkoppelingen kunnen worden gemaakt door een combinatie van speciale toetsen (Command ⌘, Shift ⇧
+, Option ⌥, Control ⌃) en een willekeurige andere toets. Bijvoorbeeld – &apos;cmd shift y&apos;. Let op, een snelkoppeling mag niet gebruikt worden door een andere plugin of door Sketch zelf.</string>
+	<key>checkUpdates-checking</key>
+	<string>Controleren op updates...</string>
+	<key>checkUpdates-updateAvailableTitle</key>
+	<string>Er is een update beschikbaar!</string>
+	<key>checkUpdates-noUpdateAvailableTitle</key>
+	<string>Je bent up-to-date!</string>
+	<key>checkUpdates-updateAvailableMessage</key>
+	<string>De nieuwste versie is %currentVersion% en jij hebt versie %installedVersion%. Download en installeer de plugin opnieuw via de website.</string>
+	<key>checkUpdates-noUpdateAvailableMessage</key>
+	<string>Je hebt de laatste versie van UserFlows geïnstalleerd 👍</string>
+	<key>checkUpdates-updateNow</key>
+	<string>Update nu</string>
+	<key>checkUpdates-updateLater</key>
+	<string>Later</string>
+	<key>language-title</key>
+	<string>Taalinstellingen </string>
+	<key>language-message</key>
+	<string>Kies de taal voor de UserFlows plugin.</string>
+	<key>artboardDescription-invalidSelectionMessage</key>
+	<string>Selecteer een artboard</string>
+	<key>artboardDescription-description</key>
+	<string>Omschrijving</string>
+	<key>artboardDescription-saved</key>
+	<string>Artboard omschrijving opgeslagen</string>
+	<key>alerts-save</key>
+	<string>Opslaan</string>
+	<key>alerts-cancel</key>
+	<string>Annuleer</string>
+	<key>alerts-done</key>
+	<string>Klaar</string>
+</dict>
+</plist>

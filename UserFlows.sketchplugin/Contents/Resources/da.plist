@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>menu-defineLink</key>
+	<string>Definer Link</string>
+	<key>menu-removeLink</key>
+	<string>Fjern Link</string>
+	<key>menu-addCondition</key>
+	<string>Tilføj/Rediger Betingelser</string>
+	<key>menu-generateFlow</key>
+	<string>Generer Flow Diagram</string>
+	<key>menu-updateFlow</key>
+	<string>Opdater Flow Diagram</string>
+	<key>menu-showConnections</key>
+	<string>Vis eller Gentegn Forbindelser</string>
+	<key>menu-hideConnections</key>
+	<string>Skjul Forbindelser</string>
+	<key>menu-gotoDestinationArtboard</key>
+	<string>Gå til forbundet Artboard</string>
+	<key>menu-goBackToLink</key>
+	<string>Gå Tilbage til forbundet Layer</string>
+	<key>menu-editSettings</key>
+	<string>Indstillinger...</string>
+	<key>menu-editShortcuts</key>
+	<string>Tastaturgenveje...</string>
+	<key>menu-editLanguage</key>
+	<string>Sprog...</string>
+	<key>menu-checkForUpdates</key>
+	<string>Søg efter opdateringer...</string>
+	<key>manifest-description</key>
+	<string>Generer user-flow diagram fra artboards i Sketch.</string>
+	<key>defineLink-invalidSelectionTitle</key>
+	<string>Forkert Markering</string>
+	<key>defineLink-invalidSelectionMessage</key>
+	<string>Vælg et Layer eller en Group som Link, vælg et artboard som destination og kør denne kommando igen.</string>
+	<key>defineLink-linkDefined</key>
+	<string>Link defineret:</string>
+	<key>removeLink-invalidSelectionMessage</key>
+	<string>Vælg et Layer, der allerede er defineret som Link, for at fjerne dets Link egenskaber.</string>
+	<key>removeLink-linkRemoved</key>
+	<string>Link fjernet</string>
+	<key>removeLink-linksRemoved</key>
+	<string>Links fjernet</string>
+	<key>addCondition-title</key>
+	<string>Tilføj eller Rediger Betingelser</string>
+	<key>addCondition-saveAndAdd</key>
+	<string>Gem + tilføj</string>
+	<key>addCondition-ifConditionPlaceholder</key>
+	<string>Ex: Hvis bruger er logget ind</string>
+	<key>addCondition-else</key>
+	<string>Ellers...</string>
+	<key>addCondition-conditionArtboardName</key>
+	<string>Betingelser</string>
+	<key>addCondition-conditionGroupName</key>
+	<string>Betingelse</string>
+	<key>gotoArtboard-invalidSelectionTitle</key>
+	<string>Forkert Markering</string>
+	<key>gotoArtboard-invalidSelectionMessage</key>
+	<string>Vælg et Layer du har defineret som Link og kør denne kommando igen.</string>
+	<key>generateFlow-message</key>
+	<string>Generer et User Flow</string>
+	<key>generateFlow-startFrom</key>
+	<string>Start fra:</string>
+	<key>generateFlow-noLinksTitle</key>
+	<string>Ingen links defineret!</string>
+	<key>generateFlow-noLinksMessage</key>
+	<string>Der er ingen Link Layers defineret på denne side. Definer minimum et Link Layer ved at gå til `Plugins &gt; User Flows &gt; Definer Link`</string>
+	<key>generateFlow-flowName</key>
+	<string>Flow Navn</string>
+	<key>generateFlow-description</key>
+	<string>Flow Beskrivelse</string>
+	<key>generateFlow-newPage</key>
+	<string>Ny side</string>
+	<key>generateFlow-keepOrganized</key>
+	<string>Sørg for at organisere _Flows siden</string>
+	<key>generateFlow-flowGroupName</key>
+	<string>Flow Gruppe</string>
+	<key>generateFlow-connectionsGroupName</key>
+	<string>Forbindelser</string>
+	<key>generateFlow-modifiedOnDate</key>
+	<string>Ændret %date%</string>
+	<key>generateFlow-modifiedBy</key>
+	<string>Ændret %date% af %user%</string>
+	<key>generateFlow-modifiedDate</key>
+	<string>Ændret Dato</string>
+	<key>generateFlow-saveButtonTitle</key>
+	<string>Generer Diagram</string>
+	<key>settings-restoreDefaults</key>
+	<string>Gendan Default</string>
+	<key>settings-title</key>
+	<string>User Flows Indstillinger</string>
+	<key>settings-exportOptions</key>
+	<string>Artboard Export Valgmuligheder</string>
+	<key>settings-scaleOptions</key>
+	<string>Skalerings Valgmuligheder</string>
+	<key>settings-flowBackground</key>
+	<string>Flow Baggrund</string>
+	<key>settings-bgLight</key>
+	<string>Lys</string>
+	<key>settings-bgDark</key>
+	<string>Mørk</string>
+	<key>settings-flowIndicatorStroke</key>
+	<string>Flow Indikator Streg</string>
+	<key>settings-minArea</key>
+	<string>Minimum Link Område</string>
+	<key>settings-drawBorders</key>
+	<string>Tegn rammer omkring link layers</string>
+	<key>settings-yourName</key>
+	<string>Dit Navn</string>
+	<key>settings-showDate</key>
+	<string>Vis Dato og Navn på Flows</string>
+	<key>settings-connectionCurved</key>
+	<string>Curved</string>
+	<key>settings-connectionStraight</key>
+	<string>Straight</string>
+	<key>shortcuts-title</key>
+	<string>User Flows Tastaturgenveje</string>
+	<key>shortcuts-message</key>
+	<string>Genveje defineres ved at kombinere tasterne cmd, control, shift og/eller option samt en anden vilkårlig tast. Eksempelvis – &apos;cmd shift y&apos;. Husk at tjekke om genvejen allerede bruges af et andet plugin eller Sketch selv.</string>
+	<key>checkUpdates-checking</key>
+	<string>Søger efter opdateringer...</string>
+	<key>checkUpdates-updateAvailableTitle</key>
+	<string>Der er en ny opdatering!</string>
+	<key>checkUpdates-noUpdateAvailableTitle</key>
+	<string>Du har den nyeste version!</string>
+	<key>checkUpdates-updateAvailableMessage</key>
+	<string>Den nyeste version er %currentVersion% og du har version %installedVersion%. Hent og installer venligst det nye plugin fra websitet.</string>
+	<key>checkUpdates-noUpdateAvailableMessage</key>
+	<string>Du har den nyeste version af UserFlows installeret 👍</string>
+	<key>checkUpdates-updateNow</key>
+	<string>Opdater Nu</string>
+	<key>checkUpdates-updateLater</key>
+	<string>Senere</string>
+	<key>language-title</key>
+	<string>Sprog Indstillinger</string>
+	<key>language-message</key>
+	<string>Indstil sproget for UserFlows plugin.</string>
+	<key>artboardDescription-invalidSelectionMessage</key>
+	<string>Vælg et artboard</string>
+	<key>artboardDescription-description</key>
+	<string>Beskrivelse</string>
+	<key>artboardDescription-saved</key>
+	<string>Artboard beskrivelse gemt</string>
+	<key>alerts-save</key>
+	<string>Gem</string>
+	<key>alerts-cancel</key>
+	<string>Annuller</string>
+	<key>alerts-done</key>
+	<string>OK</string>
+</dict>
+</plist>
