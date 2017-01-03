@@ -9,7 +9,7 @@
       },
       "identifier" : "defineLink",
       "description" : "Select a layer\/group, select an artboard, then create a link between the two.",
-      "icon" : "icon.png",
+      "icon" : "icons/addLink.png",
       "name" : "Create Link"
     },
     {
@@ -20,7 +20,7 @@
       },
       "identifier" : "removeLink",
       "description" : "Remove a Link.",
-      "icon" : "icon.png",
+      "icon" : "icons/removeLink.png",
       "name" : "Remove Link"
     },
     {
@@ -31,8 +31,8 @@
       },
       "identifier" : "addCondition",
       "description" : "Add or Edit a condition in the current flow.",
-      "icon" : "icon.png",
-      "name" : "Add/Edit Conditions"
+      "icon" : "icons/editConditions.png",
+      "name" : "Add\/Edit Conditions"
     },
     {
       "script" : "script.js",
@@ -42,19 +42,19 @@
       },
       "identifier" : "generateFlow",
       "description" : "Generate a flow diagram starting from a specific artboard.",
-      "icon" : "icon.png",
+      "icon" : "icons/generateDiagram.png",
       "name" : "Generate Flow Diagram"
     },
     {
       "script" : "script.js",
       "shortcut" : "cmd shift r",
-      "handlers" : {
-        "run" : "updateFlow"
-      },
+      "icon" : "icons/generateDiagram.png",
       "identifier" : "updateFlow",
       "description" : "Update the selected User Flow artboard.",
-      "icon" : "icon.png",
-      "name" : "Update Flow Diagram"
+      "name" : "Update Flow Diagram",
+      "handlers" : {
+        "run" : "updateFlow"
+      }
     },
     {
       "script" : "script.js",
@@ -64,7 +64,7 @@
       },
       "identifier" : "showConnections",
       "description" : "Show or redraw connections between link layers and destination artboards.",
-      "icon" : "icon.png",
+      "icon" : "icons/redrawConnections.png",
       "name" : "Show or Redraw Connections"
     },
     {
@@ -75,7 +75,7 @@
       },
       "identifier" : "hideConnections",
       "description" : "Hide connections between link layers and destination artboards.",
-      "icon" : "icon.png",
+      "icon" : "icons/hideConnections.png",
       "name" : "Hide Connections"
     },
     {
@@ -86,7 +86,7 @@
       },
       "identifier" : "gotoDestinationArtboard",
       "description" : "Go to the artboard linked to this layer.",
-      "icon" : "icon.png",
+      "icon" : "icons/gotoArtboard.png",
       "name" : "Go to Linked Artboard"
     },
     {
@@ -97,24 +97,23 @@
       },
       "identifier" : "goBackToLink",
       "description" : "Navigate back to the link layer.",
-      "icon" : "icon.png",
+      "icon" : "icons/gotoLinkLayer.png",
       "name" : "Go Back to Link Layer"
     },
     {
       "script" : "script.js",
       "shortcut" : "cmd shift b",
-      "handlers" : {
-        "run" : "editArtboardDescription"
-      },
+      "icon" : "icon.png",
       "identifier" : "editArtboardDescription",
       "description" : "Edit the description of the selected Artboard.",
-      "icon" : "icon.png",
-      "name" : "Edit Artboard Description"
+      "handlers" : {
+        "run" : "editArtboardDescription"
+      }
     },
     {
       "script" : "script.js",
       "shortcut" : "",
-      "name" : "Settings",
+      "name" : "Settings...",
       "identifier" : "editSettings",
       "description" : "Edit settings for User Flows.",
       "icon" : "icon.png",
@@ -125,7 +124,8 @@
     {
       "script" : "script.js",
       "shortcut" : "",
-      "name" : "Keyboard Shortcuts",
+      "allowsShortcut" : false,
+      "name" : "Keyboard Shortcuts...",
       "identifier" : "editShortcuts",
       "description" : "Edit keyboard shortcuts for User Flows.",
       "icon" : "icon.png",
@@ -136,12 +136,25 @@
     {
       "script" : "script.js",
       "shortcut" : "",
-      "name" : "Check for Updates...",
-      "identifier" : "checkForUpdates",
+      "allowsShortcut" : false,
+      "name" : "Language...",
+      "identifier" : "editLanguage",
+      "description" : "Language setting for User Flows.",
       "icon" : "icon.png",
       "handlers" : {
-        "run" : "checkForUpdates"
+        "run" : "editLanguage"
       }
+    },
+    {
+      "script" : "script.js",
+      "shortcut" : "",
+      "allowsShortcut" : false,
+      "handlers" : {
+        "run" : "checkForUpdates"
+      },
+      "identifier" : "checkForUpdates",
+      "name" : "Check for Updates...",
+      "icon" : "icon.png"
     }
   ],
   "menu" : {
@@ -160,14 +173,15 @@
       "-",
       "editSettings",
       "editShortcuts",
+      "editLanguage",
       "checkForUpdates"
     ]
   },
   "compatibleVersion" : 4.1,
   "disableCocoaScriptPreprocessor" : true,
   "identifier" : "com.abynim.sketchplugins.userflows",
-  "version" : "2.0.1",
-  "description" : "Generate user-flow diagrams from artboards in Sketch",
+  "version" : "2.0.2",
+  "description" : "Generate user-flow diagrams from artboards in Sketch.",
   "homepage" : "https:\/\/abynim.github.io\/UserFlows",
   "authorEmail" : "abynimbalkar@gmail.com",
   "name" : "User Flows"
