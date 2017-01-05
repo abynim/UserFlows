@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>menu-defineLink</key>
+	<string>创建连接</string>
+	<key>menu-removeLink</key>
+	<string>移除连接</string>
+	<key>menu-addCondition</key>
+	<string>添加/编辑条件</string>
+	<key>menu-generateFlow</key>
+	<string>生成流程图</string>
+	<key>menu-updateFlow</key>
+	<string>更新流程图</string>
+	<key>menu-showConnections</key>
+	<string>显示或重绘连线</string>
+	<key>menu-hideConnections</key>
+	<string>隐藏连线</string>
+	<key>menu-gotoDestinationArtboard</key>
+	<string>转到目标画板</string>
+	<key>menu-goBackToLink</key>
+	<string>转到连接图层</string>
+	<key>menu-editSettings</key>
+	<string>设置...</string>
+	<key>menu-editShortcuts</key>
+	<string>键盘快捷键...</string>
+	<key>menu-editLanguage</key>
+	<string>语言...</string>
+	<key>menu-checkForUpdates</key>
+	<string>检查更新...</string>
+	<key>manifest-description</key>
+	<string>从 Sketch 中的画板生成用户流程图表。</string>
+	<key>defineLink-invalidSelectionTitle</key>
+	<string>无效的选择</string>
+	<key>defineLink-invalidSelectionMessage</key>
+	<string>选择一个要定义连接的图层或分组，接着选择目标画板，再重新执行这个操作。</string>
+	<key>defineLink-linkDefined</key>
+	<string>Link defined:</string>
+	<key>removeLink-invalidSelectionMessage</key>
+	<string>选择一个已经定义为连接的图层，以移除它的连接属性。</string>
+	<key>removeLink-linkRemoved</key>
+	<string>连接已移除</string>
+	<key>removeLink-linksRemoved</key>
+	<string>连接已移除</string>
+	<key>addCondition-title</key>
+	<string>添加或编辑条件</string>
+	<key>addCondition-saveAndAdd</key>
+	<string>保存 + 添加</string>
+	<key>addCondition-ifConditionPlaceholder</key>
+	<string>例如：如果用户已经登录</string>
+	<key>addCondition-else</key>
+	<string>其他...</string>
+	<key>addCondition-conditionArtboardName</key>
+	<string>条件</string>
+	<key>addCondition-conditionGroupName</key>
+	<string>条件</string>
+	<key>gotoArtboard-invalidSelectionTitle</key>
+	<string>无效的选择</string>
+	<key>gotoArtboard-invalidSelectionMessage</key>
+	<string>选择一个已经定义为连接的图层，然后重试这个操作。</string>
+	<key>generateFlow-message</key>
+	<string>生成一个 User Flow</string>
+	<key>generateFlow-startFrom</key>
+	<string>起始于：</string>
+	<key>generateFlow-noLinksTitle</key>
+	<string>未定义连接！</string>
+	<key>generateFlow-noLinksMessage</key>
+	<string>此页面没有定义连接图层。点击 `插件 &gt; User Flows &gt; 定义连接` 来定义至少一个连接图层。</string>
+	<key>generateFlow-flowName</key>
+	<string>Flow 名称</string>
+	<key>generateFlow-description</key>
+	<string>Flow 描述</string>
+	<key>generateFlow-newPage</key>
+	<string>新页面</string>
+	<key>generateFlow-keepOrganized</key>
+	<string>保持 _Flows 页面有条理</string>
+	<key>generateFlow-flowGroupName</key>
+	<string>Flow 分组</string>
+	<key>generateFlow-connectionsGroupName</key>
+	<string>连接</string>
+	<key>generateFlow-modifiedOnDate</key>
+	<string>修改于 %date%</string>
+	<key>generateFlow-modifiedBy</key>
+	<string>修改于 %date% 来自 %user%</string>
+	<key>generateFlow-modifiedDate</key>
+	<string>修改日期</string>
+	<key>generateFlow-saveButtonTitle</key>
+	<string>生成图表</string>
+	<key>settings-restoreDefaults</key>
+	<string>恢复默认</string>
+	<key>settings-title</key>
+	<string>User Flows 设置</string>
+	<key>settings-exportOptions</key>
+	<string>画板导出选项</string>
+	<key>settings-scaleOptions</key>
+	<string>缩放选项</string>
+	<key>settings-flowBackground</key>
+	<string>流程图背景</string>
+	<key>settings-bgLight</key>
+	<string>浅色</string>
+	<key>settings-bgDark</key>
+	<string>深色</string>
+	<key>settings-flowIndicatorStroke</key>
+	<string>流程图连接线</string>
+	<key>settings-minArea</key>
+	<string>最小连接区域</string>
+	<key>settings-drawBorders</key>
+	<string>为连接图层绘制边框</string>
+	<key>settings-yourName</key>
+	<string>你的名字</string>
+	<key>settings-showDate</key>
+	<string>在流程图中显示日期和名字</string>
+	<key>settings-connectionCurved</key>
+	<string>曲线</string>
+	<key>settings-connectionStraight</key>
+	<string>直线</string>
+	<key>shortcuts-title</key>
+	<string>User Flows 键盘快捷键</string>
+	<key>shortcuts-message</key>
+	<string>快捷键是通过（cmd, control, shift, option）和其他按键组合来定义的的。例如 – 'cmd shift y'。记得检查快捷键是否已经被别的插件或者 Sketch 自己占用。</string>
+	<key>checkUpdates-checking</key>
+	<string>检查更新...</string>
+	<key>checkUpdates-updateAvailableTitle</key>
+	<string>发现新版本！</string>
+	<key>checkUpdates-noUpdateAvailableTitle</key>
+	<string>你最棒！</string>
+	<key>checkUpdates-updateAvailableMessage</key>
+	<string>最新的版本是 %currentVersion%，你的版本是 %installedVersion%。请重新从网站下载安装这个插件。</string>
+	<key>checkUpdates-noUpdateAvailableMessage</key>
+	<string>你已经安装了最新版本的 UserFlows 👍</string>
+	<key>checkUpdates-updateNow</key>
+	<string>现在更新</string>
+	<key>checkUpdates-updateLater</key>
+	<string>稍后</string>
+	<key>language-title</key>
+	<string>语言设置</string>
+	<key>language-message</key>
+	<string>设置 UserFlows 插件的语言。</string>
+	<key>artboardDescription-invalidSelectionMessage</key>
+	<string>选择一个画板</string>
+	<key>artboardDescription-description</key>
+	<string>描述</string>
+	<key>artboardDescription-saved</key>
+	<string>画板描述已保存</string>
+	<key>alerts-save</key>
+	<string>保存</string>
+	<key>alerts-cancel</key>
+	<string>取消</string>
+	<key>alerts-done</key>
+	<string>完成</string>
+</dict>
+</plist>

@@ -20,11 +20,12 @@ var linkLayerPredicate;
 var iconImage;
 var version;
 var strings;
-var supportedLanguages = ["en", "nl", "da"];
+var supportedLanguages = ["en", "nl", "da", "cn"];
 var languageNames = { 
 	en : "English", 
 	da : "Danish",
-	nl : "Dutch"
+	nl : "Dutch",
+	cn : "Chinese Simplified"
 };
 
 var defineLink = function(context) {
