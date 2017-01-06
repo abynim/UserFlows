@@ -20,12 +20,13 @@ var linkLayerPredicate;
 var iconImage;
 var version;
 var strings;
-var supportedLanguages = ["en", "nl", "da", "cn"];
-var languageNames = { 
-	en : "English", 
+var supportedLanguages = ["en", "nl", "da", "cn", "tw"];
+var languageNames = {
+	en : "English",
 	da : "Danish",
 	nl : "Dutch",
-	cn : "Chinese Simplified"
+	cn : "Chinese Simplified",
+	tw : "Chinese Traditional"
 };
 
 var defineLink = function(context) {
@@ -57,7 +58,7 @@ var defineLink = function(context) {
 		showAlert(strings["defineLink-invalidSelectionTitle"], strings["defineLink-invalidSelectionMessage"]);
 		return;
 	}
-	
+
 	context.command.setValue_forKey_onLayer_forPluginIdentifier(destArtboard.objectID(), "destinationArtboardID", linkLayer, kPluginDomain);
 
 	var doc = context.document;
@@ -99,7 +100,7 @@ var removeLink = function(context) {
 }
 
 var editArtboardDescription = function(context) {
-	
+
 	parseContext(context);
 
 	var currentArtboard = context.document.currentPage().currentArtboard();
@@ -210,7 +211,7 @@ var editConditionsForArtboard = function(currentArtboard, context, forceNewCondi
 	log(response);
 
 	if (response != "1001") {
-		
+
 		var conditionBoard;
 
 		if (artboardIsConditional) {
@@ -226,7 +227,7 @@ var editConditionsForArtboard = function(currentArtboard, context, forceNewCondi
 		}
 		conditionBoard.setConstrainProportions(false);
 		context.command.setValue_forKey_onLayer_forPluginIdentifier(elseCheckbox.state(), "hasElse", conditionBoard, kPluginDomain);
-		
+
 		var numConditions = conditionChecks.length,
 			conditionSpacing = 16,
 			listY = conditionSpacing,
@@ -235,13 +236,13 @@ var editConditionsForArtboard = function(currentArtboard, context, forceNewCondi
 			conditionBoardWidth = conditionBoard.frame().width(),
 			count = 0,
 			conditionLabel, conditionValue, conditionBox, conditionBorder, conditionBoxHeight, layersArray, conditionGroup, isElse;
-		
+
 		for (var i = 0; i < numConditions; i++) {
-			
+
 			checkbox = conditionChecks[i];
-			
+
 			if (checkbox.state() == NSOffState) continue;
-			
+
 			isElse = checkbox == elseCheckbox;
 			if (isElse) {
 				conditionValue = strings["addCondition-else"];
@@ -317,11 +318,11 @@ var addCondition = function(context) {
 		currentArtboard = parentArtboards.firstObject();
 
 	editConditionsForArtboard(currentArtboard, context, (parentArtboards.count() != 1));
-	
+
 }
 
 var gotoDestinationArtboard = function(context) {
-	
+
 	parseContext(context);
 
 	var linkLayer = context.selection.firstObject(),
@@ -354,7 +355,7 @@ var gotoDestinationArtboard = function(context) {
 			},
 			rects = context.command.valueForKey_onDocument_forPluginIdentifier("contentRectsHistory", doc.documentData(), kPluginDomain);
 
-		if (!rects) { 
+		if (!rects) {
 			rects = NSArray.array();
 		}
 		rects = rects.arrayByAddingObject(contentRect);
@@ -392,7 +393,7 @@ var goBackToLink = function(context) {
 }
 
 var generateFlow = function(context) {
-	
+
 	parseContext(context);
 
 	var doc = context.document;
@@ -441,7 +442,7 @@ var generateFlow = function(context) {
 	settingsWindow.addAccessoryView(separator);
 
 	var pageNames = doc.valueForKeyPath("pages.@unionOfObjects.name")
-	if (!pageNames.containsObject("_Flows")) { 
+	if (!pageNames.containsObject("_Flows")) {
 		pageNames = NSArray.arrayWithObject("_Flows").arrayByAddingObjectsFromArray(pageNames);
 	}
 	var newPageItemTitle = "[" + strings["generateFlow-newPage"] + "]";
@@ -577,7 +578,7 @@ var generateFlow = function(context) {
 			  destinationArtboard = doc.currentPage().artboards().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("objectID == %@", destinationArtboardID)).firstObject();
 			  if (destinationArtboard) {
 			  	destinationArtboardIsConditional = context.command.valueForKey_onLayer_forPluginIdentifier(kConditionalArtboardKey, destinationArtboard, kPluginDomain) || 0;
-			  
+
 			  	isCondition = context.command.valueForKey_onLayer_forPluginIdentifier("isConditionGroup", linkLayer, kPluginDomain) || 0;
 
 			  	linkRect = linkLayer.parentArtboard() == nil ? linkLayer.absoluteRect().rect() : CGRectIntersection(linkLayer.absoluteRect().rect(), linkLayer.parentArtboard().absoluteRect().rect());
@@ -594,7 +595,7 @@ var generateFlow = function(context) {
 			  	}
 			  	connections.push(connection);
 				artboardsToExport.push(destinationArtboard);
-			  	
+
 			  }
 			}
 		}
@@ -602,7 +603,7 @@ var generateFlow = function(context) {
 		if (connectionsOverlay) {
 			connectionsOverlay.setIsVisible(connectionsOverlayVisible);
 		}
-		
+
 		var connectionLayers = MSLayerArray.arrayWithLayers(drawConnections(connections, doc.currentPage(), exportScale));
 		var connectionsGroup = MSLayerGroup.groupFromLayers(connectionLayers);
 		connectionsGroup.setName(strings["generateFlow-connectionsGroupName"]);
@@ -667,7 +668,7 @@ var generateFlow = function(context) {
 			} else {
 				modifiedOnText = strings["generateFlow-modifiedOnDate"].stringByReplacingOccurrencesOfString_withString("%date%", formatter.stringFromDate(NSDate.date()))
 			}
-			
+
 			modifiedDateLabel.setName(strings["generateFlow-modifiedDate"]);
 			modifiedDateLabel.frame().setX(outerPadding);
 			modifiedDateLabel.frame().setY(yPos + 12);
@@ -707,7 +708,7 @@ var generateFlow = function(context) {
 		if (shouldOrganize && flowPageName == "_Flows") {
 
 			var loop = flowPage.artboards().objectEnumerator(),
-				i = 0, newX = 0, newY = 0, maxHeight = 0, 
+				i = 0, newX = 0, newY = 0, maxHeight = 0,
 				spacing = 160, artboard;
 			while (artboard = loop.nextObject()) {
 				artboard.frame().setX(newX);
@@ -784,7 +785,7 @@ var redrawConnections = function(context) {
 	while (linkLayer = loop.nextObject()) {
 
 		destinationArtboardID = context.command.valueForKey_onLayer_forPluginIdentifier("destinationArtboardID", linkLayer, kPluginDomain);
-  
+
 		destinationArtboard = doc.currentPage().artboards().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("objectID == %@", destinationArtboardID)).firstObject();
 
 		if (destinationArtboard) {
@@ -876,7 +877,7 @@ var drawConnections = function(connections, parent, exportScale) {
 			}
 			controlPoint2OffsetX = 0;
 			controlPoint2OffsetY = -160;
-			
+
 		} else {
 			startPoint = NSMakePoint(CGRectGetMaxX(linkRect) - 5, CGRectGetMidY(linkRect));
 			controlPoint1Offset = Math.max(Math.abs(dropPoint.x - startPoint.x)/2, 100);
@@ -886,7 +887,7 @@ var drawConnections = function(connections, parent, exportScale) {
 			arrowRotation = 0;
 			arrowOffsetX = 0;
 		}
-		
+
 		linkRect = NSInsetRect(NSMakeRect(startPoint.x, startPoint.y, 0, 0), -5, -5);
 		path = NSBezierPath.bezierPathWithOvalInRect(linkRect);
 		hitAreaLayer = MSShapeGroup.shapeWithBezierPath(path);
@@ -905,7 +906,7 @@ var drawConnections = function(connections, parent, exportScale) {
     		arrowRotation = (degrees > 0.0 ? degrees : (360.0 + degrees));
     		if (arrowRotation < 110 || arrowRotation > 255) { arrowOffsetX = 2 };
 		}
-		
+
 		lineLayer = MSShapeGroup.shapeWithBezierPath(linePath);
 		lineLayer.setName("Flow arrow");
 		hitAreaBorder = lineLayer.style().addStylePartOfType(1);
@@ -935,7 +936,7 @@ var drawConnections = function(connections, parent, exportScale) {
 }
 
 var editSettings = function(context) {
-	
+
 	parseContext(context);
 	var settingsWindow = getAlertWindow();
 	settingsWindow.addButtonWithTitle(strings["alerts-save"]);
@@ -1082,16 +1083,16 @@ var editSettings = function(context) {
 		NSUserDefaults.standardUserDefaults().setObject_forKey(userNameField.stringValue(), kFullNameKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(showNameCheckbox.state(), kShowModifiedDateKey);
 		applySettings(context);
-		logEvent("settingsChanged", { 
-			exportScale : exportScale, 
-			format : formatDropdown.titleOfSelectedItem(), 
-			backgroundMode : bgDropdown.titleOfSelectedItem(), 
-			showsName : showNameCheckbox.state(), 
+		logEvent("settingsChanged", {
+			exportScale : exportScale,
+			format : formatDropdown.titleOfSelectedItem(),
+			backgroundMode : bgDropdown.titleOfSelectedItem(),
+			showsName : showNameCheckbox.state(),
 			flowIndicatorColor : flowIndicatorColor
 		});
 
 	} else if (response == "1002") {
-		
+
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kExportScaleKey);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kExportFormatKey);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kFlowBackgroundKey);
@@ -1123,7 +1124,7 @@ var applySettings = function(context) {
 }
 
 var editShortcuts = function(context) {
-	
+
 	parseContext(context);
 	var settingsWindow = getAlertWindow();
 	settingsWindow.addButtonWithTitle(strings["alerts-save"]);
@@ -1280,7 +1281,7 @@ var parseContext = function(context) {
 
 	var localeID = NSUserDefaults.standardUserDefaults().objectForKey(kLanguageCodeKey) || "en",
 		stringsFilePath = context.plugin.urlForResourceNamed(localeID + ".plist").path();
-	
+
 	strings = NSDictionary.dictionaryWithContentsOfFile(stringsFilePath);
 }
 
