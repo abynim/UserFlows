@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>menu-defineLink</key>
+	<string>新增連線</string>
+	<key>menu-removeLink</key>
+	<string>移除連線</string>
+	<key>menu-addCondition</key>
+	<string>新增/編輯條件</string>
+	<key>menu-generateFlow</key>
+	<string>產生流程圖</string>
+	<key>menu-updateFlow</key>
+	<string>更新流程圖</string>
+	<key>menu-showConnections</key>
+	<string>顯示或重繪連線</string>
+	<key>menu-hideConnections</key>
+	<string>隱藏連線</string>
+	<key>menu-gotoDestinationArtboard</key>
+	<string>前往工作區域</string>
+	<key>menu-goBackToLink</key>
+	<string>前往連線圖層</string>
+	<key>menu-editSettings</key>
+	<string>設定...</string>
+	<key>menu-editShortcuts</key>
+	<string>快速鍵設定...</string>
+	<key>menu-editLanguage</key>
+	<string>語言...</string>
+	<key>menu-checkForUpdates</key>
+	<string>檢查更新...</string>
+	<key>manifest-description</key>
+	<string>從 Sketch 工作區域產生流程圖。</string>
+	<key>defineLink-invalidSelectionTitle</key>
+	<string>無效的目標</string>
+	<key>defineLink-invalidSelectionMessage</key>
+	<string>選擇一個要新增連線的圖層或群組，接者選取目標工作區域，再重新執行這個動作。</string>
+	<key>defineLink-linkDefined</key>
+	<string>連線定義:</string>
+	<key>removeLink-invalidSelectionMessage</key>
+	<string>選擇一個已定義連線的圖層，以移除他的連線屬性</string>
+	<key>removeLink-linkRemoved</key>
+	<string>連線已移除</string>
+	<key>removeLink-linksRemoved</key>
+	<string>連線已移除</string>
+	<key>addCondition-title</key>
+	<string>新增或編輯條件</string>
+	<key>addCondition-saveAndAdd</key>
+	<string>儲存 + 新增</string>
+	<key>addCondition-ifConditionPlaceholder</key>
+	<string>例如：用戶已經登入</string>
+	<key>addCondition-else</key>
+	<string>其他...</string>
+	<key>addCondition-conditionArtboardName</key>
+	<string>條件</string>
+	<key>addCondition-conditionGroupName</key>
+	<string>條件</string>
+	<key>gotoArtboard-invalidSelectionTitle</key>
+	<string>無效的選擇</string>
+	<key>gotoArtboard-invalidSelectionMessage</key>
+	<string>選擇一個已連線的圖層，然後重試這個動作</string>
+	<key>generateFlow-message</key>
+	<string>產生一個 User Flow</string>
+	<key>generateFlow-startFrom</key>
+	<string>開始於：</string>
+	<key>generateFlow-noLinksTitle</key>
+	<string>未定義連線！</string>
+	<key>generateFlow-noLinksMessage</key>
+	<string>此畫面沒有定義連線圖層。點擊 `外掛 &gt; User Flows &gt; 定義連線` 來定義至少一個連線圖層。</string>
+	<key>generateFlow-flowName</key>
+	<string>Flow 名稱</string>
+	<key>generateFlow-description</key>
+	<string>Flow 描述</string>
+	<key>generateFlow-newPage</key>
+	<string>新頁面</string>
+	<key>generateFlow-keepOrganized</key>
+	<string>保持 _Flows 頁面整齊</string>
+	<key>generateFlow-flowGroupName</key>
+	<string>Flow 群組</string>
+	<key>generateFlow-connectionsGroupName</key>
+	<string>連線</string>
+	<key>generateFlow-modifiedOnDate</key>
+	<string>修改於 %date%</string>
+	<key>generateFlow-modifiedBy</key>
+	<string>由 %user% 修改於 %date%</string>
+	<key>generateFlow-modifiedDate</key>
+	<string>修改日期</string>
+	<key>generateFlow-saveButtonTitle</key>
+	<string>產生圖瞟</string>
+	<key>settings-restoreDefaults</key>
+	<string>恢復預設</string>
+	<key>settings-title</key>
+	<string>User Flows 設定</string>
+	<key>settings-exportOptions</key>
+	<string>匯出選項</string>
+	<key>settings-scaleOptions</key>
+	<string>縮放選項</string>
+	<key>settings-flowBackground</key>
+	<string>流程圖背景</string>
+	<key>settings-bgLight</key>
+	<string>淺色</string>
+	<key>settings-bgDark</key>
+	<string>深色</string>
+	<key>settings-flowIndicatorStroke</key>
+	<string>流程圖連接線</string>
+	<key>settings-minArea</key>
+	<string>最小連線區域</string>
+	<key>settings-drawBorders</key>
+	<string>繪製連線圖層邊框</string>
+	<key>settings-yourName</key>
+	<string>你的名字</string>
+	<key>settings-showDate</key>
+	<string>在流程圖中顯示日期與名字</string>
+	<key>settings-connectionCurved</key>
+	<string>曲線</string>
+	<key>settings-connectionStraight</key>
+	<string>直線</string>
+	<key>shortcuts-title</key>
+	<string>User Flows 鍵盤快速鍵</string>
+	<key>shortcuts-message</key>
+	<string>快速鍵是通過（cmd, control, shift, option）與其他按鍵的組合來定義。例如 – 'cmd shift y'。記得檢查快速鍵是否被其他外掛使用或由 Sketch 自己使用。</string>
+	<key>checkUpdates-checking</key>
+	<string>檢查更新...</string>
+	<key>checkUpdates-updateAvailableTitle</key>
+	<string>發現新版本！</string>
+	<key>checkUpdates-noUpdateAvailableTitle</key>
+	<string>你最棒！</string>
+	<key>checkUpdates-updateAvailableMessage</key>
+	<string>最新的版本是 %currentVersion%，你的版本是 %installedVersion%。請重新從網站下載並安裝這個外掛。</string>
+	<key>checkUpdates-noUpdateAvailableMessage</key>
+	<string>你已經安裝了最新版本的 UserFlows 👍</string>
+	<key>checkUpdates-updateNow</key>
+	<string>馬上更新</string>
+	<key>checkUpdates-updateLater</key>
+	<string>稍晚</string>
+	<key>language-title</key>
+	<string>語言設定</string>
+	<key>language-message</key>
+	<string>設定 UserFlows 的語言。</string>
+	<key>artboardDescription-invalidSelectionMessage</key>
+	<string>選擇一個工作區域</string>
+	<key>artboardDescription-description</key>
+	<string>描述</string>
+	<key>artboardDescription-saved</key>
+	<string>工作區域描述已儲存</string>
+	<key>alerts-save</key>
+	<string>儲存</string>
+	<key>alerts-cancel</key>
+	<string>取消</string>
+	<key>alerts-done</key>
+	<string>完成</string>
+</dict>
+</plist>
