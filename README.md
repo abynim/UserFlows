@@ -1,12 +1,11 @@
 # User Flows V2
 A plugin for generating flow diagrams from Artboards in [Sketch](http://www.bohemiancoding.com/sketch/).  
 
-Please check the project page for installation, usage and other details: https://abynim.github.io/UserFlows
+Installation and usage details can be found here: https://abynim.github.io/UserFlows
 
 ---
 
 ## Localization
-
 User Flows supports the following languages:  
 
 - Engligh
@@ -15,5 +14,6 @@ User Flows supports the following languages:
 - Danish by [Kim Døfler](http://doefler.com)
 - Dutch by [Roy van Roojien](http://www.royvanrooijen.nl)
 
+---
 
 MIT License © Aby Nimbalkar | [@abynim](http://twitter.com/abynim).
