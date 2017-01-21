@@ -15,6 +15,7 @@ var kStrokeWidthKey = "com.abynim.userflows.strokeWidth";
 var kConditionalArtboardKey = "com.abynim.userflows.conditionalArtboard";
 var kLanguageCodeKey = "com.abynim.userflows.languageCode";
 var kConnectionTypeKey = "com.abynim.userflows.connectionStrokeType";
+var kRelinkWarningKey = "com.abynim.userflows.showsRelinkWarning";
 
 var linkLayerPredicate;
 var iconImage;
@@ -60,7 +61,7 @@ var defineLink = function(context) {
 	}
 
 	var artboardID = context.command.valueForKey_onLayer_forPluginIdentifier("artboardID", destArtboard, kPluginDomain);
-	if (!artboardID) {
+	if (!artboardID || artboardID != destArtboard.objectID()) {
 		artboardID = destArtboard.objectID();
 		context.command.setValue_forKey_onLayer_forPluginIdentifier(artboardID, "artboardID", destArtboard, kPluginDomain);
 	}
@@ -102,6 +103,80 @@ var removeLink = function(context) {
 		var message = context.selection.count() == 1 ? strings["removeLink-linkRemoved"] : strings["removeLink-linksRemoved"]
 		doc.showMessage(message);
 	}
+}
+
+var relinkArtboardsAfterCopy = function(context) {
+
+	var showsRelinkWarning = NSUserDefaults.standardUserDefaults().objectForKey(kRelinkWarningKey) || 1;
+	if (showsRelinkWarning == 1) {
+
+		parseContext(context);
+
+		var settingsWindow = getAlertWindow();
+		settingsWindow.addButtonWithTitle(strings["relinkArtboards-confirm"]);
+		settingsWindow.addButtonWithTitle(strings["alerts-cancel"]);
+
+		settingsWindow.setMessageText(strings["relinkArtboards-title"]);
+		settingsWindow.setInformativeText(strings["relinkArtboards-description"]);
+
+		var showsWarningCheckbox = NSButton.alloc().initWithFrame(NSMakeRect(0,0,300,22));
+		showsWarningCheckbox.setButtonType(NSSwitchButton);
+		showsWarningCheckbox.setBezelStyle(0);
+		showsWarningCheckbox.setTitle(strings["relinkArtboards-dontShowAgain"]);
+		showsWarningCheckbox.setState(NSOffState);
+		settingsWindow.addAccessoryView(showsWarningCheckbox);
+
+		var response = settingsWindow.runModal();
+
+		if (response == "1000") {
+			var warn = showsWarningCheckbox.state() == 0 ? 1 : 0;
+			NSUserDefaults.standardUserDefaults().setObject_forKey(warn, kRelinkWarningKey);
+			confirmRelinkArtboards(context);
+		}
+
+	} else {
+		confirmRelinkArtboards(context);
+	}
+}
+
+var confirmRelinkArtboards = function(context) {
+
+	var destinationArtboards = context.document.currentPage().artboards().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("userInfo != nil && function(userInfo, 'valueForKeyPath:', %@).artboardID != nil", kPluginDomain)),
+		loop = destinationArtboards.objectEnumerator(),
+		validArtboardIDs = context.document.currentPage().valueForKeyPath("artboards.@unionOfObjects.objectID"),
+		relinkCount = 0,
+		artboard, cachedID, artboardID, linkLayer, linkLayers, linkLayersCount;
+
+	while (artboard = loop.nextObject()) {
+		artboardID = artboard.objectID();
+		cachedID = context.command.valueForKey_onLayer_forPluginIdentifier("artboardID", artboard, kPluginDomain);
+
+		if (artboardID != cachedID && !validArtboardIDs.containsObject(cachedID)) {
+
+			linkLayers = context.document.currentPage().children().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("userInfo != nil && function(userInfo, 'valueForKeyPath:', %@).destinationArtboardID == %@", kPluginDomain, cachedID));
+			linkLayersCount = linkLayers.count();
+
+			for (var i = 0; i < linkLayersCount; i++) {
+				linkLayer = linkLayers[i];
+				context.command.setValue_forKey_onLayer_forPluginIdentifier(artboardID, "destinationArtboardID", linkLayer, kPluginDomain);
+			}
+
+			context.command.setValue_forKey_onLayer_forPluginIdentifier(artboardID, "artboardID", artboard, kPluginDomain);
+			relinkCount++;
+
+		}
+	}
+
+	var doc = context.document;
+	var showingConnections = NSUserDefaults.standardUserDefaults().objectForKey(kShowConnectionsKey) || 1;
+
+	if (showingConnections == 1) {
+		redrawConnections(context);
+	} else {
+		var infoText = strings["relinkArtboards-relinkComplete"].stringByReplacingOccurrencesOfString_withString("%count%", relinkCount+"");
+		doc.showMessage(infoText);
+	}
+
 }
 
 var editArtboardDescription = function(context) {
@@ -348,7 +423,7 @@ var gotoDestinationArtboard = function(context) {
 	}
 
 	var doc = context.document,
-		destinationArtboard = doc.currentPage().artboards().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("(objectID == %@) || (userInfo != nil && function(userInfo, 'valueForKeyPath:', %@).artboardID == %@)", destinationArtboardID, kPluginDomain, destinationArtboardID)).firstObject();
+		destinationArtboard = doc.currentPage().artboards().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("objectID == %@", destinationArtboardID)).firstObject();
 	if (destinationArtboard) {
 		var cRect = doc.currentView().visibleContentRect(),
 			contentRect = {
@@ -446,6 +521,7 @@ var generateFlow = function(context) {
 	separator.setBoxType(2);
 	settingsWindow.addAccessoryView(separator);
 
+	settingsWindow.addTextLabelWithValue(strings["generateFlow-addToPage"]);
 	var pageNames = doc.valueForKeyPath("pages.@unionOfObjects.name")
 	if (!pageNames.containsObject("_Flows")) {
 		pageNames = NSArray.arrayWithObject("_Flows").arrayByAddingObjectsFromArray(pageNames);
@@ -580,7 +656,8 @@ var generateFlow = function(context) {
 			  linkLayer = linkLayers.objectAtIndex(i);
 			  destinationArtboardID = context.command.valueForKey_onLayer_forPluginIdentifier("destinationArtboardID", linkLayer, kPluginDomain);
 
-			  destinationArtboard = doc.currentPage().artboards().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("(objectID == %@) || (userInfo != nil && function(userInfo, 'valueForKeyPath:', %@).artboardID == %@)", destinationArtboardID, kPluginDomain, destinationArtboardID)).firstObject();
+			  destinationArtboard = doc.currentPage().artboards().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("objectID == %@", destinationArtboardID)).firstObject();
+
 			  if (destinationArtboard) {
 			  	destinationArtboardIsConditional = context.command.valueForKey_onLayer_forPluginIdentifier(kConditionalArtboardKey, destinationArtboard, kPluginDomain) || 0;
 
@@ -791,7 +868,7 @@ var redrawConnections = function(context) {
 
 		destinationArtboardID = context.command.valueForKey_onLayer_forPluginIdentifier("destinationArtboardID", linkLayer, kPluginDomain);
 
-		destinationArtboard = doc.currentPage().artboards().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("(objectID == %@) || (userInfo != nil && function(userInfo, 'valueForKeyPath:', %@).artboardID == %@)", destinationArtboardID, kPluginDomain, destinationArtboardID)).firstObject();
+		destinationArtboard = doc.currentPage().artboards().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("objectID == %@", destinationArtboardID)).firstObject();
 
 		if (destinationArtboard) {
 

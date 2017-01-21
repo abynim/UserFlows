@@ -6,6 +6,8 @@
 	<string>Create Link</string>
 	<key>menu-removeLink</key>
 	<string>Remove Link</string>
+	<key>menu-relinkArtboardsAfterCopy</key>
+	<string>Re-Link Duplicated Artboards</string>
 	<key>menu-addCondition</key>
 	<string>Add/Edit Conditions</string>
 	<key>menu-generateFlow</key>
@@ -42,6 +44,16 @@
 	<string>Link removed</string>
 	<key>removeLink-linksRemoved</key>
 	<string>Links removed</string>
+	<key>relinkArtboards-confirm</key>
+	<string>Re-Link Artboards</string>
+	<key>relinkArtboards-title</key>
+	<string>Are you sure?</string>
+	<key>relinkArtboards-description</key>
+	<string>This command will attempt to re-link artboards that have been duplicated and have lost their connections.</string>
+	<key>relinkArtboards-dontShowAgain</key>
+	<string>Don&apos;t show this mesage again</string>
+	<key>relinkArtboards-relinkComplete</key>
+	<string>%count% artboards were relinked</string>
 	<key>addCondition-title</key>
 	<string>Add or Edit Conditions</string>
 	<key>addCondition-saveAndAdd</key>
@@ -70,6 +82,8 @@
 	<string>Flow Name</string>
 	<key>generateFlow-description</key>
 	<string>Flow Description</string>
+	<key>generateFlow-addToPage</key>
+	<string>Add to Page</string>
 	<key>generateFlow-newPage</key>
 	<string>New Page</string>
 	<key>generateFlow-keepOrganized</key>
