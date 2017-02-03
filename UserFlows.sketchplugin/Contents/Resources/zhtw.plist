@@ -6,6 +6,8 @@
 	<string>新增連線</string>
 	<key>menu-removeLink</key>
 	<string>移除連線</string>
+	<key>menu-relinkArtboardsAfterCopy</key>
+	<string>Re-Link Duplicated Artboards</string>
 	<key>menu-addCondition</key>
 	<string>新增/編輯條件</string>
 	<key>menu-generateFlow</key>
@@ -42,6 +44,16 @@
 	<string>連線已移除</string>
 	<key>removeLink-linksRemoved</key>
 	<string>連線已移除</string>
+	<key>relinkArtboards-confirm</key>
+	<string>Re-Link Artboards</string>
+	<key>relinkArtboards-title</key>
+	<string>Are you sure?</string>
+	<key>relinkArtboards-description</key>
+	<string>This command will attempt to re-link artboards that have been duplicated and have lost their connections.</string>
+	<key>relinkArtboards-dontShowAgain</key>
+	<string>Don&apos;t show this mesage again</string>
+	<key>relinkArtboards-relinkComplete</key>
+	<string>%count% artboards were relinked</string>
 	<key>addCondition-title</key>
 	<string>新增或編輯條件</string>
 	<key>addCondition-saveAndAdd</key>
@@ -70,6 +82,8 @@
 	<string>Flow 名稱</string>
 	<key>generateFlow-description</key>
 	<string>Flow 描述</string>
+	<key>generateFlow-addToPage</key>
+	<string>Add to Page</string>
 	<key>generateFlow-newPage</key>
 	<string>新頁面</string>
 	<key>generateFlow-keepOrganized</key>
@@ -117,7 +131,7 @@
 	<key>shortcuts-title</key>
 	<string>User Flows 鍵盤快速鍵</string>
 	<key>shortcuts-message</key>
-	<string>快速鍵是通過（cmd, control, shift, option）與其他按鍵的組合來定義。例如 – 'cmd shift y'。記得檢查快速鍵是否被其他外掛使用或由 Sketch 自己使用。</string>
+	<string>快速鍵是通過（cmd, control, shift, option）與其他按鍵的組合來定義。例如 – `cmd shift y`。記得檢查快速鍵是否被其他外掛使用或由 Sketch 自己使用。</string>
 	<key>checkUpdates-checking</key>
 	<string>檢查更新...</string>
 	<key>checkUpdates-updateAvailableTitle</key>

@@ -6,6 +6,8 @@
 	<string>创建连接</string>
 	<key>menu-removeLink</key>
 	<string>移除连接</string>
+	<key>menu-relinkArtboardsAfterCopy</key>
+	<string>Re-Link Duplicated Artboards</string>
 	<key>menu-addCondition</key>
 	<string>添加/编辑条件</string>
 	<key>menu-generateFlow</key>
@@ -42,6 +44,16 @@
 	<string>连接已移除</string>
 	<key>removeLink-linksRemoved</key>
 	<string>连接已移除</string>
+	<key>relinkArtboards-confirm</key>
+	<string>Re-Link Artboards</string>
+	<key>relinkArtboards-title</key>
+	<string>Are you sure?</string>
+	<key>relinkArtboards-description</key>
+	<string>This command will attempt to re-link artboards that have been duplicated and have lost their connections.</string>
+	<key>relinkArtboards-dontShowAgain</key>
+	<string>Don&apos;t show this mesage again</string>
+	<key>relinkArtboards-relinkComplete</key>
+	<string>%count% artboards were relinked</string>
 	<key>addCondition-title</key>
 	<string>添加或编辑条件</string>
 	<key>addCondition-saveAndAdd</key>
@@ -70,6 +82,8 @@
 	<string>Flow 名称</string>
 	<key>generateFlow-description</key>
 	<string>Flow 描述</string>
+	<key>generateFlow-addToPage</key>
+	<string>Add to Page</string>
 	<key>generateFlow-newPage</key>
 	<string>新页面</string>
 	<key>generateFlow-keepOrganized</key>
@@ -117,7 +131,7 @@
 	<key>shortcuts-title</key>
 	<string>User Flows 键盘快捷键</string>
 	<key>shortcuts-message</key>
-	<string>快捷键是通过（cmd, control, shift, option）和其他按键组合来定义的的。例如 – 'cmd shift y'。记得检查快捷键是否已经被别的插件或者 Sketch 自己占用。</string>
+	<string>快捷键是通过（cmd, control, shift, option）和其他按键组合来定义的的。例如 – `cmd shift y`。记得检查快捷键是否已经被别的插件或者 Sketch 自己占用。</string>
 	<key>checkUpdates-checking</key>
 	<string>检查更新...</string>
 	<key>checkUpdates-updateAvailableTitle</key>
