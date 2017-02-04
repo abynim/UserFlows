@@ -7,7 +7,7 @@
 	<key>menu-removeLink</key>
 	<string>移除连接</string>
 	<key>menu-relinkArtboardsAfterCopy</key>
-	<string>Re-Link Duplicated Artboards</string>
+	<string>重新连接复制的画板</string>
 	<key>menu-addCondition</key>
 	<string>添加/编辑条件</string>
 	<key>menu-generateFlow</key>
@@ -45,15 +45,15 @@
 	<key>removeLink-linksRemoved</key>
 	<string>连接已移除</string>
 	<key>relinkArtboards-confirm</key>
-	<string>Re-Link Artboards</string>
+	<string>重新连接画板</string>
 	<key>relinkArtboards-title</key>
-	<string>Are you sure?</string>
+	<string>你确定吗？</string>
 	<key>relinkArtboards-description</key>
-	<string>This command will attempt to re-link artboards that have been duplicated and have lost their connections.</string>
+	<string>这个操作会尝试重新连接画板，这些画板因为被复制丢失了连接。</string>
 	<key>relinkArtboards-dontShowAgain</key>
-	<string>Don&apos;t show this mesage again</string>
+	<string>不再显示</string>
 	<key>relinkArtboards-relinkComplete</key>
-	<string>%count% artboards were relinked</string>
+	<string>%count%个画板已重新连接</string>
 	<key>addCondition-title</key>
 	<string>添加或编辑条件</string>
 	<key>addCondition-saveAndAdd</key>
@@ -83,7 +83,7 @@
 	<key>generateFlow-description</key>
 	<string>Flow 描述</string>
 	<key>generateFlow-addToPage</key>
-	<string>Add to Page</string>
+	<string>添加到页面</string>
 	<key>generateFlow-newPage</key>
 	<string>新页面</string>
 	<key>generateFlow-keepOrganized</key>
