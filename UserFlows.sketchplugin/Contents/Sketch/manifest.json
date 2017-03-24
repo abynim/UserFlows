@@ -189,7 +189,7 @@
       "checkForUpdates"
     ]
   },
-  "compatibleVersion" : 4.1,
+  "compatibleVersion" : "4.1" ,
   "disableCocoaScriptPreprocessor" : true,
   "identifier" : "com.abynim.sketchplugins.userflows",
   "version" : "2.0.4",
