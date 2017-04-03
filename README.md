@@ -8,6 +8,8 @@ Installation and usage details can be found here: https://abynim.github.io/UserF
 ## Install with Sketch Runner
 With Sketch Runner, just go to the `install` command and search for `User Flows`. Runner allows you to manage plugins and do much more to speed up your workflow in Sketch. [Download Runner here](http://www.sketchrunner.com).
 
+![Runner Screenshot](user-flows-runner.png?raw=true)
+
 ---
 
 ## Localization
