@@ -15,7 +15,7 @@ With Sketch Runner, just go to the `install` command and search for `User Flows`
 ## Localization
 User Flows supports the following languages:  
 
-- Engligh
+- English
 - Chinese (Simplified) by [Pluwen](https://twitter.com/pluwen)
 - Chinese (Traditional) by [Chia Yu Pai](https://github.com/fantasywind)
 - Danish by [Kim Døfler](http://doefler.com)
