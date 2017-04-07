@@ -20,6 +20,7 @@ User Flows supports the following languages:
 - Chinese (Traditional) by [Chia Yu Pai](https://github.com/fantasywind)
 - Danish by [Kim Døfler](http://doefler.com)
 - Dutch by [Roy van Roojien](http://www.royvanrooijen.nl)
+- Persian by [Mohammad Reza Mahmoudi](http://www.rezamahmoudi.ir)
 
 ---
 

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>menu-defineLink</key>
+	<string>ساخت لینک</string>
+	<key>menu-removeLink</key>
+	<string>حذف لینک</string>
+	<key>menu-relinkArtboardsAfterCopy</key>
+	<string>اتصال دوباره صفحه طرح‌های تکراری</string>
+	<key>menu-addCondition</key>
+	<string>اضافه/ویرایش شرط‌ها</string>
+	<key>menu-generateFlow</key>
+	<string>تولید مسیر دیاگرام</string>
+	<key>menu-updateFlow</key>
+	<string>بروزرسانی مسیر دیاگرام</string>
+	<key>menu-showConnections</key>
+	<string>نمایش یا ترسیم مجدد اتصالات</string>
+	<key>menu-hideConnections</key>
+	<string>پنهان کردن اتصالات</string>
+	<key>menu-gotoDestinationArtboard</key>
+	<string>برو به صفحه طرح لینک شده</string>
+	<key>menu-goBackToLink</key>
+	<string>برگشت به لایه لینک شده</string>
+	<key>menu-editSettings</key>
+	<string>تنظیمات...</string>
+	<key>menu-editShortcuts</key>
+	<string>میانبرهای صفحه کلید...</string>
+	<key>menu-editLanguage</key>
+	<string>زبان...</string>
+	<key>menu-checkForUpdates</key>
+	<string>بررسی برای بروزرسانی...</string>
+	<key>manifest-description</key>
+	<string>تولید دیاگرام‌های user-flow از صفحه طرح در اسکچ.</string>
+	<key>defineLink-invalidSelectionTitle</key>
+	<string>انتخاب نامعتبر</string>
+	<key>defineLink-invalidSelectionMessage</key>
+	<string>یک لایه یا گروه انتخاب کنید تا به عنوان لینک تعریف شود، صفحه طرح مقصد را انتخاب کنید، سپس این دستور را دوباره اجرا کنید.</string>
+	<key>defineLink-linkDefined</key>
+	<string>لینک تعریف شده:</string>
+	<key>removeLink-invalidSelectionMessage</key>
+	<string>لایه‌ای انتخاب کنید که به عنوان لینک تعریف شده، تا ویژگی‌های لینک را حذف کنید.</string>
+	<key>removeLink-linkRemoved</key>
+	<string>لینک حذف شد</string>
+	<key>removeLink-linksRemoved</key>
+	<string>لینک‌ها حذف شدند</string>
+	<key>relinkArtboards-confirm</key>
+	<string>اتصال مجدد صفحه طرح‌ها</string>
+	<key>relinkArtboards-title</key>
+	<string>آیا مطمئنیذ؟</string>
+	<key>relinkArtboards-description</key>
+	<string>این دستور تلاش خواهد کرد برای اتصال دوباره صفحه طرح‌هایی که تکراری شده‌اند و اتصالاتشان را از دست داده‌اند.</string>
+	<key>relinkArtboards-dontShowAgain</key>
+	<string>این پیام را دوباره نشان نده</string>
+	<key>relinkArtboards-relinkComplete</key>
+	<string>%count% عدد صفحه طرح اتصال مجدد شدند</string>
+	<key>addCondition-title</key>
+	<string>اضافه یا ویرایش شرط‌ها</string>
+	<key>addCondition-saveAndAdd</key>
+	<string>ذخیره | اضافه</string>
+	<key>addCondition-ifConditionPlaceholder</key>
+	<string>مثال: اگر کاربر وارد شده بود</string>
+	<key>addCondition-else</key>
+	<string>در غیر این صورت...</string>
+	<key>addCondition-conditionArtboardName</key>
+	<string>شرط‌ها</string>
+	<key>addCondition-conditionGroupName</key>
+	<string>شرط</string>
+	<key>gotoArtboard-invalidSelectionTitle</key>
+	<string>انتخاب نامعتبر</string>
+	<key>gotoArtboard-invalidSelectionMessage</key>
+	<string>لایه‌ای انتخاب کنید که به عنوان لینک تعریف کرده‌اید، سپس این دستور را دوباره اجرا کنید.</string>
+	<key>generateFlow-message</key>
+	<string>تولید یک User Flow</string>
+	<key>generateFlow-startFrom</key>
+	<string>شروع از:</string>
+	<key>generateFlow-noLinksTitle</key>
+	<string>لینکی تعریف نشده!</string>
+	<key>generateFlow-noLinksMessage</key>
+	<string>این صفحه هیچ لایه‌ای که به عنوان لینک تعریف شده باشد ندارد. حداقل یک لایه لینک با رفتن به `Plugins &gt; User Flows &gt; Define Link` تعریف کنید.</string>
+	<key>generateFlow-flowName</key>
+	<string>نام مسیر</string>
+	<key>generateFlow-description</key>
+	<string>توضیحات مسیر</string>
+	<key>generateFlow-addToPage</key>
+	<string>اضافه کردن به صفحه</string>
+	<key>generateFlow-newPage</key>
+	<string>صفحه جدید</string>
+	<key>generateFlow-keepOrganized</key>
+	<string>صفحه مسیرها را مرتب نگه دار</string>
+	<key>generateFlow-flowGroupName</key>
+	<string>گروه مسیر</string>
+	<key>generateFlow-connectionsGroupName</key>
+	<string>اتصالات</string>
+	<key>generateFlow-modifiedOnDate</key>
+	<string>تغییر داده شده در تاریخ %date%</string>
+	<key>generateFlow-modifiedBy</key>
+	<string>تغییر داده شده در تاریخ %date% توسط %user%</string>
+	<key>generateFlow-modifiedDate</key>
+	<string>تاریخ تغییر</string>
+	<key>generateFlow-saveButtonTitle</key>
+	<string>تولید دیاگرام</string>
+	<key>settings-restoreDefaults</key>
+	<string>برگشت به حالت پیش‌فرض</string>
+	<key>settings-title</key>
+	<string>تنظیمات User Flows</string>
+	<key>settings-exportOptions</key>
+	<string>گزینه‌های خروجی گرفتن از صفحه طرح</string>
+	<key>settings-scaleOptions</key>
+	<string>گزینه‌های مقیاس</string>
+	<key>settings-flowBackground</key>
+	<string>پس‌زمینه مسیرها</string>
+	<key>settings-bgLight</key>
+	<string>روشن</string>
+	<key>settings-bgDark</key>
+	<string>تیره</string>
+	<key>settings-flowIndicatorStroke</key>
+	<string>تنظیمات مربوط به خط مسیر</string>
+	<key>settings-minArea</key>
+	<string>حداقل منطقه لینک</string>
+	<key>settings-drawBorders</key>
+	<string>ترسیم حاشیه روی لایه‌های لینک</string>
+	<key>settings-yourName</key>
+	<string>نام شما</string>
+	<key>settings-showDate</key>
+	<string>نمایش تاریخ و نام روی مسیرها</string>
+	<key>settings-connectionCurved</key>
+	<string>منحنی</string>
+	<key>settings-connectionStraight</key>
+	<string>مستقیم</string>
+	<key>shortcuts-title</key>
+	<string>میانبرهای صفحه کلید UserFlows</string>
+	<key>shortcuts-message</key>
+	<string>میانبر‌ها توسط یک ترکیب از کلید‌های (cmd, control, shift, option) و دیگر کلید‌ها تعریف شده‌اند. برای مثال - &apos;cmd shift y&apos;. حتما بررسی کنید که یک میانبر توسط افزونه‌ای دیگر یا خود Sketch استفاده شده است یا نه.</string>
+	<key>checkUpdates-checking</key>
+	<string>در حال بررسی برای بروزرسانی...</string>
+	<key>checkUpdates-updateAvailableTitle</key>
+	<string>یک بروزرسانی موجود است!</string>
+	<key>checkUpdates-noUpdateAvailableTitle</key>
+	<string>تو خوبی!</string>
+	<key>checkUpdates-updateAvailableMessage</key>
+	<string>آخرین نسخه افزونه %currentVersion% است و شما نسخه %installedVersion% را دارید. لطفا دوباره افرونه را از وب‌سایت دانلود و نصب کنید.</string>
+	<key>checkUpdates-noUpdateAvailableMessage</key>
+	<string>شما آخرین نسخه UserFlows را نصب کرده‌اید 👍</string>
+	<key>checkUpdates-updateNow</key>
+	<string>همین حالا بروزرسانی کن</string>
+	<key>checkUpdates-updateLater</key>
+	<string>بعداً</string>
+	<key>language-title</key>
+	<string>تنظیمات زبان</string>
+	<key>language-message</key>
+	<string>برای افزونه UserFlows زبان انتخاب کنید</string>
+	<key>artboardDescription-invalidSelectionMessage</key>
+	<string>یک صفحه طرح انتخاب کنید</string>
+	<key>artboardDescription-description</key>
+	<string>توضیحات</string>
+	<key>artboardDescription-saved</key>
+	<string>توضیحات صفحه طرح ذخیره شد</string>
+	<key>alerts-save</key>
+	<string>ذخیره</string>
+	<key>alerts-cancel</key>
+	<string>لغو</string>
+	<key>alerts-done</key>
+	<string>ردیفه</string>
+</dict>
+</plist>
