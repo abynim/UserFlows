@@ -21,14 +21,15 @@ var linkLayerPredicate;
 var iconImage;
 var version;
 var strings;
-var supportedLanguages = ["en", "nl", "da", "cn", "zhtw", "fa"];
+var supportedLanguages = ["en", "nl", "da", "cn", "zhtw", "fa","tr"];
 var languageNames = {
 	en : "English",
 	da : "Danish",
 	nl : "Dutch",
 	cn : "Chinese Simplified",
 	zhtw : "Chinese Traditional",
-	fa : "Persian"
+	fa : "Persian",
+	tr : "Türkçe"
 };
 
 var defineLink = function(context) {

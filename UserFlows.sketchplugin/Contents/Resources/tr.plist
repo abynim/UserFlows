@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>menu-defineLink</key>
+	<string>Bağlantı Oluştur</string>
+	<key>menu-removeLink</key>
+	<string>Bağlantıyı Sil</string>
+	<key>menu-relinkArtboardsAfterCopy</key>
+	<string>Yinelenen Artboard’ları Yeniden Bağlantıla</string>
+	<key>menu-addCondition</key>
+	<string>Koşul Ekle veya Düzenle</string>
+	<key>menu-generateFlow</key>
+	<string>Akış Diyagramı Oluştur</string>
+	<key>menu-updateFlow</key>
+	<string>Akış Diyagramını Güncelle</string>
+	<key>menu-showConnections</key>
+	<string>Bağlantıları Göster veya Yeniden Yap</string>
+	<key>menu-hideConnections</key>
+	<string>Bağlantıları Gizle</string>
+	<key>menu-gotoDestinationArtboard</key>
+	<string>Bağlantılı Artboard’a Git</string>
+	<key>menu-goBackToLink</key>
+	<string>Bağlantı Katmanına Geri Dön</string>
+	<key>menu-editSettings</key>
+	<string>Ayarlar...</string>
+	<key>menu-editShortcuts</key>
+	<string>Kısayol Tuşları...</string>
+	<key>menu-editLanguage</key>
+	<string>Dil...</string>
+	<key>menu-checkForUpdates</key>
+	<string>Güncellemeleri Denetle...</string>
+	<key>manifest-description</key>
+	<string>Sketch’de ki artboard için kullanıcı akış diyagramı oluşturun.</string>
+	<key>defineLink-invalidSelectionTitle</key>
+	<string>Geçersiz Seçim</string>
+	<key>defineLink-invalidSelectionMessage</key>
+	<string>Bir Bağlantı olarak tanımlamak için bir artboard veya grup seçin, hedef çalışma yüzeyini seçin, ardından bu komutu tekrar çalıştırın.</string>
+	<key>defineLink-linkDefined</key>
+	<string>Bağlantı Tanımlandı:</string>
+	<key>removeLink-invalidSelectionMessage</key>
+	<string>Bağlantı niteliklerini kaldırmak için zaten bir bağlantı olarak tanımlanan bir artboard seçin.</string>
+	<key>removeLink-linkRemoved</key>
+	<string>Bağlantı Silindi</string>
+	<key>removeLink-linksRemoved</key>
+	<string>Bağlantılar Silindi</string>
+	<key>relinkArtboards-confirm</key>
+	<string>Artboard’ları yeniden bağlayın</string>
+	<key>relinkArtboards-title</key>
+	<string>Emin Misin?</string>
+	<key>relinkArtboards-description</key>
+	<string>Bu komut kopyalanan ve bağlantılarını kaybetmiş olan artboard’ları yeniden bağlamayı deneyecektir.</string>
+	<key>relinkArtboards-dontShowAgain</key>
+	<string>Bu mesajı tekrar gösterme</string>
+	<key>relinkArtboards-relinkComplete</key>
+	<string>%count% artboard yeniden bağlandı</string>
+	<key>addCondition-title</key>
+	<string>Koşul Ekle veya Düzenle</string>
+	<key>addCondition-saveAndAdd</key>
+	<string>Kaydet + Ekle</string>
+	<key>addCondition-ifConditionPlaceholder</key>
+	<string>Örn: Eğer kullanıcı giriş yaparsa</string>
+	<key>addCondition-else</key>
+	<string>Değilse...</string>
+	<key>addCondition-conditionArtboardName</key>
+	<string>Koşullar</string>
+	<key>addCondition-conditionGroupName</key>
+	<string>Koşul</string>
+	<key>gotoArtboard-invalidSelectionTitle</key>
+	<string>Geçersiz Seçim</string>
+	<key>gotoArtboard-invalidSelectionMessage</key>
+	<string>Bir Bağlantı olarak tanımladığınız bir artboard’ı seçin, ardından bu komutu tekrar çalıştırın.</string>
+	<key>generateFlow-message</key>
+	<string>Kullanıcı Akışı Oluştur</string>
+	<key>generateFlow-startFrom</key>
+	<string>Buradan başla:</string>
+	<key>generateFlow-noLinksTitle</key>
+	<string>Bağlantı tanımlanmadı!</string>
+	<key>generateFlow-noLinksMessage</key>
+	<string>Bu sayfa için hiçbir bağlantı tanımlanmadı. En son tanımlanan bağlantılara buradan ulaşabilirsin: 'Eklentiler> Kullanıcı Akışları> Bağlantıyı Tanımla'</string>
+	<key>generateFlow-flowName</key>
+	<string>Akış Adı</string>
+	<key>generateFlow-description</key>
+	<string>Akış Açıklaması</string>
+	<key>generateFlow-addToPage</key>
+	<string>Sayfaya Ekle</string>
+	<key>generateFlow-newPage</key>
+	<string>Yeni Sayfa</string>
+	<key>generateFlow-keepOrganized</key>
+	<string>_Flows Sayfasını Düzenli Tutun.</string>
+	<key>generateFlow-flowGroupName</key>
+	<string>Akış Grubu</string>
+	<key>generateFlow-connectionsGroupName</key>
+	<string>Bağlantılar</string>
+	<key>generateFlow-modifiedOnDate</key>
+	<string>%date% tarhinde değiştirildi.</string>
+	<key>generateFlow-modifiedBy</key>
+	<string>%date% tarihinde %user% tarafından değiştirildi.</string>
+	<key>generateFlow-modifiedDate</key>
+	<string>Değiştirilme Tarihi</string>
+	<key>generateFlow-saveButtonTitle</key>
+	<string>Diyagram Oluştur</string>
+	<key>settings-restoreDefaults</key>
+	<string>Varsayılanları Geri Yükle</string>
+	<key>settings-title</key>
+	<string>Kullanıcı Akış Ayarları</string>
+	<key>settings-exportOptions</key>
+	<string>Artboard Dışa Aktarma Seçenekleri</string>
+	<key>settings-scaleOptions</key>
+	<string>Ölçek Seçenekleri</string>
+	<key>settings-flowBackground</key>
+	<string>Akış Arka Planı</string>
+	<key>settings-bgLight</key>
+	<string>Beyaz</string>
+	<key>settings-bgDark</key>
+	<string>Siyah</string>
+	<key>settings-flowIndicatorStroke</key>
+	<string>Akış Göstergesi Çizgisi</string>
+	<key>settings-minArea</key>
+	<string>Minimum Bağlantı Alanı</string>
+	<key>settings-drawBorders</key>
+	<string>Bağlantı katmanları çevresinde kenarlıklar çiz</string>
+	<key>settings-yourName</key>
+	<string>Adınız</string>
+	<key>settings-showDate</key>
+	<string>Akışlarda Tarih ve İsim Göster</string>
+	<key>settings-connectionCurved</key>
+	<string>Kavisli</string>
+	<key>settings-connectionStraight</key>
+	<string>Düz</string>
+	<key>shortcuts-title</key>
+	<string>Kullanıcı Akışı Klavye Kısayolları</string>
+	<key>shortcuts-message</key>
+	<string>Kısayollar, değiştiriciler (cmd, control, shift, option) ve başka herhangi bir tuş kombinasyonu kullanılarak tanımlanır. Örneğin - 'cmd vardiya y'. Bir kısayolun zaten farklı bir eklenti tarafından mı yoksa Artboard defterinin kendisi tarafından mı kullanıldığını kontrol etmeyi unutmayın.</string>
+	<key>checkUpdates-checking</key>
+	<string>Güncellemeler kontrol ediliyor…</string>
+	<key>checkUpdates-updateAvailableTitle</key>
+	<string>Bir güncelleme var!</string>
+	<key>checkUpdates-noUpdateAvailableTitle</key>
+	<string>Eklenti Güncel, Süpersin!</string>
+	<key>checkUpdates-updateAvailableMessage</key>
+	<string>En son sürüm %currentVersion% ve %installedVersion% sürümüne sahipsin. Lütfen eklentiyi web sitesinden tekrar indirin ve yükleyin.</string>
+	<key>checkUpdates-noUpdateAvailableMessage</key>
+	<string>UserFlows’un en yeni sürümü yüklendi 👍</string>
+	<key>checkUpdates-updateNow</key>
+	<string>Şimdi Güncelle</string>
+	<key>checkUpdates-updateLater</key>
+	<string>Sonra</string>
+	<key>language-title</key>
+	<string>Dil Ayarları</string>
+	<key>language-message</key>
+	<string>UserFlows eklentisinin dilini ayarlayın.</string>
+	<key>artboardDescription-invalidSelectionMessage</key>
+	<string>Bir Artboard Seçin</string>
+	<key>artboardDescription-description</key>
+	<string>Açıklama</string>
+	<key>artboardDescription-saved</key>
+	<string>Artboard açıklaması kaydedildi.</string>
+	<key>alerts-save</key>
+	<string>Kaydet</string>
+	<key>alerts-cancel</key>
+	<string>İptal</string>
+	<key>alerts-done</key>
+	<string>Tamam</string>
+</dict>
+</plist>
