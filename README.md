@@ -21,6 +21,7 @@ User Flows supports the following languages:
 - Danish by [Kim Døfler](http://doefler.com)
 - Dutch by [Roy van Roojien](http://www.royvanrooijen.nl)
 - Persian by [Mohammad Reza Mahmoudi](http://www.rezamahmoudi.ir)
+- Turkish by [Abdullah Şahin](https://twitter.com/mrabdullahsahin)
 
 ---
 
