@@ -22,6 +22,7 @@ User Flows supports the following languages:
 - Dutch by [Roy van Roojien](http://www.royvanrooijen.nl)
 - Persian by [Mohammad Reza Mahmoudi](http://www.rezamahmoudi.ir)
 - Turkish by [Abdullah Şahin](https://twitter.com/mrabdullahsahin)
+- Русский от [Никиты Шехова](https://t.me/NikitaShekhov)
 
 ---
 
