@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>menu-defineLink</key>
-	<string>Vytvořit Odkaz</string>
+	<string>Vytvořit Link</string>
 	<key>menu-removeLink</key>
-	<string>Smazat Odkaz</string>
+	<string>Smazat Link</string>
 	<key>menu-relinkArtboardsAfterCopy</key>
 	<string>Přelinkovat Duplikované Artboardy</string>
 	<key>menu-addCondition</key>
