@@ -21,7 +21,7 @@ var linkLayerPredicate;
 var iconImage;
 var version;
 var strings;
-var supportedLanguages = ["en", "nl", "da", "cn", "zhtw", "fa","tr"];
+var supportedLanguages = ["en", "nl", "da", "cn", "zhtw", "fa", "tr", "cz"];
 var languageNames = {
 	en : "English",
 	da : "Danish",
@@ -29,7 +29,8 @@ var languageNames = {
 	cn : "Chinese Simplified",
 	zhtw : "Chinese Traditional",
 	fa : "Persian",
-	tr : "Türkçe"
+	tr : "Türkçe",
+	cz : "Česky"
 };
 
 var defineLink = function(context) {
