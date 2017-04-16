@@ -30,7 +30,7 @@ var languageNames = {
 	zhtw : "Chinese Traditional",
 	fa : "Persian",
 	tr : "Türkçe",
-	cz : "Česky"
+	cz : "Česky",
 	ru : "Русский"
 };
 
