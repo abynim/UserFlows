@@ -18,12 +18,13 @@ User Flows supports the following languages:
 - English
 - Chinese (Simplified) by [Pluwen](https://twitter.com/pluwen)
 - Chinese (Traditional) by [Chia Yu Pai](https://github.com/fantasywind)
+- Česky by [Jakub Theimer](http://madnest.co)
 - Danish by [Kim Døfler](http://doefler.com)
 - Dutch by [Roy van Roojien](http://www.royvanrooijen.nl)
+- German by [Nikolas Klein](https://twitter.com/nikolasklein)
 - Persian by [Mohammad Reza Mahmoudi](http://www.rezamahmoudi.ir)
-- Turkish by [Abdullah Şahin](https://twitter.com/mrabdullahsahin)
 - Русский от [Никиты Шехова](https://t.me/NikitaShekhov)
-- Česky by [Jakub Theimer](http://madnest.co)
+- Turkish by [Abdullah Şahin](https://twitter.com/mrabdullahsahin)
 
 ---
 
