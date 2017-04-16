@@ -21,7 +21,7 @@ var linkLayerPredicate;
 var iconImage;
 var version;
 var strings;
-var supportedLanguages = ["en", "nl", "da", "cn", "zhtw", "fa", "tr", "cz"];
+var supportedLanguages = ["en", "nl", "da", "cn", "zhtw", "fa", "tr", "ru", "cz"];
 var languageNames = {
 	en : "English",
 	da : "Danish",
@@ -31,6 +31,7 @@ var languageNames = {
 	fa : "Persian",
 	tr : "Türkçe",
 	cz : "Česky"
+	ru : "Русский"
 };
 
 var defineLink = function(context) {

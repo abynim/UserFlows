@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>menu-defineLink</key>
+	<string>Создать связь</string>
+	<key>menu-removeLink</key>
+	<string>Удалить связь</string>
+	<key>menu-relinkArtboardsAfterCopy</key>
+	<string>Скопировать артборды и пересоздать связь</string>
+	<key>menu-addCondition</key>
+	<string>Добавить/редактировать условия</string>
+	<key>menu-generateFlow</key>
+	<string>Сгенерировать Flow диаграмму</string>
+	<key>menu-updateFlow</key>
+	<string>Редактировать Flow диаграмму</string>
+	<key>menu-showConnections</key>
+	<string>Показать или пересоздать связи</string>
+	<key>menu-hideConnections</key>
+	<string>Скрыть связи</string>
+	<key>menu-gotoDestinationArtboard</key>
+	<string>Перейти к привязанному артборду</string>
+	<key>menu-goBackToLink</key>
+	<string>Вернуться к привязанному слою</string>
+	<key>menu-editSettings</key>
+	<string>Настройки</string>
+	<key>menu-editShortcuts</key>
+	<string>Горячие клавиши</string>
+	<key>menu-editLanguage</key>
+	<string>Язык</string>
+	<key>menu-checkForUpdates</key>
+	<string>Проверить обновления</string>
+	<key>manifest-description</key>
+	<string>Генератор User Flow диаграм для Sketch</string>
+	<key>defineLink-invalidSelectionTitle</key>
+	<string>Ошибка выделения</string>
+	<key>defineLink-invalidSelectionMessage</key>
+	<string>Для создания связи выберите слой или группу, нужный артборд и повторите команду.</string>
+	<key>defineLink-linkDefined</key>
+	<string>Ссылка определена:</string>
+	<key>removeLink-invalidSelectionMessage</key>
+	<string>Выберите слой-ссылку, чтобы удалить его атрибуты.</string>
+	<key>removeLink-linkRemoved</key>
+	<string>Связь удалена</string>
+	<key>removeLink-linksRemoved</key>
+	<string>Связи удалены</string>
+	<key>relinkArtboards-confirm</key>
+	<string>Пересоздать связь артбордов</string>
+	<key>relinkArtboards-title</key>
+	<string>Вы уверены?</string>
+	<key>relinkArtboards-description</key>
+	<string>Это команда пересоздаст связи между скопированными и потерявшими связи артбордам.</string>
+	<key>relinkArtboards-dontShowAgain</key>
+	<string>Не показывать это сообщение снова</string>
+	<key>relinkArtboards-relinkComplete</key>
+	<string>%count% арбордов были связаны снова</string>
+	<key>addCondition-title</key>
+	<string>Добавить или редактировать условия</string>
+	<key>addCondition-saveAndAdd</key>
+	<string>Сохранить и добавить</string>
+	<key>addCondition-ifConditionPlaceholder</key>
+	<string>Если пользователей не залогинен</string>
+	<key>addCondition-else</key>
+	<string>Или...</string>
+	<key>addCondition-conditionArtboardName</key>
+	<string>Условия</string>
+	<key>addCondition-conditionGroupName</key>
+	<string>Условиие</string>
+	<key>gotoArtboard-invalidSelectionTitle</key>
+	<string>Ошибка выделения</string>
+	<key>gotoArtboard-invalidSelectionMessage</key>
+	<string>Выберите слой-ссылку и повторите команду.</string>
+	<key>generateFlow-message</key>
+	<string>Создать User Flow</string>
+	<key>generateFlow-startFrom</key>
+	<string>Начать от:</string>
+	<key>generateFlow-noLinksTitle</key>
+	<string>Нет слоев-ссылок!</string>
+	<key>generateFlow-noLinksMessage</key>
+	<string>На этой странице нет связей. Создайте хотя бы одну связь, перейдя в `Plugins &gt; User Flows &gt; Создать связь`</string>
+	<key>generateFlow-flowName</key>
+	<string>Название Flow</string>
+	<key>generateFlow-description</key>
+	<string>Описание Flow</string>
+	<key>generateFlow-addToPage</key>
+	<string>Добавить на страницу</string>
+	<key>generateFlow-newPage</key>
+	<string>Новая страница</string>
+	<key>generateFlow-keepOrganized</key>
+	<string>Держать страницу _Flows упорядоченной</string>
+	<key>generateFlow-flowGroupName</key>
+	<string>Flow-группа</string>
+	<key>generateFlow-connectionsGroupName</key>
+	<string>Связи</string>
+	<key>generateFlow-modifiedOnDate</key>
+	<string>Отредактирован %date%</string>
+	<key>generateFlow-modifiedBy</key>
+	<string>Отредактирован %date% пользователем %user%</string>
+	<key>generateFlow-modifiedDate</key>
+	<string>Дата редактирования</string>
+	<key>generateFlow-saveButtonTitle</key>
+	<string>Создать диаграмму</string>
+	<key>settings-restoreDefaults</key>
+	<string>Восстановить настройки по умолчанию</string>
+	<key>settings-title</key>
+	<string>User Flow</string>
+	<key>settings-exportOptions</key>
+	<string>Выгрузка артбордов</string>
+	<key>settings-scaleOptions</key>
+	<string>Масштаб</string>
+	<key>settings-flowBackground</key>
+	<string>Задний фон Flow</string>
+	<key>settings-bgLight</key>
+	<string>Светлый</string>
+	<key>settings-bgDark</key>
+	<string>Тёмный</string>
+	<key>settings-flowIndicatorStroke</key>
+	<string>Величина линии индикатора Flow</string>
+	<key>settings-minArea</key>
+	<string>Минимальная область ссылки</string>
+	<key>settings-drawBorders</key>
+	<string>Отрисовывать границы вокруг соединенных слоев</string>
+	<key>settings-yourName</key>
+	<string>Ваше имя</string>
+	<key>settings-showDate</key>
+	<string>Показывать дату и время на Flow</string>
+	<key>settings-connectionCurved</key>
+	<string>Изогнутая</string>
+	<key>settings-connectionStraight</key>
+	<string>Прямая</string>
+	<key>shortcuts-title</key>
+	<string>Горячие клавиши User Flows</string>
+	<key>shortcuts-message</key>
+	<string>Горячие клавиши — комбинации cmd, ctrl, shift, option и любых других клавиш. Пример: &apos;cmd shift y&apos;. Перед созданием горячих клавиш, проверьте, не используются ли они другими плагинами или Sketch.</string>
+	<key>checkUpdates-checking</key>
+	<string>Проверяем обновление...</string>
+	<key>checkUpdates-updateAvailableTitle</key>
+	<string>Доступно обновление</string>
+	<key>checkUpdates-noUpdateAvailableTitle</key>
+	<string>Нет доступных обновлений</string>
+	<key>checkUpdates-updateAvailableMessage</key>
+	<string>Последняя доступная версия %currentVersion%, у вас установлена %installedVersion%. Пожалуйста скачайте плагин с официального сайта.</string>
+	<key>checkUpdates-noUpdateAvailableMessage</key>
+	<string>Установлена последняя версия плагина 👍</string>
+	<key>checkUpdates-updateNow</key>
+	<string>Обновить сейчас</string>
+	<key>checkUpdates-updateLater</key>
+	<string>Позже</string>
+	<key>language-title</key>
+	<string>Язык</string>
+	<key>language-message</key>
+	<string>Выберите язык плагина UserFlows.</string>
+	<key>artboardDescription-invalidSelectionMessage</key>
+	<string>Выберите артборд</string>
+	<key>artboardDescription-description</key>
+	<string>Описание</string>
+	<key>artboardDescription-saved</key>
+	<string>Описание артборда сохранено</string>
+	<key>alerts-save</key>
+	<string>Сохранить</string>
+	<key>alerts-cancel</key>
+	<string>Отменить</string>
+	<key>alerts-done</key>
+	<string>ОК</string>
+</dict>
+</plist>
