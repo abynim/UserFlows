@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>menu-defineLink</key>
+	<string>Vytvořit Link</string>
+	<key>menu-removeLink</key>
+	<string>Smazat Link</string>
+	<key>menu-relinkArtboardsAfterCopy</key>
+	<string>Přelinkovat Duplikované Artboardy</string>
+	<key>menu-addCondition</key>
+	<string>Přidat/Upravit Podmínky</string>
+	<key>menu-generateFlow</key>
+	<string>Generovat Flow Diagram</string>
+	<key>menu-updateFlow</key>
+	<string>Upravit Flow Diagram</string>
+	<key>menu-showConnections</key>
+	<string>Zobrazit nebo Překreslit Spojení</string>
+	<key>menu-hideConnections</key>
+	<string>Schovat Spojení</string>
+	<key>menu-gotoDestinationArtboard</key>
+	<string>Přejít na Linked Artboard</string>
+	<key>menu-goBackToLink</key>
+	<string>Jít zpět na Link Layer</string>
+	<key>menu-editSettings</key>
+	<string>Nastavení...</string>
+	<key>menu-editShortcuts</key>
+	<string>Klávesové Zkratky...</string>
+	<key>menu-editLanguage</key>
+	<string>Jazyk...</string>
+	<key>menu-checkForUpdates</key>
+	<string>Zkontrolovat Aktualizace...</string>
+	<key>manifest-description</key>
+	<string>Generovat user-flow diagramy z artboardů ve Sketchi.</string>
+	<key>defineLink-invalidSelectionTitle</key>
+	<string>Nesprávný Výběr</string>
+	<key>defineLink-invalidSelectionMessage</key>
+	<string>Vyberte vrstvu nebo skupinu pro vytvoření Linku, vyberte cílový artboard, potom znovu spusťe tento příkaz.</string>
+	<key>defineLink-linkDefined</key>
+	<string>Link definován:</string>
+	<key>removeLink-invalidSelectionMessage</key>
+	<string>Zvolte vrstvu definovanou jako link, abyste smazali jejich Link vlastnosti.</string>
+	<key>removeLink-linkRemoved</key>
+	<string>Link smazán</string>
+	<key>removeLink-linksRemoved</key>
+	<string>Linky smazány</string>
+	<key>relinkArtboards-confirm</key>
+	<string>Přelinkovat Artboardy</string>
+	<key>relinkArtboards-title</key>
+	<string>Jste si jistí?</string>
+	<key>relinkArtboards-description</key>
+	<string>Tento příkaz se pokusí přelinkovat artboardy, které byly duplikovány a ztratily svá spojení.</string>
+	<key>relinkArtboards-dontShowAgain</key>
+	<string>Znovu nezobrazovat tuto zprávu</string>
+	<key>relinkArtboards-relinkComplete</key>
+	<string>%count% artboardů bylo přelinkováno</string>
+	<key>addCondition-title</key>
+	<string>Přidat nebo Upravit Spojení</string>
+	<key>addCondition-saveAndAdd</key>
+	<string>Uložit + Přidat</string>
+	<key>addCondition-ifConditionPlaceholder</key>
+	<string>Př. Pokud je uživatel přihlášen</string>
+	<key>addCondition-else</key>
+	<string>Nebo...</string>
+	<key>addCondition-conditionArtboardName</key>
+	<string>Podmínky</string>
+	<key>addCondition-conditionGroupName</key>
+	<string>Podmínka</string>
+	<key>gotoArtboard-invalidSelectionTitle</key>
+	<string>Neznámý výběr</string>
+	<key>gotoArtboard-invalidSelectionMessage</key>
+	<string>Vyberte vrstvu, kterou jste si definovali jako Link, potom spusťe tento příkaz znovu.</string>
+	<key>generateFlow-message</key>
+	<string>Generovat User Flow</string>
+	<key>generateFlow-startFrom</key>
+	<string>Začít od:</string>
+	<key>generateFlow-noLinksTitle</key>
+	<string>Nedefinován žádný Link!</string>
+	<key>generateFlow-noLinksMessage</key>
+	<string>Tato stránka nemá nadefinovány žádné linky mezi vrstvami. Definujte nejméně jeden link přechodem na `Plugins &gt; User Flows &gt; Definovat Link`</string>
+	<key>generateFlow-flowName</key>
+	<string>Jméno Flow</string>
+	<key>generateFlow-description</key>
+	<string>Popis Flow</string>
+	<key>generateFlow-addToPage</key>
+	<string>Přidat na Stránku</string>
+	<key>generateFlow-newPage</key>
+	<string>Nová Stránka</string>
+	<key>generateFlow-keepOrganized</key>
+	<string>Ponechat _Flows Stránku Organizovanou</string>
+	<key>generateFlow-flowGroupName</key>
+	<string>Flow Skupina</string>
+	<key>generateFlow-connectionsGroupName</key>
+	<string>Spojení</string>
+	<key>generateFlow-modifiedOnDate</key>
+	<string>Upraveno %date%</string>
+	<key>generateFlow-modifiedBy</key>
+	<string>Upraveno %date% uživatelem %user%</string>
+	<key>generateFlow-modifiedDate</key>
+	<string>Datum Upraveno</string>
+	<key>generateFlow-saveButtonTitle</key>
+	<string>Generovat Diagramy</string>
+	<key>settings-restoreDefaults</key>
+	<string>Obnovit Výchozí Nastavení</string>
+	<key>settings-title</key>
+	<string>User Flows Nastavení</string>
+	<key>settings-exportOptions</key>
+	<string>Možnosti Artboard Exportu</string>
+	<key>settings-scaleOptions</key>
+	<string>Nastavení Měřítka</string>
+	<key>settings-flowBackground</key>
+	<string>Flow Pozadí</string>
+	<key>settings-bgLight</key>
+	<string>Světlé</string>
+	<key>settings-bgDark</key>
+	<string>Tmavé</string>
+	<key>settings-flowIndicatorStroke</key>
+	<string>Obtažení Flow Indicator</string>
+	<key>settings-minArea</key>
+	<string>Minimální Plocha Linku</string>
+	<key>settings-drawBorders</key>
+	<string>Nakreslit okraje kolem link vrstev</string>
+	<key>settings-yourName</key>
+	<string>Vaše Jméno</string>
+	<key>settings-showDate</key>
+	<string>Zobrazit Datum a Pojmenovat Flows</string>
+	<key>settings-connectionCurved</key>
+	<string>Zakřivené</string>
+	<key>settings-connectionStraight</key>
+	<string>Rozvné</string>
+	<key>shortcuts-title</key>
+	<string>User Flows Klávesové Zkratky</string>
+	<key>shortcuts-message</key>
+	<string>Zkratky jsou definovány použitím modifikátorů (cmd, control, shift, option) a jakoukoliv další klávesou. Například – &apos;cmd shift y&apos;. Zkontrolujte zda-li zkratka není používána žádným dalším Sketch pluginem.</string>
+	<key>checkUpdates-checking</key>
+	<string>Kontroluji aktualizace...</string>
+	<key>checkUpdates-updateAvailableTitle</key>
+	<string>Aktualizace k dispozici!</string>
+	<key>checkUpdates-noUpdateAvailableTitle</key>
+	<string>Jste skvělí!</string>
+	<key>checkUpdates-updateAvailableMessage</key>
+	<string>Poslední verze je %currentVersion% a vy máte verzi %installedVersion%. Prosím stáhněte si a nainstalujte plugin z našeho webu.</string>
+	<key>checkUpdates-noUpdateAvailableMessage</key>
+	<string>Máte nainstalovánu poslední verzi UserFlows 👍</string>
+	<key>checkUpdates-updateNow</key>
+	<string>Aktualizovat Nyní</string>
+	<key>checkUpdates-updateLater</key>
+	<string>Později</string>
+	<key>language-title</key>
+	<string>Jazyková Nastavení</string>
+	<key>language-message</key>
+	<string>Nastavit jazyk pro UserFlows plugin.</string>
+	<key>artboardDescription-invalidSelectionMessage</key>
+	<string>Zvolte artboard</string>
+	<key>artboardDescription-description</key>
+	<string>Popis</string>
+	<key>artboardDescription-saved</key>
+	<string>Popis artboardu uložen</string>
+	<key>alerts-save</key>
+	<string>Uložit</string>
+	<key>alerts-cancel</key>
+	<string>Zrušit</string>
+	<key>alerts-done</key>
+	<string>Hotovo</string>
+</dict>
+</plist>

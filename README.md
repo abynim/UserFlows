@@ -23,6 +23,7 @@ User Flows supports the following languages:
 - Persian by [Mohammad Reza Mahmoudi](http://www.rezamahmoudi.ir)
 - Turkish by [Abdullah Şahin](https://twitter.com/mrabdullahsahin)
 - Русский от [Никиты Шехова](https://t.me/NikitaShekhov)
+- Česky by [Jakub Theimer](http://madnest.co)
 
 ---
 
