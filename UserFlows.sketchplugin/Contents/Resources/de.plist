@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>menu-defineLink</key>
+	<string>Link erstellen</string>
+	<key>menu-removeLink</key>
+	<string>Link entfernen</string>
+	<key>menu-relinkArtboardsAfterCopy</key>
+	<string>Duplizierte Artboards neu verlinken</string>
+	<key>menu-addCondition</key>
+	<string>Bedinungen hinzufügen/entfernen</string>
+	<key>menu-generateFlow</key>
+	<string>Flow Diagramm erstellen</string>
+	<key>menu-updateFlow</key>
+	<string>Flow Diagramm aktualisieren</string>
+	<key>menu-showConnections</key>
+	<string>Verbindungen zeigen oder aktualisieren</string>
+	<key>menu-hideConnections</key>
+	<string>Verbindungen verstecken</string>
+	<key>menu-gotoDestinationArtboard</key>
+	<string>Zu verlinktem Artboard springen</string>
+	<key>menu-goBackToLink</key>
+	<string>Zurück zur verlinkten Ebene</string>
+	<key>menu-editSettings</key>
+	<string>Einstellungen...</string>
+	<key>menu-editShortcuts</key>
+	<string>Tastaturkürzel...</string>
+	<key>menu-editLanguage</key>
+	<string>Sprache...</string>
+	<key>menu-checkForUpdates</key>
+	<string>Nach Updates suchen...</string>
+	<key>manifest-description</key>
+	<string>User-flow Diagramme aus Artboards in Sketch erstellen.</string>
+	<key>defineLink-invalidSelectionTitle</key>
+	<string>Ungültige Auswahl</string>
+	<key>defineLink-invalidSelectionMessage</key>
+	<string>Wähle eine Ebene oder Group als Link aus, wähle das gewünschte Ziel und führe diesen Befehl wieder aus.</string>
+	<key>defineLink-linkDefined</key>
+	<string>Link definiert:</string>
+	<key>removeLink-invalidSelectionMessage</key>
+	<string>Wähle eine Ebene, die schon als Link definiert ist aus, um den Link zu entfernen.</string>
+	<key>removeLink-linkRemoved</key>
+	<string>Link entfernt</string>
+	<key>removeLink-linksRemoved</key>
+	<string>Links entfernt</string>
+	<key>relinkArtboards-confirm</key>
+	<string>Artboards neu verlinken</string>
+	<key>relinkArtboards-title</key>
+	<string>Bist du dir sicher?</string>
+	<key>relinkArtboards-description</key>
+	<string>Dieser Befehl versucht duplizierte Artboards wieder zu verlinken, die ihren Link verloren hatten.</string>
+	<key>relinkArtboards-dontShowAgain</key>
+	<string>Diese Nachricht nicht mehr anzeigen</string>
+	<key>relinkArtboards-relinkComplete</key>
+	<string>%count% Artobards wurden wieder verlinkt</string>
+	<key>addCondition-title</key>
+	<string>Bedinungen hinzufügen oder ändern</string>
+	<key>addCondition-saveAndAdd</key>
+	<string>Speichern + Hinzufügen</string>
+	<key>addCondition-ifConditionPlaceholder</key>
+	<string>Ex: When Nutzer eingeloogt ist</string>
+	<key>addCondition-else</key>
+	<string>Oder...</string>
+	<key>addCondition-conditionArtboardName</key>
+	<string>Bedingung</string>
+	<key>addCondition-conditionGroupName</key>
+	<string>Bedingung</string>
+	<key>gotoArtboard-invalidSelectionTitle</key>
+	<string>Ungültige Auswahl</string>
+	<key>gotoArtboard-invalidSelectionMessage</key>
+	<string>Wähle eine Ebene, die schon als Link definiert ist aus, dann führe diesen Befehl noch einmal aus.</string>
+	<key>generateFlow-message</key>
+	<string>User Flow erstellen</string>
+	<key>generateFlow-startFrom</key>
+	<string>Starten von:</string>
+	<key>generateFlow-noLinksTitle</key>
+	<string>Keine Links definiert!</string>
+	<key>generateFlow-noLinksMessage</key>
+	<string>Diese Seite hat keine Links. Füge mindestens einen Link hinzu über `Plugins &gt; User Flows &gt; Link erstellen`</string>
+	<key>generateFlow-flowName</key>
+	<string>Flow Name</string>
+	<key>generateFlow-description</key>
+	<string>Flow Beschreibung</string>
+	<key>generateFlow-addToPage</key>
+	<string>Zur Seite hinzufügen</string>
+	<key>generateFlow-newPage</key>
+	<string>Neue Seite</string>
+	<key>generateFlow-keepOrganized</key>
+	<string>Die _Flows Seite organisiert halten</string>
+	<key>generateFlow-flowGroupName</key>
+	<string>Flow Gruppe</string>
+	<key>generateFlow-connectionsGroupName</key>
+	<string>Verbindungen</string>
+	<key>generateFlow-modifiedOnDate</key>
+	<string>Zuletzt bearbeitet: %date%</string>
+	<key>generateFlow-modifiedBy</key>
+	<string>Zuletzt bearbeitet: %date% durch %user%</string>
+	<key>generateFlow-modifiedDate</key>
+	<string>Bearbeitungsdatum</string>
+	<key>generateFlow-saveButtonTitle</key>
+	<string>Diagramm erstellen</string>
+	<key>settings-restoreDefaults</key>
+	<string>Einstellungen zurücksetzen</string>
+	<key>settings-title</key>
+	<string>User Flows Einstellungen</string>
+	<key>settings-exportOptions</key>
+	<string>Artboard Export Optionen</string>
+	<key>settings-scaleOptions</key>
+	<string>Skalierungs Optionen</string>
+	<key>settings-flowBackground</key>
+	<string>Flow Hintergrund</string>
+	<key>settings-bgLight</key>
+	<string>Hell</string>
+	<key>settings-bgDark</key>
+	<string>Dunkel</string>
+	<key>settings-flowIndicatorStroke</key>
+	<string>Flow Anzeigestrich</string>
+	<key>settings-minArea</key>
+	<string>Kleinste Link Fläche</string>
+	<key>settings-drawBorders</key>
+	<string>Rahmen um verlinkte Ebenen zeichnen</string>
+	<key>settings-yourName</key>
+	<string>Dein Name</string>
+	<key>settings-showDate</key>
+	<string>Namen und Datum auf Flows zeigen</string>
+	<key>settings-connectionCurved</key>
+	<string>Gewölbt</string>
+	<key>settings-connectionStraight</key>
+	<string>Gerade</string>
+	<key>shortcuts-title</key>
+	<string>User Flows Tastaturkürzel</string>
+	<key>shortcuts-message</key>
+	<string>Tastaturkürzel werden definiert über eine Kombination aus Systemtasten (cmd, control, shift, option) und einer anderen Taste. Zum Beispiel – &apos;cmd shift y&apos;. Überprüfe bitte, ob ein Kürzel schon von einem anderen Plugin oder Sketch schon verwendet wird.</string>
+	<key>checkUpdates-checking</key>
+	<string>Nach Updates suchen...</string>
+	<key>checkUpdates-updateAvailableTitle</key>
+	<string>Ein Update ist vorhanden!</string>
+	<key>checkUpdates-noUpdateAvailableTitle</key>
+	<string>Alles aktuell!</string>
+	<key>checkUpdates-updateAvailableMessage</key>
+	<string>Die aktuellse Version ist %currentVersion%. Du hast Version %installedVersion%. Bitte lade dir das Plugin von der Webseite herunter und installiere es neu.</string>
+	<key>checkUpdates-noUpdateAvailableMessage</key>
+	<string>Du hast die aktuellste Version von User Flows! 👍</string>
+	<key>checkUpdates-updateNow</key>
+	<string>Jetzt aktualisieren</string>
+	<key>checkUpdates-updateLater</key>
+	<string>Später</string>
+	<key>language-title</key>
+	<string>Spracheinstellungen</string>
+	<key>language-message</key>
+	<string>Verändere die Sprache von User Flows.</string>
+	<key>artboardDescription-invalidSelectionMessage</key>
+	<string>Wähle ein Artboard aus</string>
+	<key>artboardDescription-description</key>
+	<string>Beschreibung</string>
+	<key>artboardDescription-saved</key>
+	<string>Artboard Beschreibung gespeichert</string>
+	<key>alerts-save</key>
+	<string>Speichern</string>
+	<key>alerts-cancel</key>
+	<string>Abbrechen</string>
+	<key>alerts-done</key>
+	<string>Fertig</string>
+</dict>
+</plist>
