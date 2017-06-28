@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"  xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>UserFlows</title>
+    <link>https://abynim.github.io/UserFlows</link>
+    <description>Generate flow diagrams from Artboards in Sketch</description>
+    <language>en</language>
+      <item>
+        <title>UserFlows 2.0.5</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>Fixes for Sketch 45</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://github.com/abynim/UserFlows/archive/v2.zip" sparkle:version="2.0.5" />
+      </item>
+  </channel>
+</rss>

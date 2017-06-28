@@ -192,9 +192,10 @@
   "compatibleVersion" : "4.1" ,
   "disableCocoaScriptPreprocessor" : true,
   "identifier" : "com.abynim.sketchplugins.userflows",
-  "version" : "2.0.4",
+  "version" : "2.0.5",
   "description" : "Generate user-flow diagrams from artboards in Sketch.",
   "homepage" : "https:\/\/abynim.github.io\/UserFlows",
   "authorEmail" : "abynimbalkar@gmail.com",
-  "name" : "User Flows"
+  "name" : "User Flows",
+  "appcast" : "https://raw.githubusercontent.com/abynim/UserFlows/v2/appcast.xml"
 }

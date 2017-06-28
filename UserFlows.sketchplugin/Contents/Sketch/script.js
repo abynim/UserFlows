@@ -21,6 +21,7 @@ var linkLayerPredicate;
 var iconImage;
 var version;
 var strings;
+
 var supportedLanguages = ["en", "cn", "zhtw", "cz", "da", "nl", "de", "fa", "ru", "tr"];
 var languageNames = {
 	en : "English",
@@ -725,9 +726,9 @@ var generateFlow = function(context) {
 		flowBoard.addLayers([flowNameLabel]);
 
 		var yPos = outerPadding + flowNameLabel.frame().height() + 14;
-
+		var flowDescriptionLabel;
 		if (flowDescription && flowDescription != "") {
-			var flowDescriptionLabel = MSTextLayer.new();
+			flowDescriptionLabel = MSTextLayer.new();
 			flowDescriptionLabel.setName(strings["generateFlow-description"]);
 			flowDescriptionLabel.frame().setX(outerPadding);
 			flowDescriptionLabel.frame().setY(yPos);
@@ -742,13 +743,14 @@ var generateFlow = function(context) {
 			yPos = flowDescriptionLabel.frame().y() + flowDescriptionLabel.frame().height();
 		}
 
+		var modifiedDateLabel;
 		if (showModifiedDate == 1) {
 
 			var formatter = NSDateFormatter.alloc().init();
 			formatter.setTimeStyle(NSDateFormatterNoStyle);
 			formatter.setDateStyle(NSDateFormatterMediumStyle);
 
-			var modifiedDateLabel = MSTextLayer.new();
+			modifiedDateLabel = MSTextLayer.new();
 			var modifiedOnText;
 			if (modifiedBy && modifiedBy != "") {
 				modifiedOnText = strings["generateFlow-modifiedBy"].stringByReplacingOccurrencesOfString_withString("%date%", formatter.stringFromDate(NSDate.date())).stringByReplacingOccurrencesOfString_withString("%user%", modifiedBy);
@@ -779,6 +781,18 @@ var generateFlow = function(context) {
 		flowBoard.frame().setWidth(newGroup.frame().width() + (outerPadding*2));
 		flowBoard.frame().setHeight(yPos + newGroup.frame().height() + outerPadding);
 		newGroup.ungroup();
+
+		var labelWidth = flowBoard.frame().width() - (outerPadding*2);
+		flowNameLabel.frame().setWidth(labelWidth)
+		flowNameLabel.setTextAlignment( 0 );
+		if (flowDescriptionLabel) { 
+			flowDescriptionLabel.frame().setWidth(labelWidth);
+			flowDescriptionLabel.setTextAlignment( 0 );
+		}
+		if (modifiedDateLabel) { 
+			modifiedDateLabel.frame().setWidth(labelWidth);
+			modifiedDateLabel.setTextAlignment( 0 );
+		}
 
 		var flowPageName = pagesDropdown.titleOfSelectedItem(),
 			flowPage = doc.pages().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("name == %@", flowPageName)).firstObject();;
@@ -856,7 +870,7 @@ var showConnections = function(context) {
 
 var redrawConnections = function(context) {
 	var doc = context.document || context.actionContext.document;
-	var selectedLayers = doc.findSelectedLayers();
+	var selectedLayers = doc.selectedLayers().layers();
 
 	var connectionsGroup = getConnectionsGroupInPage(doc.currentPage());
 	if (connectionsGroup) {
@@ -869,11 +883,19 @@ var redrawConnections = function(context) {
 		connections = [],
 		linkLayer, destinationArtboardID, destinationArtboard, isCondition, linkRect;
 
+	var parentArtboards = linkLayers.valueForKeyPath("@distinctUnionOfObjects.parentArtboard"),
+		loop2 = parentArtboards.objectEnumerator(),
+		parentArtboard;
+	while(parentArtboard = loop2.nextObject()) {
+		parentArtboard.exportOptions().setLayerOptions(2);
+	}
+
 	while (linkLayer = loop.nextObject()) {
 
 		destinationArtboardID = context.command.valueForKey_onLayer_forPluginIdentifier("destinationArtboardID", linkLayer, kPluginDomain);
 
 		destinationArtboard = doc.currentPage().artboards().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("objectID == %@", destinationArtboardID)).firstObject();
+		destinationArtboard.exportOptions().setLayerOptions(2);
 
 		if (destinationArtboard) {
 
@@ -897,11 +919,11 @@ var redrawConnections = function(context) {
 
 	var connectionLayers = MSLayerArray.arrayWithLayers(drawConnections(connections, doc.currentPage(), 1));
 	connectionsGroup = MSLayerGroup.groupFromLayers(connectionLayers);
-	connectionsGroup.setName("Connections");
+	connectionsGroup.setName("-Connections");
 	connectionsGroup.setIsLocked(1);
+	connectionsGroup.deselectLayerAndParent();
 	context.command.setValue_forKey_onLayer_forPluginIdentifier(true, "isConnectionsContainer", connectionsGroup, kPluginDomain);
-	doc.currentPage().deselectAllLayers();
-
+	
 	var loop = selectedLayers.objectEnumerator(), selectedLayer;
 	while (selectedLayer = loop.nextObject()) {
 		selectedLayer.select_byExpandingSelection(true, true);
