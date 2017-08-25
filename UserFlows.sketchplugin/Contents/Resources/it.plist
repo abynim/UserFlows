@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>menu-defineLink</key>
+	<string>Create Link</string>
+	<key>menu-removeLink</key>
+	<string>Remove Link</string>
+	<key>menu-relinkArtboardsAfterCopy</key>
+	<string>Re-Link Duplicated Artboards</string>
+	<key>menu-addCondition</key>
+	<string>Add/Edit Conditions</string>
+	<key>menu-generateFlow</key>
+	<string>Generate Flow Diagram</string>
+	<key>menu-updateFlow</key>
+	<string>Update Flow Diagram</string>
+	<key>menu-showConnections</key>
+	<string>Show or Redraw Connections</string>
+	<key>menu-hideConnections</key>
+	<string>Hide Connections</string>
+	<key>menu-gotoDestinationArtboard</key>
+	<string>Go to Linked Artboard</string>
+	<key>menu-goBackToLink</key>
+	<string>Go Back to Link Layer</string>
+	<key>menu-editSettings</key>
+	<string>Settings...</string>
+	<key>menu-editShortcuts</key>
+	<string>Keyboard Shortcuts...</string>
+	<key>menu-editLanguage</key>
+	<string>Language...</string>
+	<key>menu-checkForUpdates</key>
+	<string>Check for Updates...</string>
+	<key>manifest-description</key>
+	<string>Generate user-flow diagrams from artboards in Sketch.</string>
+	<key>defineLink-invalidSelectionTitle</key>
+	<string>Invalid Selection</string>
+	<key>defineLink-invalidSelectionMessage</key>
+	<string>Select a layer or group to define as a Link, select the destination artboard, then run this command again.</string>
+	<key>defineLink-linkDefined</key>
+	<string>Link defined:</string>
+	<key>removeLink-invalidSelectionMessage</key>
+	<string>Select a layer already defined as a link, to remove its link attributes.</string>
+	<key>removeLink-linkRemoved</key>
+	<string>Link removed</string>
+	<key>removeLink-linksRemoved</key>
+	<string>Links removed</string>
+	<key>relinkArtboards-confirm</key>
+	<string>Re-Link Artboards</string>
+	<key>relinkArtboards-title</key>
+	<string>Are you sure?</string>
+	<key>relinkArtboards-description</key>
+	<string>This command will attempt to re-link artboards that have been duplicated and have lost their connections.</string>
+	<key>relinkArtboards-dontShowAgain</key>
+	<string>Don&apos;t show this mesage again</string>
+	<key>relinkArtboards-relinkComplete</key>
+	<string>%count% artboards were relinked</string>
+	<key>addCondition-title</key>
+	<string>Add or Edit Conditions</string>
+	<key>addCondition-saveAndAdd</key>
+	<string>Save + Add</string>
+	<key>addCondition-ifConditionPlaceholder</key>
+	<string>Ex: If user is logged in</string>
+	<key>addCondition-else</key>
+	<string>Else...</string>
+	<key>addCondition-conditionArtboardName</key>
+	<string>Conditions</string>
+	<key>addCondition-conditionGroupName</key>
+	<string>Condition</string>
+	<key>gotoArtboard-invalidSelectionTitle</key>
+	<string>Invalid Selection</string>
+	<key>gotoArtboard-invalidSelectionMessage</key>
+	<string>Select a layer that you have defined as a Link, then run this command again.</string>
+	<key>generateFlow-message</key>
+	<string>Generate a User Flow</string>
+	<key>generateFlow-startFrom</key>
+	<string>Start from:</string>
+	<key>generateFlow-noLinksTitle</key>
+	<string>No links defined!</string>
+	<key>generateFlow-noLinksMessage</key>
+	<string>This page has no link layers defined. Define at least one link layer by going to `Plugins &gt; User Flows &gt; Define Link`</string>
+	<key>generateFlow-flowName</key>
+	<string>Flow Name</string>
+	<key>generateFlow-description</key>
+	<string>Flow Description</string>
+	<key>generateFlow-addToPage</key>
+	<string>Add to Page</string>
+	<key>generateFlow-newPage</key>
+	<string>New Page</string>
+	<key>generateFlow-keepOrganized</key>
+	<string>Keep _Flows Page Organized</string>
+	<key>generateFlow-flowGroupName</key>
+	<string>Flow Group</string>
+	<key>generateFlow-connectionsGroupName</key>
+	<string>Connections</string>
+	<key>generateFlow-modifiedOnDate</key>
+	<string>Modified on %date%</string>
+	<key>generateFlow-modifiedBy</key>
+	<string>Modified on %date% by %user%</string>
+	<key>generateFlow-modifiedDate</key>
+	<string>Modified Date</string>
+	<key>generateFlow-saveButtonTitle</key>
+	<string>Generate Diagram</string>
+	<key>settings-restoreDefaults</key>
+	<string>Restore Defaults</string>
+	<key>settings-title</key>
+	<string>User Flows Settings</string>
+	<key>settings-exportOptions</key>
+	<string>Artboard Export Options</string>
+	<key>settings-scaleOptions</key>
+	<string>Scale Options</string>
+	<key>settings-flowBackground</key>
+	<string>Flow Background</string>
+	<key>settings-bgLight</key>
+	<string>Light</string>
+	<key>settings-bgDark</key>
+	<string>Dark</string>
+	<key>settings-flowIndicatorStroke</key>
+	<string>Flow Indicator Stroke</string>
+	<key>settings-minArea</key>
+	<string>Minimum Link Area</string>
+	<key>settings-drawBorders</key>
+	<string>Draw borders around link layers</string>
+	<key>settings-yourName</key>
+	<string>Your Name</string>
+	<key>settings-showDate</key>
+	<string>Show Date and Name on Flows</string>
+	<key>settings-connectionCurved</key>
+	<string>Curved</string>
+	<key>settings-connectionStraight</key>
+	<string>Straight</string>
+	<key>shortcuts-title</key>
+	<string>User Flows Keyboard Shortcuts</string>
+	<key>shortcuts-message</key>
+	<string>Shortcuts are defined by using a combination of modifiers (cmd, control, shift, option) and any other key. For example – &apos;cmd shift y&apos;. Remember to check if a shortcut is already being used by a different plugin or by Sketch itself.</string>
+	<key>checkUpdates-checking</key>
+	<string>Checking for updates...</string>
+	<key>checkUpdates-updateAvailableTitle</key>
+	<string>An update is available!</string>
+	<key>checkUpdates-noUpdateAvailableTitle</key>
+	<string>You&apos;re good!</string>
+	<key>checkUpdates-updateAvailableMessage</key>
+	<string>The most recent version is %currentVersion% and you have version %installedVersion%. Please download and install the plugin again from the website.</string>
+	<key>checkUpdates-noUpdateAvailableMessage</key>
+	<string>You have the most recent version of UserFlows installed 👍</string>
+	<key>checkUpdates-updateNow</key>
+	<string>Update Now</string>
+	<key>checkUpdates-updateLater</key>
+	<string>Later</string>
+	<key>language-title</key>
+	<string>Language Settings</string>
+	<key>language-message</key>
+	<string>Set the language for the UserFlows plugin.</string>
+	<key>artboardDescription-invalidSelectionMessage</key>
+	<string>Select an artboard</string>
+	<key>artboardDescription-description</key>
+	<string>Description</string>
+	<key>artboardDescription-saved</key>
+	<string>Artboard description saved</string>
+	<key>alerts-save</key>
+	<string>Save</string>
+	<key>alerts-cancel</key>
+	<string>Cancel</string>
+	<key>alerts-done</key>
+	<string>Done</string>
+</dict>
+</plist>
