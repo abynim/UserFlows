@@ -3,33 +3,33 @@
 <plist version="1.0">
 <dict>
 	<key>menu-defineLink</key>
-	<string>Create Link</string>
+	<string>Crea Collegamento</string>
 	<key>menu-removeLink</key>
-	<string>Remove Link</string>
+	<string>Rimuovi Collegamento</string>
 	<key>menu-relinkArtboardsAfterCopy</key>
-	<string>Re-Link Duplicated Artboards</string>
+	<string>Ricollega Artboard Duplicata</string>
 	<key>menu-addCondition</key>
-	<string>Add/Edit Conditions</string>
+	<string>Aggiungi/Modifica Condizioni</string>
 	<key>menu-generateFlow</key>
-	<string>Generate Flow Diagram</string>
+	<string>Genera Diagramma di Flusso</string>
 	<key>menu-updateFlow</key>
-	<string>Update Flow Diagram</string>
+	<string>Aggiorna Diagramma di Flusso</string>
 	<key>menu-showConnections</key>
-	<string>Show or Redraw Connections</string>
+	<string>Mostra o Ridisegna Connessioni</string>
 	<key>menu-hideConnections</key>
-	<string>Hide Connections</string>
+	<string>Nascondi Connessioni</string>
 	<key>menu-gotoDestinationArtboard</key>
-	<string>Go to Linked Artboard</string>
+	<string>Vai all'Artboard Collegata</string>
 	<key>menu-goBackToLink</key>
-	<string>Go Back to Link Layer</string>
+	<string>Torna al Livello Collegato</string>
 	<key>menu-editSettings</key>
-	<string>Settings...</string>
+	<string>Impostazioni...</string>
 	<key>menu-editShortcuts</key>
-	<string>Keyboard Shortcuts...</string>
+	<string>Scorciatoie da Tastiera...</string>
 	<key>menu-editLanguage</key>
-	<string>Language...</string>
+	<string>Lingua...</string>
 	<key>menu-checkForUpdates</key>
-	<string>Check for Updates...</string>
+	<string>Controlla Aggiornamenti...</string>
 	<key>manifest-description</key>
 	<string>Generate user-flow diagrams from artboards in Sketch.</string>
 	<key>defineLink-invalidSelectionTitle</key>
