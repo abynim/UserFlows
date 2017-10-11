@@ -22,7 +22,7 @@ var iconImage;
 var version;
 var strings;
 
-var supportedLanguages = ["en", "cn", "zhtw", "cz", "da", "nl", "de", "fa", "ru", "tr"];
+var supportedLanguages = ["en", "cn", "zhtw", "cz", "da", "nl", "de", "fa", "ru", "tr", "it"];
 var languageNames = {
 	en : "English",
 	da : "Danish",
@@ -33,7 +33,8 @@ var languageNames = {
 	tr : "Türkçe",
 	cz : "Česky",
 	ru : "Русский",
-	de : "German"
+	de : "German",
+	it : "Italian"
 };
 
 var defineLink = function(context) {
