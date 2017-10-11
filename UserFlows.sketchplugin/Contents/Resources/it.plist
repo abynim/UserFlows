@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>menu-defineLink</key>
+	<string>Crea Collegamento</string>
+	<key>menu-removeLink</key>
+	<string>Rimuovi Collegamento</string>
+	<key>menu-relinkArtboardsAfterCopy</key>
+	<string>Ricollega Artboard Duplicata</string>
+	<key>menu-addCondition</key>
+	<string>Aggiungi/Modifica Condizioni</string>
+	<key>menu-generateFlow</key>
+	<string>Genera Diagramma di Flusso</string>
+	<key>menu-updateFlow</key>
+	<string>Aggiorna Diagramma di Flusso</string>
+	<key>menu-showConnections</key>
+	<string>Mostra o Ridisegna Connessioni</string>
+	<key>menu-hideConnections</key>
+	<string>Nascondi Connessioni</string>
+	<key>menu-gotoDestinationArtboard</key>
+	<string>Vai all&apos;Artboard Collegata</string>
+	<key>menu-goBackToLink</key>
+	<string>Torna al Livello Collegato</string>
+	<key>menu-editSettings</key>
+	<string>Impostazioni...</string>
+	<key>menu-editShortcuts</key>
+	<string>Scorciatoie da Tastiera...</string>
+	<key>menu-editLanguage</key>
+	<string>Lingua...</string>
+	<key>menu-checkForUpdates</key>
+	<string>Controlla Aggiornamenti...</string>
+	<key>manifest-description</key>
+	<string>Genera il diagramma di flusso dalle artboard in Sketch.</string>
+	<key>defineLink-invalidSelectionTitle</key>
+	<string>Selezione invalida</string>
+	<key>defineLink-invalidSelectionMessage</key>
+	<string>Selezione un livello o gruppo come partenza del collegamento, poi selezione l&apos;artboard di destinazione, quindi riprova.</string>
+	<key>defineLink-linkDefined</key>
+	<string>Collegamento definito:</string>
+	<key>removeLink-invalidSelectionMessage</key>
+	<string>Selezione un livello già definito come collegamento prima di rimuoverlo.</string>
+	<key>removeLink-linkRemoved</key>
+	<string>Collegamento rimosso</string>
+	<key>removeLink-linksRemoved</key>
+	<string>Collegamenti rimossi</string>
+	<key>relinkArtboards-confirm</key>
+	<string>Artboard ricollegate</string>
+	<key>relinkArtboards-title</key>
+	<string>Sei sicuro?</string>
+	<key>relinkArtboards-description</key>
+	<string>Questo comando cercherà di ricollegare le artboard che sono state duplicate e che hanno perso la loro connessione.</string>
+	<key>relinkArtboards-dontShowAgain</key>
+	<string>Non mostrare più questo messaggio</string>
+	<key>relinkArtboards-relinkComplete</key>
+	<string>%count% artboard sono state ricollegate</string>
+	<key>addCondition-title</key>
+	<string>Aggiungi o rimuovi condizioni</string>
+	<key>addCondition-saveAndAdd</key>
+	<string>Salva + Aggiungi</string>
+	<key>addCondition-ifConditionPlaceholder</key>
+	<string>Es: Se l&apos;utente è già loggato</string>
+	<key>addCondition-else</key>
+	<string>Altrimenti...</string>
+	<key>addCondition-conditionArtboardName</key>
+	<string>Condizioni</string>
+	<key>addCondition-conditionGroupName</key>
+	<string>Condizione</string>
+	<key>gotoArtboard-invalidSelectionTitle</key>
+	<string>Selezione invalida</string>
+	<key>gotoArtboard-invalidSelectionMessage</key>
+	<string>Seleziona un livello che hai già definito come collegamento, quindi riprova.</string>
+	<key>generateFlow-message</key>
+	<string>Flusso Utente generato</string>
+	<key>generateFlow-startFrom</key>
+	<string>Parti da:</string>
+	<key>generateFlow-noLinksTitle</key>
+	<string>Nessun collegamento definito!</string>
+	<key>generateFlow-noLinksMessage</key>
+	<string>Questa pagina non ha livelli con collegamenti definiti. Definisci almeno un livello con collegamento andando su `Plugins &gt; User Flows &gt; Definisci Collegamento`</string>
+	<key>generateFlow-flowName</key>
+	<string>Nome del Flusso</string>
+	<key>generateFlow-description</key>
+	<string>Descrizione del Flusso</string>
+	<key>generateFlow-addToPage</key>
+	<string>Aggiungi alla Pagina</string>
+	<key>generateFlow-newPage</key>
+	<string>Nuova Pagina</string>
+	<key>generateFlow-keepOrganized</key>
+	<string>Mantieni la pagina _Flows Organizzata</string>
+	<key>generateFlow-flowGroupName</key>
+	<string>Gruppo del Flusso</string>
+	<key>generateFlow-connectionsGroupName</key>
+	<string>Connessioni</string>
+	<key>generateFlow-modifiedOnDate</key>
+	<string>Modificato il %date%</string>
+	<key>generateFlow-modifiedBy</key>
+	<string>Modificato il %date% da %user%</string>
+	<key>generateFlow-modifiedDate</key>
+	<string>Data modifica</string>
+	<key>generateFlow-saveButtonTitle</key>
+	<string>Genera Diagramma</string>
+	<key>settings-restoreDefaults</key>
+	<string>Ripristina impostazioni base</string>
+	<key>settings-title</key>
+	<string>Impostazioni di User Flows</string>
+	<key>settings-exportOptions</key>
+	<string>Opzioni di esportazioni delle Artboard</string>
+	<key>settings-scaleOptions</key>
+	<string>Opzioni ridimensionamento</string>
+	<key>settings-flowBackground</key>
+	<string>Background del Flusso</string>
+	<key>settings-bgLight</key>
+	<string>Chiaro</string>
+	<key>settings-bgDark</key>
+	<string>Scuro</string>
+	<key>settings-flowIndicatorStroke</key>
+	<string>Indicatore del tratto</string>
+	<key>settings-minArea</key>
+	<string>Area minima collegamento</string>
+	<key>settings-drawBorders</key>
+	<string>Disegna bordi attorno al livello di collegamento</string>
+	<key>settings-yourName</key>
+	<string>Il tuo nome</string>
+	<key>settings-showDate</key>
+	<string>Mostra Date e Nomi nel Flusso</string>
+	<key>settings-connectionCurved</key>
+	<string>Curve</string>
+	<key>settings-connectionStraight</key>
+	<string>Dritte</string>
+	<key>shortcuts-title</key>
+	<string>User Flows Scorciatoie da Tastiera</string>
+	<key>shortcuts-message</key>
+	<string>Le scorciatoie sono definiti dai tasti (cmd, control, shift, option) più uno più tasti. Per esempio – &apos;cmd shift y&apos;. Ricordati di verificare se la combinazione è già in uso da un altro plugin o da Sketch stesso.</string>
+	<key>checkUpdates-checking</key>
+	<string>Controllo aggiornamenti...</string>
+	<key>checkUpdates-updateAvailableTitle</key>
+	<string>Aggiornamento disponibile!</string>
+	<key>checkUpdates-noUpdateAvailableTitle</key>
+	<string>Sei a posto!</string>
+	<key>checkUpdates-updateAvailableMessage</key>
+	<string>La versione più recente è %currentVersion% e tu hai la %installedVersion%. Per favore scarica e installa nuovamente il plugin dal sito.</string>
+	<key>checkUpdates-noUpdateAvailableMessage</key>
+	<string>Hai la versione più recente di UserFlows installata 👍</string>
+	<key>checkUpdates-updateNow</key>
+	<string>Aggiorna ora</string>
+	<key>checkUpdates-updateLater</key>
+	<string>Dopo</string>
+	<key>language-title</key>
+	<string>Impostazioni Lingua</string>
+	<key>language-message</key>
+	<string>Imposta la lingua per UserFlows.</string>
+	<key>artboardDescription-invalidSelectionMessage</key>
+	<string>Selezione un artboard</string>
+	<key>artboardDescription-description</key>
+	<string>Descrizione</string>
+	<key>artboardDescription-saved</key>
+	<string>Descrizione dell&apos;Artboard salvata</string>
+	<key>alerts-save</key>
+	<string>Salva</string>
+	<key>alerts-cancel</key>
+	<string>Cancella</string>
+	<key>alerts-done</key>
+	<string>Fatto</string>
+</dict>
+</plist>
