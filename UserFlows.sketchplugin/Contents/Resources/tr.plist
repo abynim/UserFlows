@@ -6,6 +6,8 @@
 	<string>Bağlantı Oluştur</string>
 	<key>menu-removeLink</key>
 	<string>Bağlantıyı Sil</string>
+	<key>menu-removeAllLinks</key>
+	<string>Remove All Links</string>
 	<key>menu-relinkArtboardsAfterCopy</key>
 	<string>Yinelenen Artboard’ları Yeniden Bağlantıla</string>
 	<key>menu-addCondition</key>
@@ -44,6 +46,12 @@
 	<string>Bağlantı Silindi</string>
 	<key>removeLink-linksRemoved</key>
 	<string>Bağlantılar Silindi</string>
+	<key>removeLinks-title</key>
+	<string>Remove all Links from:</string>
+	<key>removeLinks-scopeSelectedArtboards</key>
+	<string>Selected Artboards</string>
+	<key>removeLinks-scopeCurrentPage</key>
+	<string>Current Page</string>
 	<key>relinkArtboards-confirm</key>
 	<string>Artboard’ları yeniden bağlayın</string>
 	<key>relinkArtboards-title</key>
@@ -77,7 +85,7 @@
 	<key>generateFlow-noLinksTitle</key>
 	<string>Bağlantı tanımlanmadı!</string>
 	<key>generateFlow-noLinksMessage</key>
-	<string>Bu sayfa için hiçbir bağlantı tanımlanmadı. En son tanımlanan bağlantılara buradan ulaşabilirsin: 'Eklentiler> Kullanıcı Akışları> Bağlantıyı Tanımla'</string>
+	<string>Bu sayfa için hiçbir bağlantı tanımlanmadı. En son tanımlanan bağlantılara buradan ulaşabilirsin: &apos;Eklentiler&gt; Kullanıcı Akışları&gt; Bağlantıyı Tanımla&apos;</string>
 	<key>generateFlow-flowName</key>
 	<string>Akış Adı</string>
 	<key>generateFlow-description</key>
@@ -131,7 +139,7 @@
 	<key>shortcuts-title</key>
 	<string>Kullanıcı Akışı Klavye Kısayolları</string>
 	<key>shortcuts-message</key>
-	<string>Kısayollar, değiştiriciler (cmd, control, shift, option) ve başka herhangi bir tuş kombinasyonu kullanılarak tanımlanır. Örneğin - 'cmd vardiya y'. Bir kısayolun zaten farklı bir eklenti tarafından mı yoksa Artboard defterinin kendisi tarafından mı kullanıldığını kontrol etmeyi unutmayın.</string>
+	<string>Kısayollar, değiştiriciler (cmd, control, shift, option) ve başka herhangi bir tuş kombinasyonu kullanılarak tanımlanır. Örneğin - &apos;cmd vardiya y&apos;. Bir kısayolun zaten farklı bir eklenti tarafından mı yoksa Artboard defterinin kendisi tarafından mı kullanıldığını kontrol etmeyi unutmayın.</string>
 	<key>checkUpdates-checking</key>
 	<string>Güncellemeler kontrol ediliyor…</string>
 	<key>checkUpdates-updateAvailableTitle</key>

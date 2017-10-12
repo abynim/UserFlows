@@ -25,6 +25,17 @@
     },
     {
       "script" : "script.js",
+      "shortcut" : "cmd option shift u",
+      "handlers" : {
+        "run" : "removeAllLinks"
+      },
+      "identifier" : "removeAllLinks",
+      "description" : "Remove all Links from an Artboard or Page.",
+      "icon" : "icons/removeLink.png",
+      "name" : "Remove All Links"
+    },
+    {
+      "script" : "script.js",
       "shortcut" : "",
       "name" : "Relink Duplicated Artboards",
       "identifier" : "relinkArtboardsAfterCopy",
@@ -171,8 +182,10 @@
   "menu" : {
     "items" : [
       "defineLink",
-      "removeLink",
       "relinkArtboardsAfterCopy",
+      "-",
+      "removeLink",
+      "removeAllLinks",
       "-",
       "addCondition",
       "generateFlow",
@@ -189,10 +202,10 @@
       "checkForUpdates"
     ]
   },
-  "compatibleVersion" : "4.1" ,
+  "compatibleVersion" : "47" ,
   "disableCocoaScriptPreprocessor" : true,
   "identifier" : "com.abynim.sketchplugins.userflows",
-  "version" : "2.0.6",
+  "version" : "2.0.7",
   "description" : "Generate user-flow diagrams from artboards in Sketch.",
   "homepage" : "https:\/\/abynim.github.io\/UserFlows",
   "authorEmail" : "abynimbalkar@gmail.com",

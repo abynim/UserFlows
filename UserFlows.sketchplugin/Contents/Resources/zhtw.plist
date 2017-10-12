@@ -6,6 +6,8 @@
 	<string>新增連線</string>
 	<key>menu-removeLink</key>
 	<string>移除連線</string>
+	<key>menu-removeAllLinks</key>
+	<string>Remove All Links</string>
 	<key>menu-relinkArtboardsAfterCopy</key>
 	<string>Re-Link Duplicated Artboards</string>
 	<key>menu-addCondition</key>
@@ -44,6 +46,12 @@
 	<string>連線已移除</string>
 	<key>removeLink-linksRemoved</key>
 	<string>連線已移除</string>
+	<key>removeLinks-title</key>
+	<string>Remove all Links from:</string>
+	<key>removeLinks-scopeSelectedArtboards</key>
+	<string>Selected Artboards</string>
+	<key>removeLinks-scopeCurrentPage</key>
+	<string>Current Page</string>
 	<key>relinkArtboards-confirm</key>
 	<string>Re-Link Artboards</string>
 	<key>relinkArtboards-title</key>

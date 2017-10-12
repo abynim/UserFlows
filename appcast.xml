@@ -27,5 +27,20 @@
         </description>
         <enclosure url="https://github.com/abynim/UserFlows/archive/v2.zip" sparkle:version="2.0.6" />
       </item>
+      <item>
+        <title>UserFlows 2.0.7</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>Fixes for Sketch 47 and High Sierra.</li>
+              <li>Added ability to remove all links from an Artboard or Page.</li>
+              <li>Added option for generating flows at 1x but with retina images.</li>
+              <li>Added option to customize the font size of Condition labels.</li>
+              <li>Added support for Spanish (by @AlvYuste) and Italian (by @KingFelix)</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://github.com/abynim/UserFlows/archive/v2.zip" sparkle:version="2.0.7" />
+      </item>
   </channel>
 </rss>
