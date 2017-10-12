@@ -6,6 +6,8 @@
 	<string>创建连接</string>
 	<key>menu-removeLink</key>
 	<string>移除连接</string>
+	<key>menu-removeAllLinks</key>
+	<string>Remove All Links</string>
 	<key>menu-relinkArtboardsAfterCopy</key>
 	<string>重新连接复制的画板</string>
 	<key>menu-addCondition</key>
@@ -44,6 +46,12 @@
 	<string>连接已移除</string>
 	<key>removeLink-linksRemoved</key>
 	<string>连接已移除</string>
+	<key>removeLinks-title</key>
+	<string>Remove all Links from:</string>
+	<key>removeLinks-scopeSelectedArtboards</key>
+	<string>Selected Artboards</string>
+	<key>removeLinks-scopeCurrentPage</key>
+	<string>Current Page</string>
 	<key>relinkArtboards-confirm</key>
 	<string>重新连接画板</string>
 	<key>relinkArtboards-title</key>

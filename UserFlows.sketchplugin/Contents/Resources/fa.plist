@@ -6,6 +6,8 @@
 	<string>ساخت لینک</string>
 	<key>menu-removeLink</key>
 	<string>حذف لینک</string>
+	<key>menu-removeAllLinks</key>
+	<string>Remove All Links</string>
 	<key>menu-relinkArtboardsAfterCopy</key>
 	<string>اتصال دوباره صفحه طرح‌های تکراری</string>
 	<key>menu-addCondition</key>
@@ -44,6 +46,12 @@
 	<string>لینک حذف شد</string>
 	<key>removeLink-linksRemoved</key>
 	<string>لینک‌ها حذف شدند</string>
+	<key>removeLinks-title</key>
+	<string>Remove all Links from:</string>
+	<key>removeLinks-scopeSelectedArtboards</key>
+	<string>Selected Artboards</string>
+	<key>removeLinks-scopeCurrentPage</key>
+	<string>Current Page</string>
 	<key>relinkArtboards-confirm</key>
 	<string>اتصال مجدد صفحه طرح‌ها</string>
 	<key>relinkArtboards-title</key>

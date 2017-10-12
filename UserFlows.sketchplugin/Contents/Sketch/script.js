@@ -3,7 +3,9 @@ var kKeepOrganizedKey = "com.abynim.userflows.keepOrganized";
 var kExportScaleKey = "com.abynim.userflows.exportScale";
 var kExportFormatKey = "com.abynim.userflows.exportFormat";
 var kShowModifiedDateKey = "com.abynim.userflows.showModifiedDate";
+var kRemoveAllLinksOptionKey = "com.abynim.userflows.removeAllLinksOption";
 var kFlowIndicatorColorKey = "com.abynim.userflows.flowIndicatorColor";
+var kConditionFontSizeKey = "com.abynim.userflows.conditionFontSize"
 var kFlowIndicatorAlphaKey = "com.abynim.userflows.flowIndicatorAlpha";
 var kFlowBackgroundKey = "com.abynim.userflows.backgroundColor";
 var kMinTapAreaKey = "com.abynim.userflows.minTapArea";
@@ -11,6 +13,7 @@ var kFullNameKey = "com.abynim.userflows.fullName";
 var kUUIDKey = "com.abynim.userflows.uuid";
 var kShowConnectionsKey = "com.abynim.userflows.showConnections";
 var kShowsLinkRectsKey = "com.abynim.userflows.showsLinkRects";
+var kScalesDownFlowBitmaps = "com.abynim.userflows.scalesDownFlowBitmaps";
 var kStrokeWidthKey = "com.abynim.userflows.strokeWidth";
 var kConditionalArtboardKey = "com.abynim.userflows.conditionalArtboard";
 var kLanguageCodeKey = "com.abynim.userflows.languageCode";
@@ -22,7 +25,7 @@ var iconImage;
 var version;
 var strings;
 
-var supportedLanguages = ["en", "cn", "zhtw", "cz", "da", "nl", "de", "fa", "ru", "tr"];
+var supportedLanguages = ["en", "cn", "zhtw", "cz", "da", "es", "nl", "de", "it", "fa", "ru", "tr"];
 var languageNames = {
 	en : "English",
 	da : "Danish",
@@ -33,7 +36,9 @@ var languageNames = {
 	tr : "Türkçe",
 	cz : "Česky",
 	ru : "Русский",
-	de : "German"
+	de : "German",
+	es : "Español",
+	it : "Italian"
 };
 
 var defineLink = function(context) {
@@ -108,6 +113,68 @@ var removeLink = function(context) {
 	} else {
 		var message = context.selection.count() == 1 ? strings["removeLink-linkRemoved"] : strings["removeLink-linksRemoved"]
 		doc.showMessage(message);
+	}
+}
+
+var removeAllLinks = function(context) {
+	
+	parseContext(context);
+
+	var doc = context.document;
+	var settingsWindow = getAlertWindow();
+	settingsWindow.addButtonWithTitle(strings["alerts-save"]);
+	settingsWindow.addButtonWithTitle(strings["alerts-cancel"]);
+
+	settingsWindow.setMessageText(strings["removeLinks-title"]);
+
+	var fakeFunc = function() {
+		log("Fake func");
+	}
+
+	var artboardButton = NSButton.alloc().initWithFrame(NSMakeRect(0,0,300,22));
+	artboardButton.setTitle(strings["removeLinks-scopeSelectedArtboards"]);
+	artboardButton.setButtonType(NSRadioButton);
+	artboardButton.setAction(fakeFunc);
+
+	var pageButton = NSButton.alloc().initWithFrame(NSMakeRect(0,0,300,22));
+	pageButton.setTitle(strings["removeLinks-scopeCurrentPage"]);
+	pageButton.setButtonType(NSRadioButton);
+	pageButton.setAction(fakeFunc);
+
+	settingsWindow.addAccessoryView(artboardButton);
+	settingsWindow.addAccessoryView(pageButton);
+
+	var lastSelectedOption = NSUserDefaults.standardUserDefaults().objectForKey(kRemoveAllLinksOptionKey) || 1;
+	if (lastSelectedOption == 1) {
+		artboardButton.setState(NSOnState);
+	} else if(lastSelectedOption == 2) {
+		pageButton.setState(NSOnState);
+	}
+
+	var response = settingsWindow.runModal();
+
+	if (response == "1000") {
+
+		var selectedOptionID = artboardButton.state() == NSOnState ? 1 : 2;
+		NSUserDefaults.standardUserDefaults().setObject_forKey(selectedOptionID, kRemoveAllLinksOptionKey);
+		var layersInScope = selectedOptionID == 1 ? context.selection.valueForKeyPath("@distinctUnionOfArrays.parentArtboard.children") : doc.currentPage().children();
+
+		var linkLayersPredicate = NSPredicate.predicateWithFormat("userInfo != nil && function(userInfo, 'valueForKeyPath:', %@).destinationArtboardID != nil", kPluginDomain),
+			linkLayers = layersInScope.filteredArrayUsingPredicate(linkLayersPredicate),
+			loop = linkLayers.objectEnumerator(),
+			linkLayer;
+
+		while (linkLayer = loop.nextObject()) {
+			context.command.setValue_forKey_onLayer_forPluginIdentifier(nil, "destinationArtboardID", linkLayer, kPluginDomain);
+		}
+
+		var showingConnections = NSUserDefaults.standardUserDefaults().objectForKey(kShowConnectionsKey) || 1;
+		if (showingConnections == 1) {
+			redrawConnections(context);
+		} else {
+			var message = strings["removeLink-linksRemoved"];
+			doc.showMessage(message);
+		}
 	}
 }
 
@@ -318,6 +385,7 @@ var editConditionsForArtboard = function(currentArtboard, context, forceNewCondi
 			conditionSpacing = 16,
 			listY = conditionSpacing,
 			flowIndicatorColor = NSUserDefaults.standardUserDefaults().objectForKey(kFlowIndicatorColorKey) || "#F5A623",
+			conditionFontSize = NSUserDefaults.standardUserDefaults().objectForKey(kConditionFontSizeKey) || 16,
 			conditionBorderColor = MSImmutableColor.colorWithSVGString(flowIndicatorColor).newMutableCounterpart(),
 			conditionBoardWidth = conditionBoard.frame().width(),
 			count = 0,
@@ -346,13 +414,13 @@ var editConditionsForArtboard = function(currentArtboard, context, forceNewCondi
 			conditionLabel.frame().setWidth(conditionBoardWidth - ((conditionSpacing+8)*2));
 			conditionLabel.setTextBehaviour(1);
 			conditionLabel.setStringValue(conditionValue);
-			conditionLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 16));
-			conditionLabel.setLineHeight(16*1.4);
+			conditionLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", conditionFontSize));
+			conditionLabel.setLineHeight(conditionFontSize*1.4);
 			conditionLabel.setTextColor(MSImmutableColor.colorWithSVGString("#121212").newMutableCounterpart());
 			conditionLabel.adjustFrameToFit();
 			context.command.setValue_forKey_onLayer_forPluginIdentifier(1, (isElse ? "isElse" : "isCondition"), conditionLabel, kPluginDomain);
 
-			conditionBoxHeight = conditionLabel.frame().height() + 16;
+			conditionBoxHeight = Math.ceil(conditionLabel.frame().height()) + 16;
 			conditionBox = MSShapeGroup.shapeWithPath(MSRectangleShape.alloc().initWithFrame(NSMakeRect(conditionSpacing, listY, conditionBoardWidth-(conditionSpacing*2), conditionBoxHeight)));
 			conditionBox.firstLayer().setCornerRadiusFloat(5);
 			conditionBox.style().addStylePartOfType(0).setColor(MSImmutableColor.colorWithSVGString("#f9f9f9").newMutableCounterpart());
@@ -566,6 +634,8 @@ var generateFlow = function(context) {
 		}
 
 		var exportScale = NSUserDefaults.standardUserDefaults().objectForKey(kExportScaleKey) || 1,
+			shouldScaleDownBitmaps = NSUserDefaults.standardUserDefaults().objectForKey(kScalesDownFlowBitmaps) || false,
+			bitmapExportScale = exportScale,
 			exportFormat = NSUserDefaults.standardUserDefaults().objectForKey(kExportFormatKey) || "pdf",
 			modifiedBy = NSUserDefaults.standardUserDefaults().objectForKey(kFullNameKey),
 			showModifiedDate = NSUserDefaults.standardUserDefaults().objectForKey(kShowModifiedDateKey) || false,
@@ -587,6 +657,10 @@ var generateFlow = function(context) {
 		context.command.setValue_forKey_onLayer_forPluginIdentifier(initialArtboard.objectID(), "homeScreenID", doc.currentPage(), kPluginDomain);
 		screenShadowColor.setAlpha(.2);
 		exportFormat = exportFormat.toLowerCase();
+
+		if (shouldScaleDownBitmaps == 1) {
+			exportScale = 1;
+		}
 
 		if (flowBackground == "Dark") {
 			flowBackgroundColor = MSImmutableColor.colorWithSVGString("#1E1D1C").newMutableCounterpart();
@@ -610,7 +684,7 @@ var generateFlow = function(context) {
 
 			exportRequest = MSExportRequest.alloc().init();
 			exportRequest.setRect(artboard.absoluteRect().rect());
-			exportRequest.setScale(exportScale);
+			exportRequest.setScale(bitmapExportScale);
 			exportRequest.setShouldTrim(0);
 			exportRequest.setSaveForWeb(1);
 			exportRequest.setBackgroundColor(( artboard.hasBackgroundColor() ? artboard.backgroundColor() : MSImmutableColor.colorWithSVGString("#FFFFFF").newMutableCounterpart() ));
@@ -785,11 +859,11 @@ var generateFlow = function(context) {
 		var labelWidth = flowBoard.frame().width() - (outerPadding*2);
 		flowNameLabel.frame().setWidth(labelWidth)
 		flowNameLabel.setTextAlignment( 0 );
-		if (flowDescriptionLabel) { 
+		if (flowDescriptionLabel) {
 			flowDescriptionLabel.frame().setWidth(labelWidth);
 			flowDescriptionLabel.setTextAlignment( 0 );
 		}
-		if (modifiedDateLabel) { 
+		if (modifiedDateLabel) {
 			modifiedDateLabel.frame().setWidth(labelWidth);
 			modifiedDateLabel.setTextAlignment( 0 );
 		}
@@ -923,7 +997,7 @@ var redrawConnections = function(context) {
 	connectionsGroup.setIsLocked(1);
 	connectionsGroup.deselectLayerAndParent();
 	context.command.setValue_forKey_onLayer_forPluginIdentifier(true, "isConnectionsContainer", connectionsGroup, kPluginDomain);
-	
+
 	var loop = selectedLayers.objectEnumerator(), selectedLayer;
 	while (selectedLayer = loop.nextObject()) {
 		selectedLayer.select_byExpandingSelection(true, true);
@@ -1061,35 +1135,47 @@ var editSettings = function(context) {
 	var scaleOptions = [1, 2];
 	var numOptions = scaleOptions.length;
 	var exportScale = NSUserDefaults.standardUserDefaults().objectForKey(kExportScaleKey) || 1;
-	var buttonCell = NSButtonCell.new();
-	buttonCell.setTitle(strings["settings-scaleOptions"]);
-	buttonCell.setButtonType(NSRadioButton);
-
-	var scaleOptionsMatrix = NSMatrix.alloc().initWithFrame_mode_prototype_numberOfRows_numberOfColumns(NSMakeRect(0, 0, 300, 22), NSRadioModeMatrix, buttonCell, 1, numOptions);
-	scaleOptionsMatrix.setAutorecalculatesCellSize(true);
-	scaleOptionsMatrix.setIntercellSpacing(NSMakeSize(10,10));
-	var cells = scaleOptionsMatrix.cells();
+	var buttonCellViews = [];
 	var scaleOption;
+
+	var fakeFunc = function() {
+		log("Fake func");
+	}
+
+	var exportOptionsView = NSView.alloc().initWithFrame(NSMakeRect(0,0,300,30));
 
 	for (var i = 0; i<numOptions; i++) {
 		scaleOption = scaleOptions[i];
-		cells.objectAtIndex(i).setTitle(scaleOption + "x");
+
+		var buttonCell = NSButton.alloc().initWithFrame(NSMakeRect(42*i,1,42,22));
+		buttonCell.setTitle(scaleOption+"x");
+		buttonCell.setButtonType(NSRadioButton);
+		buttonCell.setAction(fakeFunc);
+
 		if (exportScale == scaleOption) {
-			scaleOptionsMatrix.selectCellAtRow_column(0, i);
+			buttonCell.setState(NSOnState);
 		}
+		buttonCellViews.push(buttonCell);
+		exportOptionsView.addSubview(buttonCell);
 	}
 
-	var formatOptions = NSArray.arrayWithObjects("PDF", "PNG", "JPG", "TIFF");
+	var formatOptions = NSArray.arrayWithArray(["PDF", "PNG", "JPG", "TIFF"]);
 	var exportFormat = NSUserDefaults.standardUserDefaults().objectForKey(kExportFormatKey) || "PNG";
 	var selectedIndex = formatOptions.indexOfObject(exportFormat);
 	var formatDropdown = NSPopUpButton.alloc().initWithFrame_pullsDown(NSMakeRect(100,1,70,22), false);
 	formatDropdown.addItemsWithTitles(formatOptions);
 	formatDropdown.selectItemAtIndex(selectedIndex);
 
-	var exportOptionsView = NSView.alloc().initWithFrame(NSMakeRect(0,0,300,30));
-	exportOptionsView.addSubview(scaleOptionsMatrix);
 	exportOptionsView.addSubview(formatDropdown);
 	settingsWindow.addAccessoryView(exportOptionsView);
+
+	var scaleDownFlowBitmaps = NSUserDefaults.standardUserDefaults().objectForKey(kScalesDownFlowBitmaps) || 0;
+	var scaleDownBitmapsCheckbox = NSButton.alloc().initWithFrame(NSMakeRect(0,0,300,22));
+	scaleDownBitmapsCheckbox.setButtonType(NSSwitchButton);
+	scaleDownBitmapsCheckbox.setBezelStyle(0);
+	scaleDownBitmapsCheckbox.setTitle("Always generate flows at 1x");
+	scaleDownBitmapsCheckbox.setState(scaleDownFlowBitmaps);
+	settingsWindow.addAccessoryView(scaleDownBitmapsCheckbox);
 
 	// ------------
 	var separator = NSBox.alloc().initWithFrame(NSMakeRect(0,0,300,10));
@@ -1098,8 +1184,8 @@ var editSettings = function(context) {
 	// ------------
 
 	settingsWindow.addTextLabelWithValue(strings["settings-flowBackground"]);
-	var bgOptionNames = NSArray.arrayWithObjects(strings["settings-bgLight"], strings["settings-bgDark"]);
-	var bgOptions = NSArray.arrayWithObjects("Light", "Dark");
+	var bgOptionNames = NSArray.arrayWithArray([strings["settings-bgLight"], strings["settings-bgDark"]]);
+	var bgOptions = NSArray.arrayWithArray(["Light", "Dark"]);
 	var bgMode = NSUserDefaults.standardUserDefaults().objectForKey(kFlowBackgroundKey) || "Light";
 	var bgDropdown = NSPopUpButton.alloc().initWithFrame_pullsDown(NSMakeRect(0,0,70,22), false);
 	selectedIndex = bgOptions.indexOfObject(bgMode);
@@ -1120,8 +1206,8 @@ var editSettings = function(context) {
 	var strokeWidthField = NSTextField.alloc().initWithFrame(NSMakeRect(0,0,50,23));
 	strokeWidthField.setStringValue(strokeWidth + "px");
 
-	var connectionTypeNames = NSArray.arrayWithObjects(strings["settings-connectionCurved"], strings["settings-connectionStraight"]);
-	var connectionTypes = NSArray.arrayWithObjects("curved", "straight");
+	var connectionTypeNames = NSArray.arrayWithArray([strings["settings-connectionCurved"], strings["settings-connectionStraight"]]);
+	var connectionTypes = NSArray.arrayWithArray(["curved", "straight"]);
 	var currentConnectionType = NSUserDefaults.standardUserDefaults().objectForKey(kConnectionTypeKey) || "curved";
 	var connectionTypeDropdown = NSPopUpButton.alloc().initWithFrame_pullsDown(NSMakeRect(106,0,90,22), false);
 	selectedIndex = connectionTypes.indexOfObject(currentConnectionType);
@@ -1154,6 +1240,18 @@ var editSettings = function(context) {
 	settingsWindow.addAccessoryView(separator);
 	// ------------
 
+	settingsWindow.addTextLabelWithValue("Condition Font Size");
+	var conditionFontSizeField = NSTextField.alloc().initWithFrame(NSMakeRect(0, 0, 50, 23));
+	var conditionFontSize = NSUserDefaults.standardUserDefaults().objectForKey(kConditionFontSizeKey) || 16;
+	conditionFontSizeField.setStringValue(conditionFontSize + "pt");
+	settingsWindow.addAccessoryView(conditionFontSizeField);
+
+	// ------------
+	var separator = NSBox.alloc().initWithFrame(NSMakeRect(0, 0, 300, 10));
+	separator.setBoxType(2);
+	settingsWindow.addAccessoryView(separator);
+	// ------------
+
 	settingsWindow.addTextLabelWithValue(strings["settings-yourName"]);
 	var userName = NSUserDefaults.standardUserDefaults().objectForKey(kFullNameKey) || "";
 	var userNameField = NSTextField.alloc().initWithFrame(NSMakeRect(0,0,200,23));
@@ -1178,7 +1276,16 @@ var editSettings = function(context) {
 
 	if (response == "1000") {
 
-		var exportScale = parseInt(scaleOptionsMatrix.selectedCell().title());
+		var exportScale = 1;
+		for (var i = 0; i < buttonCellViews.length; i++) {
+			var exportScaleButton = buttonCellViews[i];
+			if (exportScaleButton.state() == NSOnState) {
+				exportScale = parseInt(exportScaleButton.title());
+				break;
+			}
+		};
+		//var exportScale = parseInt(scaleOptionsMatrix.selectedCell().title());
+
 		var flowIndicatorMSColor = MSColor.colorWithNSColor(flowIndicatorColorWell.color()).immutableModelObject();
 		var flowIndicatorColor = flowIndicatorMSColor.svgRepresentation()
 		var flowIndicatorAlpha = flowIndicatorMSColor.alpha();
@@ -1190,9 +1297,11 @@ var editSettings = function(context) {
 		NSUserDefaults.standardUserDefaults().setObject_forKey(connectionTypes.objectAtIndex(connectionTypeDropdown.indexOfSelectedItem()), kConnectionTypeKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(parseInt(strokeWidthField.stringValue()), kStrokeWidthKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(parseInt(tapAreaField.stringValue()), kMinTapAreaKey);
+		NSUserDefaults.standardUserDefaults().setObject_forKey(parseInt(conditionFontSizeField.stringValue()), kConditionFontSizeKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(showLinksCheckbox.state(), kShowsLinkRectsKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(userNameField.stringValue(), kFullNameKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(showNameCheckbox.state(), kShowModifiedDateKey);
+		NSUserDefaults.standardUserDefaults().setObject_forKey(scaleDownBitmapsCheckbox.state(), kScalesDownFlowBitmaps);
 		applySettings(context);
 		logEvent("settingsChanged", {
 			exportScale : exportScale,
@@ -1215,6 +1324,8 @@ var editSettings = function(context) {
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kShowsLinkRectsKey);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kFullNameKey);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kShowModifiedDateKey);
+		NSUserDefaults.standardUserDefaults().removeObjectForKey(kScalesDownFlowBitmaps);
+		NSUserDefaults.standardUserDefaults().removeObjectForKey(kConditionFontSizeKey);
 		applySettings(context);
 		logEvent("settingsReset", nil);
 

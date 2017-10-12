@@ -4,242 +4,171 @@
 <dict>
 	<key>menu-defineLink</key>
 	<string>Crear Enlace</string>
-  
 	<key>menu-removeLink</key>
 	<string>Eliminar Enlace</string>
-  
+	<key>menu-removeAllLinks</key>
+	<string>Remove All Links</string>
 	<key>menu-relinkArtboardsAfterCopy</key>
 	<string>Re-enlazar Artboards duplicados</string>
-  
 	<key>menu-addCondition</key>
 	<string>Añadir/Editar Condiciones</string>
-  
 	<key>menu-generateFlow</key>
 	<string>Generar Diagrama de Flujo</string>
-  
 	<key>menu-updateFlow</key>
 	<string>Actualizar Diagrama de Flujo</string>
-  
 	<key>menu-showConnections</key>
 	<string>Mostrar or Repintar Conexiones</string>
-  
 	<key>menu-hideConnections</key>
 	<string>Ocultar Conexiones</string>
-  
 	<key>menu-gotoDestinationArtboard</key>
 	<string>Ir al Artboard enlazado</string>
-  
 	<key>menu-goBackToLink</key>
 	<string>Volver a la capa Enlace</string>
-  
 	<key>menu-editSettings</key>
 	<string>Ajustes...</string>
-  
 	<key>menu-editShortcuts</key>
 	<string>Atajos de teclado...</string>
-  
 	<key>menu-editLanguage</key>
 	<string>Idioma...</string>
-  
 	<key>menu-checkForUpdates</key>
 	<string>Buscar actualizaciones...</string>
-  
 	<key>manifest-description</key>
 	<string>Generar diagramas de interacción desde Artboards en Sketch.</string>
-  
 	<key>defineLink-invalidSelectionTitle</key>
 	<string>Selección Inválida</string>
-  
 	<key>defineLink-invalidSelectionMessage</key>
 	<string>Selecciona una capa o grupo para definirlo como enlace, selecciona el Artboard destino, y ejecuta este comando de nuevo.</string>
-	
-  <key>defineLink-linkDefined</key>
+	<key>defineLink-linkDefined</key>
 	<string>Enlace definido:</string>
-  
 	<key>removeLink-invalidSelectionMessage</key>
 	<string>Selecciona una capa definida como Enlace para eliminar sus atributos.</string>
-  
 	<key>removeLink-linkRemoved</key>
 	<string>Enlace eliminado</string>
-  
 	<key>removeLink-linksRemoved</key>
 	<string>Enlaces eliminados</string>
-  
+	<key>removeLinks-title</key>
+	<string>Remove all Links from:</string>
+	<key>removeLinks-scopeSelectedArtboards</key>
+	<string>Selected Artboards</string>
+	<key>removeLinks-scopeCurrentPage</key>
+	<string>Current Page</string>
 	<key>relinkArtboards-confirm</key>
 	<string>Re-enlazar Artboards</string>
-  
 	<key>relinkArtboards-title</key>
 	<string>¿Estás seguro?</string>
-  
 	<key>relinkArtboards-description</key>
 	<string>Este comando intentará re-enlazar Artboards duplicados que hayan perdido sus conexiones.</string>
-	
-  <key>relinkArtboards-dontShowAgain</key>
+	<key>relinkArtboards-dontShowAgain</key>
 	<string>No mostrar este mensaje de nuevo.</string>
-  
 	<key>relinkArtboards-relinkComplete</key>
 	<string>%count% Artboards fueron re-enlazados</string>
-  
 	<key>addCondition-title</key>
 	<string>Añadir o Editar Condiciones</string>
-  
 	<key>addCondition-saveAndAdd</key>
 	<string>Guardar + Añadir</string>
-  
 	<key>addCondition-ifConditionPlaceholder</key>
 	<string>Ej: Si el usuario se ha logueado</string>
-  
 	<key>addCondition-else</key>
 	<string>Si no...</string>
-  
 	<key>addCondition-conditionArtboardName</key>
 	<string>Condiciones</string>
-  
 	<key>addCondition-conditionGroupName</key>
 	<string>Condición</string>
-  
 	<key>gotoArtboard-invalidSelectionTitle</key>
 	<string>Selección Inválida</string>
-  
 	<key>gotoArtboard-invalidSelectionMessage</key>
 	<string>Selecciona una capa definida como Enlace, y vuelve a ejecutar este comando.</string>
-  
 	<key>generateFlow-message</key>
 	<string>Generar un User Flow</string>
-  
 	<key>generateFlow-startFrom</key>
 	<string>Empezar desde:</string>
-	
-  <key>generateFlow-noLinksTitle</key>
+	<key>generateFlow-noLinksTitle</key>
 	<string>Ningún enlace definido!</string>
-	
-  <key>generateFlow-noLinksMessage</key>
+	<key>generateFlow-noLinksMessage</key>
 	<string>Esta página no tiene capas de enlace definidas. Define al menos una capa de enlace en `Plugins &gt; User Flows &gt; Define Link`</string>
-	
-  <key>generateFlow-flowName</key>
-  <string>Nombre del Flujo</string>
-	
-  <key>generateFlow-description</key>
+	<key>generateFlow-flowName</key>
+	<string>Nombre del Flujo</string>
+	<key>generateFlow-description</key>
 	<string>Descripción del Flujo</string>
-	
-  <key>generateFlow-addToPage</key>
+	<key>generateFlow-addToPage</key>
 	<string>Añadir a la Página</string>
-	
-  <key>generateFlow-newPage</key>
+	<key>generateFlow-newPage</key>
 	<string>Nueva Página</string>
-	
-  <key>generateFlow-keepOrganized</key>
+	<key>generateFlow-keepOrganized</key>
 	<string>Mantener páginas _Flows organizadas</string>
-	
-  <key>generateFlow-flowGroupName</key>
+	<key>generateFlow-flowGroupName</key>
 	<string>Grupo de Flujo</string>
-	
-  <key>generateFlow-connectionsGroupName</key>
+	<key>generateFlow-connectionsGroupName</key>
 	<string>Conexiones</string>
-	
-  <key>generateFlow-modifiedOnDate</key>
+	<key>generateFlow-modifiedOnDate</key>
 	<string>Modificado el %date%</string>
-	
-  <key>generateFlow-modifiedBy</key>
+	<key>generateFlow-modifiedBy</key>
 	<string>Modificado el %date% por %user%</string>
-	
-  <key>generateFlow-modifiedDate</key>
+	<key>generateFlow-modifiedDate</key>
 	<string>Fecha de Modificación</string>
-	
-  <key>generateFlow-saveButtonTitle</key>
+	<key>generateFlow-saveButtonTitle</key>
 	<string>Generar Diagrama</string>
-	
-  <key>settings-restoreDefaults</key>
+	<key>settings-restoreDefaults</key>
 	<string>Restablecer valores por defecto</string>
-	
-  <key>settings-title</key>
+	<key>settings-title</key>
 	<string>Ajustes de User Flows</string>
-	
-  <key>settings-exportOptions</key>
+	<key>settings-exportOptions</key>
 	<string>Opciones de Exportación del Artboard</string>
-	
-  <key>settings-scaleOptions</key>
+	<key>settings-scaleOptions</key>
 	<string>Opciones de Escalado</string>
-	
-  <key>settings-flowBackground</key>
+	<key>settings-flowBackground</key>
 	<string>Fondo del Flujo</string>
-	
-  <key>settings-bgLight</key>
+	<key>settings-bgLight</key>
 	<string>Claro</string>
-	
-  <key>settings-bgDark</key>
+	<key>settings-bgDark</key>
 	<string>Oscuro</string>
-	
-  <key>settings-flowIndicatorStroke</key>
+	<key>settings-flowIndicatorStroke</key>
 	<string>Línea de Flujo</string>
-	
-  <key>settings-minArea</key>
+	<key>settings-minArea</key>
 	<string>Area mínima de Enlace</string>
-	
-  <key>settings-drawBorders</key>
-  <string>Pintar bordes en las capas con Enlace</string>
-	
-  <key>settings-yourName</key>
+	<key>settings-drawBorders</key>
+	<string>Pintar bordes en las capas con Enlace</string>
+	<key>settings-yourName</key>
 	<string>Tu Nombre</string>
-	
-  <key>settings-showDate</key>
+	<key>settings-showDate</key>
 	<string>Mostrar Nombre y Fecha en los Flujos</string>
-	
-  <key>settings-connectionCurved</key>
+	<key>settings-connectionCurved</key>
 	<string>Curva</string>
-	
-  <key>settings-connectionStraight</key>
+	<key>settings-connectionStraight</key>
 	<string>Recta</string>
-	
-  <key>shortcuts-title</key>
+	<key>shortcuts-title</key>
 	<string>Atajos de teclado de User Flows</string>
-	
-  <key>shortcuts-message</key>
+	<key>shortcuts-message</key>
 	<string>Los atajos se definen usando una combinación de modificadores (cmd, control, shift, option) y cualquier otra tecla. Por ejemplo – &apos;cmd shift y&apos;. Recuerda comprobar si el atajo ya está siendo usado por otro plugin o por el mismo Sketch.</string>
-	
-  <key>checkUpdates-checking</key>
+	<key>checkUpdates-checking</key>
 	<string>Buscando actualizaciones...</string>
-	
-  <key>checkUpdates-updateAvailableTitle</key>
+	<key>checkUpdates-updateAvailableTitle</key>
 	<string>Una actualización disponible!</string>
-	
-  <key>checkUpdates-noUpdateAvailableTitle</key>
+	<key>checkUpdates-noUpdateAvailableTitle</key>
 	<string>¡Eres bueno!</string>
-	
-  <key>checkUpdates-updateAvailableMessage</key>
+	<key>checkUpdates-updateAvailableMessage</key>
 	<string>La última versión es %currentVersion% y tienes instalada la %installedVersion%. Por favor, descargate e instala el Plugin de nuevo desde la web.</string>
-	
-  <key>checkUpdates-noUpdateAvailableMessage</key>
+	<key>checkUpdates-noUpdateAvailableMessage</key>
 	<string>Tienes la última versión de User Flows instalada 👍</string>
-	
-  <key>checkUpdates-updateNow</key>
+	<key>checkUpdates-updateNow</key>
 	<string>Actualizar ahora</string>
-	
-  <key>checkUpdates-updateLater</key>
+	<key>checkUpdates-updateLater</key>
 	<string>Más tarde</string>
-	
-  <key>language-title</key>
+	<key>language-title</key>
 	<string>Ajustes de Idioma</string>
-	
-  <key>language-message</key>
+	<key>language-message</key>
 	<string>Selecciona el idioma para el plugin User Flow.</string>
-	
-  <key>artboardDescription-invalidSelectionMessage</key>
+	<key>artboardDescription-invalidSelectionMessage</key>
 	<string>Selecciona un Artboard</string>
-	
-  <key>artboardDescription-description</key>
+	<key>artboardDescription-description</key>
 	<string>Descripción</string>
-	
-  <key>artboardDescription-saved</key>
+	<key>artboardDescription-saved</key>
 	<string>Descripción del Artboard guardada</string>
-	
-  <key>alerts-save</key>
+	<key>alerts-save</key>
 	<string>Guardar</string>
-	
-  <key>alerts-cancel</key>
+	<key>alerts-cancel</key>
 	<string>Cancelar</string>
-	
-  <key>alerts-done</key>
+	<key>alerts-done</key>
 	<string>Hecho</string>
 </dict>
 </plist>
