@@ -24,6 +24,7 @@ var linkLayerPredicate;
 var iconImage;
 var version;
 var strings;
+var sketchVersion;
 
 var supportedLanguages = ["en", "cn", "zhtw", "cz", "da", "es", "nl", "de", "it", "fa", "ru", "tr"];
 var languageNames = {
@@ -389,7 +390,7 @@ var editConditionsForArtboard = function(currentArtboard, context, forceNewCondi
 			conditionBorderColor = MSImmutableColor.colorWithSVGString(flowIndicatorColor).newMutableCounterpart(),
 			conditionBoardWidth = conditionBoard.frame().width(),
 			count = 0,
-			conditionLabel, conditionValue, conditionBox, conditionBorder, conditionBoxHeight, layersArray, conditionGroup, isElse;
+			conditionLabel, conditionValue, conditionBox, conditionBorder, conditionBoxHeight, layersArray, conditionGroup, isElse, conditionLabelColor;
 
 		for (var i = 0; i < numConditions; i++) {
 
@@ -416,7 +417,9 @@ var editConditionsForArtboard = function(currentArtboard, context, forceNewCondi
 			conditionLabel.setStringValue(conditionValue);
 			conditionLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", conditionFontSize));
 			conditionLabel.setLineHeight(conditionFontSize*1.4);
-			conditionLabel.setTextColor(MSImmutableColor.colorWithSVGString("#121212").newMutableCounterpart());
+			conditionLabelColor = MSImmutableColor.colorWithSVGString("#121212");
+			if (sketchVersion < 480) conditionLabelColor = conditionLabelColor.newMutableCounterpart();
+			conditionLabel.setTextColor(conditionLabelColor);
 			conditionLabel.adjustFrameToFit();
 			context.command.setValue_forKey_onLayer_forPluginIdentifier(1, (isElse ? "isElse" : "isCondition"), conditionLabel, kPluginDomain);
 
@@ -447,7 +450,8 @@ var editConditionsForArtboard = function(currentArtboard, context, forceNewCondi
 
 		conditionBoard.frame().setHeight(listY);
 		if (artboardIsConditional != 1) {
-			var vcr = context.document.currentView().visibleContentRect(),
+			var currentView = sketchVersion < 480 ? context.document.currentView() : context.document.contentDrawView();
+			var vcr = currentView.visibleContentRect(),
 				absPosition = NSMakePoint(CGRectGetMidX(vcr)-CGRectGetMidX(conditionBoard.absoluteRect().rect()), CGRectGetMidY(vcr)-CGRectGetMidY(conditionBoard.absoluteRect().rect()));
 			conditionBoard.setAbsolutePosition(absPosition);
 		}
@@ -459,6 +463,7 @@ var editConditionsForArtboard = function(currentArtboard, context, forceNewCondi
 			if (showingConnections == 1) {
 				redrawConnections(context);
 			}
+			conditionBoard.select_byExtendingSelection(true, false);
 		}
 
 	}
@@ -499,7 +504,8 @@ var gotoDestinationArtboard = function(context) {
 	var doc = context.document,
 		destinationArtboard = doc.currentPage().artboards().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("objectID == %@", destinationArtboardID)).firstObject();
 	if (destinationArtboard) {
-		var cRect = doc.currentView().visibleContentRect(),
+		var currentView = sketchVersion < 480 ? doc.currentView() : doc.contentDrawView();
+		var cRect = currentView.visibleContentRect(),
 			contentRect = {
 				x : cRect.origin.x,
 				y : cRect.origin.y,
@@ -516,12 +522,14 @@ var gotoDestinationArtboard = function(context) {
 
 		context.command.setValue_forKey_onDocument_forPluginIdentifier(rects, "contentRectsHistory", doc.documentData(), kPluginDomain);
 
-		doc.currentView().centerRect(destinationArtboard.absoluteRect().rect());
-		destinationArtboard.select_byExpandingSelection(true, false);
+		currentView.centerRect(destinationArtboard.absoluteRect().rect());
+		destinationArtboard.select_byExtendingSelection(true, false);
 	}
 }
 
 var goBackToLink = function(context) {
+
+	parseContext(context);
 
 	var doc = context.document,
 		rects = context.command.valueForKey_onDocument_forPluginIdentifier("contentRectsHistory", doc.documentData(), kPluginDomain).mutableCopy();
@@ -534,12 +542,13 @@ var goBackToLink = function(context) {
 		if (contentRect.linkLayerID ) {
 			var layer = doc.currentPage().children().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("objectID == %@", contentRect.linkLayerID)).firstObject();
 			if(layer) {
-				layer.select_byExpandingSelection(true, false);
+				layer.select_byExtendingSelection(true, false);
 			}
 		}
 
 		var cRect = NSMakeRect(contentRect.x, contentRect.y, contentRect.width, contentRect.height);
-		doc.currentView().centerRect(cRect);
+		var currentView = sketchVersion < 480 ? doc.currentView() : doc.contentDrawView();
+		currentView.centerRect(cRect);
 
 		rects.removeLastObject();
 		context.command.setValue_forKey_onDocument_forPluginIdentifier(rects, "contentRectsHistory", doc.documentData(), kPluginDomain);
@@ -664,12 +673,17 @@ var generateFlow = function(context) {
 
 		if (flowBackground == "Dark") {
 			flowBackgroundColor = MSImmutableColor.colorWithSVGString("#1E1D1C").newMutableCounterpart();
-			primaryTextColor = MSImmutableColor.colorWithSVGString("#FFFFFF").newMutableCounterpart();
-			secondaryTextColor = MSImmutableColor.colorWithSVGString("#9B9B9B").newMutableCounterpart();
+			primaryTextColor = MSImmutableColor.colorWithSVGString("#FFFFFF");
+			secondaryTextColor = MSImmutableColor.colorWithSVGString("#9B9B9B");
 		} else {
 			flowBackgroundColor = MSImmutableColor.colorWithSVGString("#FFFFFF").newMutableCounterpart();
-			primaryTextColor = MSImmutableColor.colorWithSVGString("#121212").newMutableCounterpart();
-			secondaryTextColor = MSImmutableColor.colorWithSVGString("#999999").newMutableCounterpart();
+			primaryTextColor = MSImmutableColor.colorWithSVGString("#121212");
+			secondaryTextColor = MSImmutableColor.colorWithSVGString("#999999");
+		}
+		
+		if(sketchVersion < 480) { 
+			primaryTextColor = primaryTextColor.newMutableCounterpart();
+			secondaryTextColor = secondaryTextColor.newMutableCounterpart();
 		}
 
 		while(artboardsToExport.length) {
@@ -909,8 +923,9 @@ var generateFlow = function(context) {
 		flowBoard.exportOptions().addExportFormat();
 
 		doc.setCurrentPage(flowPage);
-		flowBoard.select_byExpandingSelection(true, false);
-		doc.currentView().zoomToFitRect(NSInsetRect(flowBoard.absoluteRect().rect(), -60, -60));
+		flowBoard.select_byExtendingSelection(true, false);
+		var currentView = sketchVersion < 480 ? doc.currentView() : doc.contentDrawView();
+		currentView.zoomToFitRect(NSInsetRect(flowBoard.absoluteRect().rect(), -60, -60));
 
 		// update defaults
 		NSUserDefaults.standardUserDefaults().setObject_forKey(shouldOrganize, kKeepOrganizedKey);
@@ -1000,7 +1015,7 @@ var redrawConnections = function(context) {
 
 	var loop = selectedLayers.objectEnumerator(), selectedLayer;
 	while (selectedLayer = loop.nextObject()) {
-		selectedLayer.select_byExpandingSelection(true, true);
+		selectedLayer.select_byExtendingSelection(true, true);
 	}
 
 	return connectionsGroup;
@@ -1500,6 +1515,7 @@ var getConnectionsGroupInPage = function(page) {
 var parseContext = function(context) {
 	iconImage = NSImage.alloc().initByReferencingFile(context.plugin.urlForResourceNamed("icon.png").path());
 	version = context.plugin.version();
+	sketchVersion = getVersionNumberFromString(NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString"));
 
 	var localeID = NSUserDefaults.standardUserDefaults().objectForKey(kLanguageCodeKey) || "en",
 		stringsFilePath = context.plugin.urlForResourceNamed(localeID + ".plist").path();

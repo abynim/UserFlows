@@ -6,26 +6,16 @@
     <description>Generate flow diagrams from Artboards in Sketch</description>
     <language>en</language>
       <item>
-        <title>UserFlows 2.0.5</title>
+        <title>UserFlows 2.0.8</title>
         <description>
           <![CDATA[
             <ul>
-              <li>Fixes for Sketch 45</li>
+              <li>Fixes for Sketch 48.</li>
+              <li>Changed `Create Link` shortcut from (Cmd Shift K) to (Cmd Shift M) to avoid clashing with a new native shortcut.</li>
             </ul>
           ]]>
         </description>
-        <enclosure url="https://github.com/abynim/UserFlows/archive/v2.zip" sparkle:version="2.0.5" />
-      </item>
-	<item>
-        <title>UserFlows 2.0.6</title>
-        <description>
-          <![CDATA[
-            <ul>
-              <li>Minor bug fix for older documents</li>
-            </ul>
-          ]]>
-        </description>
-        <enclosure url="https://github.com/abynim/UserFlows/archive/v2.zip" sparkle:version="2.0.6" />
+        <enclosure url="https://github.com/abynim/UserFlows/archive/v2.zip" sparkle:version="2.0.8" />
       </item>
       <item>
         <title>UserFlows 2.0.7</title>
@@ -41,6 +31,28 @@
           ]]>
         </description>
         <enclosure url="https://github.com/abynim/UserFlows/archive/v2.zip" sparkle:version="2.0.7" />
+      </item>
+	     <item>
+        <title>UserFlows 2.0.6</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>Minor bug fix for older documents</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://github.com/abynim/UserFlows/archive/v2.zip" sparkle:version="2.0.6" />
+      </item>
+      <item>
+        <title>UserFlows 2.0.5</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>Fixes for Sketch 45</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://github.com/abynim/UserFlows/archive/v2.zip" sparkle:version="2.0.5" />
       </item>
   </channel>
 </rss>
