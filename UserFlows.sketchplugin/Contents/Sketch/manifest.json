@@ -3,7 +3,7 @@
   "commands" : [
     {
       "script" : "script.js",
-      "shortcut" : "cmd shift k",
+      "shortcut" : "cmd shift m",
       "handlers" : {
         "run" : "defineLink"
       },
@@ -205,7 +205,7 @@
   "compatibleVersion" : "47" ,
   "disableCocoaScriptPreprocessor" : true,
   "identifier" : "com.abynim.sketchplugins.userflows",
-  "version" : "2.0.7",
+  "version" : "2.0.8",
   "description" : "Generate user-flow diagrams from artboards in Sketch.",
   "homepage" : "https:\/\/abynim.github.io\/UserFlows",
   "authorEmail" : "abynimbalkar@gmail.com",
