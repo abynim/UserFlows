@@ -22,6 +22,7 @@ User Flows supports the following languages:
 - Danish by [Kim Døfler](http://doefler.com)
 - Dutch by [Roy van Roojien](http://www.royvanrooijen.nl)
 - Español by [Alvaro Yuste Torregrosa](http://yuste.info)
+- French by [Benjamin Carrier](https://github.com/benjarier)
 - German by [Nikolas Klein](https://twitter.com/nikolasklein)
 - Italian by [Jacopo Rabolini](https://www.jacoporabolini.com)
 - Persian by [Mohammad Reza Mahmoudi](http://www.rezamahmoudi.ir)

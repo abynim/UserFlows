@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>menu-defineLink</key>
+	<string>Créer un lien</string>
+	<key>menu-removeLink</key>
+	<string>Retirer un lien</string>
+	<key>menu-removeAllLinks</key>
+	<string>Retirer tous les liens</string>
+	<key>menu-relinkArtboardsAfterCopy</key>
+	<string>Relier les plans de travail dupliqués</string>
+	<key>menu-addCondition</key>
+	<string>Ajouter/Modifier les conditions</string>
+	<key>menu-generateFlow</key>
+	<string>Générer le diagramme de flux</string>
+	<key>menu-updateFlow</key>
+	<string>Mettre à jour le diagramme</string>
+	<key>menu-showConnections</key>
+	<string>Afficher ou redessiner les connections</string>
+	<key>menu-hideConnections</key>
+	<string>Cacher les connections</string>
+	<key>menu-gotoDestinationArtboard</key>
+	<string>Aller au plan de travail lié</string>
+	<key>menu-goBackToLink</key>
+	<string>Revenir au calque lié </string>
+	<key>menu-editSettings</key>
+	<string>Paramètres...</string>
+	<key>menu-editShortcuts</key>
+	<string>Raccourcis clavier...</string>
+	<key>menu-editLanguage</key>
+	<string>Langue...</string>
+	<key>menu-checkForUpdates</key>
+	<string>Rechercher des mises à jour...</string>
+	<key>manifest-description</key>
+	<string>Génère des diagrammes de flux à partir des plans de travail dans Sketch.</string>
+	<key>defineLink-invalidSelectionTitle</key>
+	<string>Sélection nulle</string>
+	<key>defineLink-invalidSelectionMessage</key>
+	<string>Sélectionnez un claque ou un groupe d'où faire partir un lien, Sélectionnez le plan de travail de destination, puis réexécuter cette commande.</string>
+	<key>defineLink-linkDefined</key>
+	<string>Lien créé:</string>
+	<key>removeLink-invalidSelectionMessage</key>
+	<string>Sélectionnez un calque avec un lien déjà défini pour retirer le lien.</string>
+	<key>removeLink-linkRemoved</key>
+	<string>Lien retiré</string>
+	<key>removeLink-linksRemoved</key>
+	<string>Lien retiré</string>
+	<key>removeLinks-title</key>
+	<string>Retirer tous les liens de:</string>
+	<key>removeLinks-scopeSelectedArtboards</key>
+	<string>Plans de travail sélectionnés</string>
+	<key>removeLinks-scopeCurrentPage</key>
+	<string>Page actuelle</string>
+	<key>relinkArtboards-confirm</key>
+	<string>Relier les plans de travail</string>
+	<key>relinkArtboards-title</key>
+	<string>Êtes-vous certain?</string>
+	<key>relinkArtboards-description</key>
+	<string>Cette commande va tenter de relier les plans de travail dupliqués ayant perdus leur liens.</string>
+	<key>relinkArtboards-dontShowAgain</key>
+	<string>Ne plus afficher ce message</string>
+	<key>relinkArtboards-relinkComplete</key>
+	<string>%count% plans de travail ont été reliés</string>
+	<key>addCondition-title</key>
+	<string>Ajouter/Modifier les conditions</string>
+	<key>addCondition-saveAndAdd</key>
+	<string>Sauvegarder + Ajouter</string>
+	<key>addCondition-ifConditionPlaceholder</key>
+	<string>Ex: Si l'utilisateur est connecté</string>
+	<key>addCondition-else</key>
+	<string>Sinon...</string>
+	<key>addCondition-conditionArtboardName</key>
+	<string>Conditions</string>
+	<key>addCondition-conditionGroupName</key>
+	<string>Condition</string>
+	<key>gotoArtboard-invalidSelectionTitle</key>
+	<string>Sélection nulle</string>
+	<key>gotoArtboard-invalidSelectionMessage</key>
+	<string>Sélectionnez un claque d'où part un lien, puis réexécuter cette commande.</string>
+	<key>generateFlow-message</key>
+	<string>Générer un flux d'utilisateur</string>
+	<key>generateFlow-startFrom</key>
+	<string>Départ de:</string>
+	<key>generateFlow-noLinksTitle</key>
+	<string>Pas de liens créés!</string>
+	<key>generateFlow-noLinksMessage</key>
+	<string>Cette page n'a pas de liens créés. Créez au moins un lien en allant sur `Plugins &gt; User Flows &gt; Créer un lien `</string>
+	<key>generateFlow-flowName</key>
+	<string>Flow Name</string>
+	<key>generateFlow-description</key>
+	<string>Description du diagramme</string>
+	<key>generateFlow-addToPage</key>
+	<string>Ajouter à la page</string>
+	<key>generateFlow-newPage</key>
+	<string>Nouvelle page</string>
+	<key>generateFlow-keepOrganized</key>
+	<string>Garder la page _Flows organisée</string>
+	<key>generateFlow-flowGroupName</key>
+	<string>Groupe de flux</string>
+	<key>generateFlow-connectionsGroupName</key>
+	<string>Connections</string>
+	<key>generateFlow-modifiedOnDate</key>
+	<string>Modifié le %date%</string>
+	<key>generateFlow-modifiedBy</key>
+	<string>Modifié le %date% par %user%</string>
+	<key>generateFlow-modifiedDate</key>
+	<string>Date de modification</string>
+	<key>generateFlow-saveButtonTitle</key>
+	<string>Générer le diagramme</string>
+	<key>settings-restoreDefaults</key>
+	<string>Rétablir les paramètres par defaut</string>
+	<key>settings-title</key>
+	<string>Paramètre de User Flow</string>
+	<key>settings-exportOptions</key>
+	<string>Option d'export des plans de travail</string>
+	<key>settings-scaleOptions</key>
+	<string>Options d'échelle</string>
+	<key>settings-flowBackground</key>
+	<string>Arrière plan du diagramme</string>
+	<key>settings-bgLight</key>
+	<string>Claire</string>
+	<key>settings-bgDark</key>
+	<string>Sombre</string>
+	<key>settings-flowIndicatorStroke</key>
+	<string>Traits des indicateurs de flux</string>
+	<key>settings-minArea</key>
+	<string>Taille minimum de la zone liée</string>
+	<key>settings-drawBorders</key>
+	<string>Ajouter un bord aux calques liés</string>
+	<key>settings-yourName</key>
+	<string>Votre nom</string>
+	<key>settings-showDate</key>
+	<string>Afficher le nom et la date sur le diagramme</string>
+	<key>settings-connectionCurved</key>
+	<string>Courbe</string>
+	<key>settings-connectionStraight</key>
+	<string>Droite</string>
+	<key>shortcuts-title</key>
+	<string>Raccourcis clavier User Flows</string>
+	<key>shortcuts-message</key>
+	<string>Les raccourcis clavier sont définis par une combinaison d'une touche de modification (cmd, control, shift, option) et n'importe quelle autre touche. Par exemple – 'cmd shift y'. N'oubliez pas de vous assurez que la combinaison n'est pas déjà utilisée par Sketch ou un autre plugin.</string>
+	<key>checkUpdates-checking</key>
+	<string>Recherche de mises à jour...</string>
+	<key>checkUpdates-updateAvailableTitle</key>
+	<string>Une mise à jour est disponible!</string>
+	<key>checkUpdates-noUpdateAvailableTitle</key>
+	<string>Vous êtes à jour!</string>
+	<key>checkUpdates-updateAvailableMessage</key>
+	<string>La version la plus récente est %currentVersion% et vous avez la version %installedVersion%. Veuillez télécharger et installer le plugin à partir du site.</string>
+	<key>checkUpdates-noUpdateAvailableMessage</key>
+	<string>Vous avez la version la plus récente de UserFlows installée 👍</string>
+	<key>checkUpdates-updateNow</key>
+	<string>Mettre à jour maintenant</string>
+	<key>checkUpdates-updateLater</key>
+	<string>Plus tard</string>
+	<key>language-title</key>
+	<string>Paramètres de langue</string>
+	<key>language-message</key>
+	<string>Choisir la langue pour UserFlows.</string>
+	<key>artboardDescription-invalidSelectionMessage</key>
+	<string>Sélectionner un plan de travail</string>
+	<key>artboardDescription-description</key>
+	<string>Description</string>
+	<key>artboardDescription-saved</key>
+	<string>Description du plan de travail sauvegardée</string>
+	<key>alerts-save</key>
+	<string>Sauvegarder</string>
+	<key>alerts-cancel</key>
+	<string>Annuler</string>
+	<key>alerts-done</key>
+	<string>Terminé</string>
+</dict>
+</plist>

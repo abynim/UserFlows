@@ -26,7 +26,7 @@ var version;
 var strings;
 var sketchVersion;
 
-var supportedLanguages = ["en", "cn", "zhtw", "cz", "da", "es", "nl", "de", "it", "fa", "ru", "tr"];
+var supportedLanguages = ["en", "cn", "zhtw", "cz", "da", "nl", "es", "fr", "de", "it", "fa", "ru", "tr"];
 var languageNames = {
 	en : "English",
 	da : "Danish",
@@ -39,7 +39,8 @@ var languageNames = {
 	ru : "Русский",
 	de : "German",
 	es : "Español",
-	it : "Italian"
+	it : "Italian",
+	fr : "French"
 };
 
 var defineLink = function(context) {
@@ -118,7 +119,7 @@ var removeLink = function(context) {
 }
 
 var removeAllLinks = function(context) {
-	
+
 	parseContext(context);
 
 	var doc = context.document;
@@ -680,8 +681,8 @@ var generateFlow = function(context) {
 			primaryTextColor = MSImmutableColor.colorWithSVGString("#121212");
 			secondaryTextColor = MSImmutableColor.colorWithSVGString("#999999");
 		}
-		
-		if(sketchVersion < 480) { 
+
+		if(sketchVersion < 480) {
 			primaryTextColor = primaryTextColor.newMutableCounterpart();
 			secondaryTextColor = secondaryTextColor.newMutableCounterpart();
 		}
