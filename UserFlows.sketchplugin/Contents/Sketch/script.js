@@ -926,13 +926,13 @@ var generateFlow = function(context) {
 		flowNameLabel.frame().setWidth(groupBounds.size.width);
 		flowNameLabel.setTextBehaviour(1);
 		flowNameLabel.setStringValue(flowName);
-		flowNameLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 18*exportScale));
+		flowNameLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 36*exportScale));
 		flowNameLabel.setTextColor(primaryTextColor);
 		flowNameLabel.adjustFrameToFit();
 		flowNameLabel.setIsLocked(1);
 		flowBoard.addLayers([flowNameLabel]);
 
-		var yPos = outerPadding + flowNameLabel.frame().height() + 14;
+		var yPos = outerPadding + flowNameLabel.frame().height() + 18;
 		var flowDescriptionLabel;
 		if (flowDescription && flowDescription != "") {
 			flowDescriptionLabel = MSTextLayer.new();
@@ -942,7 +942,7 @@ var generateFlow = function(context) {
 			flowDescriptionLabel.frame().setWidth(groupBounds.size.width);
 			flowDescriptionLabel.setTextBehaviour(1);
 			flowDescriptionLabel.setStringValue(flowDescription);
-			flowDescriptionLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 12*exportScale));
+			flowDescriptionLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 16*exportScale));
 			flowDescriptionLabel.setTextColor(secondaryTextColor);
 			flowDescriptionLabel.adjustFrameToFit();
 			flowDescriptionLabel.setIsLocked(1);
