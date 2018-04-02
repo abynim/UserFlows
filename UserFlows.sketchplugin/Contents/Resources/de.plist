@@ -132,6 +132,8 @@
 	<string>Dein Name</string>
 	<key>settings-showDate</key>
 	<string>Namen und Datum auf Flows zeigen</string>
+	<key>settings-autoUpdateConnections</key>
+	<string>Auto-redraw connections (experimental)</string>
 	<key>settings-connectionCurved</key>
 	<string>Gewölbt</string>
 	<key>settings-connectionStraight</key>

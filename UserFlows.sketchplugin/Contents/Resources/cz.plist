@@ -132,6 +132,8 @@
 	<string>Vaše Jméno</string>
 	<key>settings-showDate</key>
 	<string>Zobrazit Datum a Pojmenovat Flows</string>
+	<key>settings-autoUpdateConnections</key>
+	<string>Auto-redraw connections (experimental)</string>
 	<key>settings-connectionCurved</key>
 	<string>Zakřivené</string>
 	<key>settings-connectionStraight</key>

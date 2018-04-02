@@ -132,6 +132,8 @@
 	<string>Ваше имя</string>
 	<key>settings-showDate</key>
 	<string>Показывать дату и время на Flow</string>
+	<key>settings-autoUpdateConnections</key>
+	<string>Auto-redraw connections (experimental)</string>
 	<key>settings-connectionCurved</key>
 	<string>Изогнутая</string>
 	<key>settings-connectionStraight</key>

@@ -132,6 +132,8 @@
 	<string>Adınız</string>
 	<key>settings-showDate</key>
 	<string>Akışlarda Tarih ve İsim Göster</string>
+	<key>settings-autoUpdateConnections</key>
+	<string>Auto-redraw connections (experimental)</string>
 	<key>settings-connectionCurved</key>
 	<string>Kavisli</string>
 	<key>settings-connectionStraight</key>
