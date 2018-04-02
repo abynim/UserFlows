@@ -965,9 +965,11 @@ var generateFlow = function(context) {
 				modifiedOnText = strings["generateFlow-modifiedOnDate"].stringByReplacingOccurrencesOfString_withString("%date%", formatter.stringFromDate(NSDate.date()))
 			}
 
+			yPos += 12;
+
 			modifiedDateLabel.setName(strings["generateFlow-modifiedDate"]);
 			modifiedDateLabel.frame().setX(outerPadding);
-			modifiedDateLabel.frame().setY(yPos + 12);
+			modifiedDateLabel.frame().setY(yPos);
 			modifiedDateLabel.frame().setWidth(groupBounds.size.width - (outerPadding*2));
 			modifiedDateLabel.setTextBehaviour(1);
 			modifiedDateLabel.setStringValue(modifiedOnText);
@@ -976,6 +978,8 @@ var generateFlow = function(context) {
 			modifiedDateLabel.adjustFrameToFit();
 			modifiedDateLabel.setIsLocked(1);
 			flowBoard.addLayers([modifiedDateLabel]);
+
+			yPos += modifiedDateLabel.frame().height();
 		}
 
 		yPos += 60;
