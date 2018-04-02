@@ -132,6 +132,8 @@
 	<string>你的名字</string>
 	<key>settings-showDate</key>
 	<string>在流程圖中顯示日期與名字</string>
+	<key>settings-autoUpdateConnections</key>
+	<string>Auto-redraw connections (experimental)</string>
 	<key>settings-connectionCurved</key>
 	<string>曲線</string>
 	<key>settings-connectionStraight</key>

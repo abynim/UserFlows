@@ -177,6 +177,15 @@
       "identifier" : "checkForUpdates",
       "name" : "Check for Updates...",
       "icon" : "icon.png"
+    },
+    {
+      "script" : "script.js",
+      "handlers" : {
+        "actions" : {
+          "LayersMoved.finish" : "onLayersMoved"
+        }
+      },
+      "identifier" : "actionHandler"
     }
   ],
   "menu" : {
@@ -202,10 +211,10 @@
       "checkForUpdates"
     ]
   },
-  "compatibleVersion" : "47" ,
+  "compatibleVersion" : "49" ,
   "disableCocoaScriptPreprocessor" : true,
   "identifier" : "com.abynim.sketchplugins.userflows",
-  "version" : "2.0.8",
+  "version" : "2.1",
   "description" : "Generate user-flow diagrams from artboards in Sketch.",
   "homepage" : "https:\/\/abynim.github.io\/UserFlows",
   "authorEmail" : "abynimbalkar@gmail.com",

@@ -10,6 +10,7 @@ var kFlowIndicatorAlphaKey = "com.abynim.userflows.flowIndicatorAlpha";
 var kFlowBackgroundKey = "com.abynim.userflows.backgroundColor";
 var kMinTapAreaKey = "com.abynim.userflows.minTapArea";
 var kFullNameKey = "com.abynim.userflows.fullName";
+var kAutoUpdateConnectionsKey = "com.abynim.userflows.autoUpdateConnections";
 var kUUIDKey = "com.abynim.userflows.uuid";
 var kShowConnectionsKey = "com.abynim.userflows.showConnections";
 var kShowsLinkRectsKey = "com.abynim.userflows.showsLinkRects";
@@ -556,6 +557,50 @@ var goBackToLink = function(context) {
 	}
 }
 
+var recursivelyDetachSymbolInstance = function(instance) {
+	
+	// don't detach the instance if it has a flow connection
+	if (instance.flow()) return;
+
+	var instanceRect = instance.absoluteRect();
+	var group = instance.detachByReplacingWithGroup();
+	if (!group) return;
+
+	// resize the group to match the original instance dimensions
+	group.absoluteRect().setWidth(instanceRect.width());
+	group.absoluteRect().setHeight(instanceRect.height());
+	group.resizeToFitChildrenWithOption(1);
+	
+	var loop = group.children().objectEnumerator(), layer;
+	while (layer = loop.nextObject()) {
+		if (layer.className() == 'MSSymbolInstance') {
+			recursivelyDetachSymbolInstance(layer);
+		}
+	}
+}
+
+var artboardWithDetachedSymbolsFromArtboard = function(artboard) {
+	var detachedArtboard = artboard.duplicate();
+	var symbolInstances = detachedArtboard.children().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("className == 'MSSymbolInstance'"));
+	var loop = symbolInstances.objectEnumerator(), instance;
+	while (instance = loop.nextObject()) {
+		recursivelyDetachSymbolInstance(instance);
+	}
+	return detachedArtboard;
+}
+
+var getArtboardsWithFlowConnectionsInPage = function(page, doc) {
+	var loop = page.artboards().objectEnumerator(),
+		validArtboards = [], 
+		artboard;
+	while (artboard = loop.nextObject()) {
+		if (artboard.ancestry().layer().containsFlowWithSymbolsFromDocument(doc.immutableDocumentData())) {
+			validArtboards.push(artboard);
+		}
+	}
+	return NSArray.arrayWithArray(validArtboards);
+}
+
 var generateFlow = function(context) {
 
 	parseContext(context);
@@ -569,19 +614,29 @@ var generateFlow = function(context) {
 
 	settingsWindow.addTextLabelWithValue(strings["generateFlow-startFrom"]);
 
+	var currentPage = doc.currentPage();
+	var pageContainsFlowConnections = currentPage.ancestry().layer().containsFlowWithSymbolsFromDocument(doc.immutableDocumentData());
+
 	linkLayerPredicate = NSPredicate.predicateWithFormat("userInfo != nil && function(userInfo, 'valueForKeyPath:', %@).destinationArtboardID != nil", kPluginDomain);
 	var linkLayers = doc.currentPage().children().filteredArrayUsingPredicate(linkLayerPredicate);
 
-	if (linkLayers.count() == 0) {
+
+	if (linkLayers.count() == 0 && !pageContainsFlowConnections) {
 		showAlert(strings["generateFlow-noLinksTitle"], strings["generateFlow-noLinksMessage"]);
 		return;
 	}
 
-	var artboardsWithLinks = linkLayers.valueForKeyPath("@distinctUnionOfObjects.parentArtboard");
+	var artboardsWithLinks = linkLayers.count() ? linkLayers.valueForKeyPath("@distinctUnionOfObjects.parentArtboard") : NSArray.array();
+
+	if (pageContainsFlowConnections) {
+		artboardsWithLinks = NSSet.setWithArray(artboardsWithLinks.arrayByAddingObjectsFromArray(getArtboardsWithFlowConnectionsInPage(currentPage, doc))).allObjects();
+	}
+
 	var artboardsDropdown = NSPopUpButton.alloc().initWithFrame(NSMakeRect(0,0,300,25));
-	var loop = artboardsWithLinks.objectEnumerator(), artboardWithLinks, menuItem;
+	var loop = artboardsWithLinks.objectEnumerator(), artboardWithLinks, menuItem, artboardTitle;
 	while (artboardWithLinks = loop.nextObject()) {
-		menuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent(artboardWithLinks.name(), nil, "");
+		artboardTitle = artboardWithLinks.isFlowHome() ? "⚑ " + artboardWithLinks.name() : artboardWithLinks.name();
+		menuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent(artboardTitle, nil, "");
 		artboardsDropdown.menu().addItem(menuItem);
 	}
 
@@ -662,7 +717,7 @@ var generateFlow = function(context) {
 			artboardsToExport = [initialArtboard],
 			screenShadowColor = MSImmutableColor.colorWithSVGString("#00000").newMutableCounterpart(),
 			tempFolderURL = NSFileManager.defaultManager().URLsForDirectory_inDomains(NSCachesDirectory, NSUserDomainMask).lastObject().URLByAppendingPathComponent(kPluginDomain),
-			artboard, artboardID, linkLayers, linkLayersCount, destinationArtboard, destinationArtboardID, linkLayer, screenLayer, exportRequest, exportURL, screenShadow, connection, artboardNameLabel, primaryTextColor, secondaryTextColor, flowBackgroundColor, artboardIsConditional, isCondition, destinationArtboardIsConditional, linkRect;
+			artboard, detachedArtboard, artboardID, linkLayers, linkLayersCount, destinationArtboard, destinationArtboardID, linkLayer, screenLayer, exportRequest, exportURL, screenShadow, connection, artboardNameLabel, primaryTextColor, secondaryTextColor, flowBackgroundColor, artboardIsConditional, isCondition, destinationArtboardIsConditional, linkRect, destinationRect;
 
 		context.command.setValue_forKey_onLayer_forPluginIdentifier(initialArtboard.objectID(), "homeScreenID", doc.currentPage(), kPluginDomain);
 		screenShadowColor.setAlpha(.2);
@@ -760,11 +815,14 @@ var generateFlow = function(context) {
 
 			  	linkRect = linkLayer.parentArtboard() == nil ? linkLayer.absoluteRect().rect() : CGRectIntersection(linkLayer.absoluteRect().rect(), linkLayer.parentArtboard().absoluteRect().rect());
 
+			  	destinationRect = destinationArtboard.absoluteRect().rect();
+
 			  	connection = {
 			  		linkRect : linkRect,
 			  		linkID : linkLayer.objectID(),
 			  		linkIsCondition : isCondition,
 			  		destinationIsConditional : destinationArtboardIsConditional,
+			  		destinationRect : destinationRect,
 			  		dropPoint : {
 			  			x : destinationArtboard.absoluteRect().x() - (10*exportScale),
 			  			y : destinationArtboard.absoluteRect().y() - (10*exportScale)
@@ -775,13 +833,73 @@ var generateFlow = function(context) {
 
 			  }
 			}
+
+			// Flow Connections
+			if (sketchVersion >= 490) {
+				var immutableArtboard = artboard.ancestry().layer();
+				if (immutableArtboard.containsFlowWithSymbolsFromDocument(doc.immutableDocumentData())) {
+					
+					detachedArtboard = artboardWithDetachedSymbolsFromArtboard(artboard);
+
+					var flowConnections = detachedArtboard.valueForKeyPath("children.@distinctUnionOfObjects.flow");
+					var loop = flowConnections.objectEnumerator(), flowConnection, dropPointX, dropPointY;
+
+					while (flowConnection = loop.nextObject()) {
+						
+						linkLayer = flowConnection.sendingLayer();
+						linkRect = CGRectIntersection(linkLayer.absoluteRect().rect(), linkLayer.parentArtboard().absoluteRect().rect());
+
+						connection = {
+					  		linkRect : linkRect,
+					  		isBackAction : flowConnection.isBackAction(),
+					  		linkIsCrossPage : false
+					  	};
+
+						if (flowConnection.isBackAction()) {
+							dropPointX = artboard.absoluteRect().x() - (30*exportScale);
+							dropPointY = artboard.absoluteRect().y() - (30*exportScale);
+							connection.destinationRect = CGRectMake(dropPointX - 20, dropPointY, 10, 10);
+
+						} else {
+							destinationArtboard = flowConnection.destinationArtboard();
+							connection.linkIsCrossPage = destinationArtboard.parentPage() != doc.currentPage();
+
+							if(connection.linkIsCrossPage) {
+								dropPointX = artboard.absoluteRect().x() + artboard.absoluteRect().width() + (50*exportScale);
+								dropPointY = artboard.absoluteRect().y() - (30*exportScale);
+
+								connection.destinationRect = CGRectMake(dropPointX, dropPointY, 10, 10);
+								connection.artboardName = destinationArtboard.name();
+								connection.artboardParentName = destinationArtboard.parentPage().name();
+
+							} else {
+								dropPointX = destinationArtboard.absoluteRect().x() - (10*exportScale);
+								dropPointY = destinationArtboard.absoluteRect().y() + (destinationArtboard.absoluteRect().height()/2);
+
+								destinationRect = destinationArtboard.absoluteRect().rect();
+								connection.destinationRect = destinationRect;
+
+								artboardsToExport.push(destinationArtboard);
+							}
+
+						}
+
+					  	connections.push(connection);
+
+					}
+
+					detachedArtboard.removeFromParent();
+					detachedArtboard = nil;
+
+				}
+			}
 		}
 
 		if (connectionsOverlay) {
 			connectionsOverlay.setIsVisible(connectionsOverlayVisible);
 		}
 
-		var connectionLayers = MSLayerArray.arrayWithLayers(drawConnections(connections, doc.currentPage(), exportScale));
+		var connectionLayers = MSLayerArray.arrayWithLayers(drawConnections(connections, doc.currentPage(), exportScale, flowBackgroundColor));
 		var connectionsGroup = MSLayerGroup.groupFromLayers(connectionLayers);
 		connectionsGroup.setName(strings["generateFlow-connectionsGroupName"]);
 		artboardBitmapLayers.push(connectionsGroup);
@@ -808,13 +926,13 @@ var generateFlow = function(context) {
 		flowNameLabel.frame().setWidth(groupBounds.size.width);
 		flowNameLabel.setTextBehaviour(1);
 		flowNameLabel.setStringValue(flowName);
-		flowNameLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 18*exportScale));
+		flowNameLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 36*exportScale));
 		flowNameLabel.setTextColor(primaryTextColor);
 		flowNameLabel.adjustFrameToFit();
 		flowNameLabel.setIsLocked(1);
 		flowBoard.addLayers([flowNameLabel]);
 
-		var yPos = outerPadding + flowNameLabel.frame().height() + 14;
+		var yPos = outerPadding + flowNameLabel.frame().height() + 18;
 		var flowDescriptionLabel;
 		if (flowDescription && flowDescription != "") {
 			flowDescriptionLabel = MSTextLayer.new();
@@ -824,7 +942,7 @@ var generateFlow = function(context) {
 			flowDescriptionLabel.frame().setWidth(groupBounds.size.width);
 			flowDescriptionLabel.setTextBehaviour(1);
 			flowDescriptionLabel.setStringValue(flowDescription);
-			flowDescriptionLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 12*exportScale));
+			flowDescriptionLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 16*exportScale));
 			flowDescriptionLabel.setTextColor(secondaryTextColor);
 			flowDescriptionLabel.adjustFrameToFit();
 			flowDescriptionLabel.setIsLocked(1);
@@ -847,9 +965,11 @@ var generateFlow = function(context) {
 				modifiedOnText = strings["generateFlow-modifiedOnDate"].stringByReplacingOccurrencesOfString_withString("%date%", formatter.stringFromDate(NSDate.date()))
 			}
 
+			yPos += 12;
+
 			modifiedDateLabel.setName(strings["generateFlow-modifiedDate"]);
 			modifiedDateLabel.frame().setX(outerPadding);
-			modifiedDateLabel.frame().setY(yPos + 12);
+			modifiedDateLabel.frame().setY(yPos);
 			modifiedDateLabel.frame().setWidth(groupBounds.size.width - (outerPadding*2));
 			modifiedDateLabel.setTextBehaviour(1);
 			modifiedDateLabel.setStringValue(modifiedOnText);
@@ -858,6 +978,8 @@ var generateFlow = function(context) {
 			modifiedDateLabel.adjustFrameToFit();
 			modifiedDateLabel.setIsLocked(1);
 			flowBoard.addLayers([modifiedDateLabel]);
+
+			yPos += modifiedDateLabel.frame().height();
 		}
 
 		yPos += 60;
@@ -998,6 +1120,7 @@ var redrawConnections = function(context) {
 		  		linkRect : linkRect,
 		  		linkID : linkLayer.objectID(),
 		  		linkIsCondition : isCondition,
+		  		destinationRect : destinationArtboard.absoluteRect().rect(),
 		  		dropPoint : {
 		  			x : destinationArtboard.absoluteRect().x() - 10,
 		  			y : destinationArtboard.absoluteRect().y()
@@ -1022,7 +1145,7 @@ var redrawConnections = function(context) {
 	return connectionsGroup;
 }
 
-var drawConnections = function(connections, parent, exportScale) {
+var drawConnections = function(connections, parent, exportScale, labelColor) {
 	var connectionsCount = connections.length,
 		flowIndicatorColor = NSUserDefaults.standardUserDefaults().objectForKey(kFlowIndicatorColorKey) || "#F5A623",
 		flowIndicatorAlpha = NSUserDefaults.standardUserDefaults().objectForKey(kFlowIndicatorAlphaKey) || 1,
@@ -1035,22 +1158,23 @@ var drawConnections = function(connections, parent, exportScale) {
 		hitAreaBorderColor = MSImmutableColor.colorWithSVGString(flowIndicatorColor).newMutableCounterpart(),
 		arrowRotation = 0,
 		arrowOffsetX = 0,
-		path, hitAreaLayer, linkRect, dropPoint, hitAreaBorder, startPoint, controlPoint1, controlPoint1Offset, controlPoint2OffsetX, controlPoint2OffsetY, linePath, lineLayer, destinationArtboardIsConditional, originPoint, degrees;
+		path, hitAreaLayer, linkRect, destinationRect, dropPoint, hitAreaBorder, startPoint, controlPoint1, controlPoint2, controlPoint1Offset, controlPoint2OffsetX, controlPoint2OffsetY, linePath, lineLayer, destinationArtboardIsConditional, originPoint, degrees, connectionPosition, controlPointOffset, minControlPointOffset;
 	hitAreaColor.setAlpha(0);
 	hitAreaBorderColor.setAlpha(flowIndicatorAlpha);
 
 	for (var i=0; i < connectionsCount; i++) {
 		connection = connections[i];
 		linkRect = connection.linkRect;
-		destinationArtboardIsConditional = connection.destinationIsConditional == 1;
-		if (linkRect.size.width < minimumTapArea) {
-			linkRect = NSInsetRect(linkRect, (linkRect.size.width-minimumTapArea)/2, 0);
-		}
-		if (linkRect.size.height < minimumTapArea) {
-			linkRect = NSInsetRect(linkRect, 0, (linkRect.size.height-minimumTapArea)/2);
-		}
 
 		if (showLinkRects == 1 && connection.linkIsCondition != 1) {
+
+			if (linkRect.size.width < minimumTapArea) {
+				linkRect = NSInsetRect(linkRect, (linkRect.size.width-minimumTapArea)/2, 0);
+			}
+			if (linkRect.size.height < minimumTapArea) {
+				linkRect = NSInsetRect(linkRect, 0, (linkRect.size.height-minimumTapArea)/2);
+			}
+
 			path = NSBezierPath.bezierPathWithRect(linkRect);
 			hitAreaLayer = MSShapeGroup.shapeWithBezierPath(path);
 			hitAreaLayer.style().addStylePartOfType(0).setColor(hitAreaColor);
@@ -1062,31 +1186,119 @@ var drawConnections = function(connections, parent, exportScale) {
 			connectionLayers.push(hitAreaLayer);
 		}
 
-		dropPoint = destinationArtboardIsConditional ? NSMakePoint(connection.dropPoint.x+(5*exportScale), connection.dropPoint.y + (10*exportScale)) : NSMakePoint(connection.dropPoint.x, connection.dropPoint.y);
-		if (dropPoint.x < CGRectGetMinX(linkRect)) {
-			dropPoint = NSMakePoint(dropPoint.x + 18, dropPoint.y - (30/exportScale) );
-			arrowRotation = 90;
-			arrowOffsetX = 2;
-			if (dropPoint.y < CGRectGetMinY(linkRect)) {
-				startPoint = NSMakePoint(CGRectGetMidX(linkRect), CGRectGetMinY(linkRect) + 5);
-				controlPoint1Offset = Math.max(Math.abs(dropPoint.y - startPoint.y)/2, 200);
-				controlPoint1 = NSMakePoint(startPoint.x, startPoint.y - controlPoint1Offset);
-			} else {
-				startPoint = NSMakePoint(CGRectGetMidX(linkRect), CGRectGetMaxY(linkRect) - 5);
-				controlPoint1Offset = Math.max(Math.abs(dropPoint.y - startPoint.y)/2, 200);
-				controlPoint1 = NSMakePoint(startPoint.x, startPoint.y + controlPoint1Offset);
-			}
-			controlPoint2OffsetX = 0;
-			controlPoint2OffsetY = -160;
+		destinationArtboardIsConditional = connection.destinationIsConditional == 1;
+		destinationRect = connection.destinationRect;
 
-		} else {
-			startPoint = NSMakePoint(CGRectGetMaxX(linkRect) - 5, CGRectGetMidY(linkRect));
-			controlPoint1Offset = Math.max(Math.abs(dropPoint.x - startPoint.x)/2, 100);
-			controlPoint1 = NSMakePoint(startPoint.x + controlPoint1Offset, startPoint.y);
-			controlPoint2OffsetY = 0;
-			controlPoint2OffsetX = Math.max(Math.abs(dropPoint.x - startPoint.x)/2, 100);
-			arrowRotation = 0;
-			arrowOffsetX = 0;
+		if (destinationRect) {
+
+			destinationRect = CGRectInset(destinationRect, (-14*exportScale), (-14*exportScale));
+
+			if (CGRectGetMinX(destinationRect) >= CGRectGetMaxX(linkRect)) {
+				connectionPosition = "right";
+			} else if(CGRectGetMaxX(destinationRect) <= CGRectGetMinX(linkRect)) {
+				connectionPosition = "left";
+			} else {
+				if(CGRectGetMinY(linkRect) > CGRectGetMaxY(destinationRect)) {
+					connectionPosition = "top";
+				}
+				else {
+					connectionPosition = "bottom";
+				}
+			}
+
+			minControlPointOffset = connection.isBackAction || connection.linkIsCrossPage ? 0 : 160;
+
+			switch(connectionPosition) {
+
+				case "right":
+
+					startPoint = NSMakePoint(CGRectGetMaxX(linkRect), CGRectGetMidY(linkRect));
+					dropPoint = NSMakePoint(CGRectGetMinX(destinationRect), CGRectGetMidY(destinationRect));
+
+					controlPointOffset = Math.max(Math.min(Math.abs(dropPoint.x - startPoint.x), 160), minControlPointOffset);
+					controlPoint1 = NSMakePoint(startPoint.x + controlPointOffset, startPoint.y);
+					controlPoint2 = NSMakePoint(dropPoint.x - controlPointOffset, dropPoint.y);
+
+					arrowRotation = 0;
+					arrowOffsetX = 0;
+
+				break;
+
+				case "left":
+
+					startPoint = NSMakePoint(CGRectGetMinX(linkRect), CGRectGetMidY(linkRect));
+					dropPoint = NSMakePoint(CGRectGetMaxX(destinationRect), CGRectGetMidY(destinationRect));
+
+					controlPointOffset = Math.max(Math.min(Math.abs(dropPoint.x - startPoint.x), 160), minControlPointOffset);
+					controlPoint1 = NSMakePoint(startPoint.x - controlPointOffset, startPoint.y);
+					controlPoint2 = NSMakePoint(dropPoint.x + controlPointOffset, dropPoint.y);
+
+					arrowRotation = 180;
+					arrowOffsetX = 2;
+
+				break;
+
+				case "top":
+
+					startPoint = NSMakePoint(CGRectGetMidX(linkRect), CGRectGetMinY(linkRect));
+					dropPoint = NSMakePoint(CGRectGetMidX(destinationRect), CGRectGetMaxY(destinationRect));
+
+					controlPointOffset = Math.max(Math.min(Math.abs(dropPoint.y - startPoint.y), 160), minControlPointOffset);
+					controlPoint1 = NSMakePoint(startPoint.x, startPoint.y - controlPointOffset);
+					controlPoint2 = NSMakePoint(dropPoint.x, dropPoint.y + controlPointOffset);
+
+					arrowRotation = -90;
+					arrowOffsetX = 2;
+
+				break;
+
+				case "bottom":
+
+					dropPoint = NSMakePoint(CGRectGetMidX(destinationRect), CGRectGetMinY(destinationRect));
+					startPoint = NSMakePoint(CGRectGetMidX(linkRect), CGRectGetMaxY(linkRect));
+
+					controlPointOffset = Math.max(Math.min(Math.abs(dropPoint.y - startPoint.y), 160), minControlPointOffset);
+					controlPoint1 = NSMakePoint(startPoint.x, startPoint.y + controlPointOffset);
+					controlPoint2 = NSMakePoint(dropPoint.x, dropPoint.y - controlPointOffset);
+
+					arrowRotation = 90;
+					arrowOffsetX = 2;
+
+				break;			
+
+			}
+
+		}
+		else {
+
+			dropPoint = destinationArtboardIsConditional ? NSMakePoint(connection.dropPoint.x+(5*exportScale), connection.dropPoint.y + (10*exportScale)) : NSMakePoint(connection.dropPoint.x, connection.dropPoint.y);
+			if (dropPoint.x < CGRectGetMinX(linkRect)) {
+				dropPoint = NSMakePoint(dropPoint.x + 18, dropPoint.y - (30/exportScale) );
+				arrowRotation = 90;
+				arrowOffsetX = 2;
+				if (dropPoint.y < CGRectGetMinY(linkRect)) {
+					startPoint = NSMakePoint(CGRectGetMidX(linkRect), CGRectGetMinY(linkRect) + 5);
+					controlPoint1Offset = Math.max(Math.abs(dropPoint.y - startPoint.y)/2, 200);
+					controlPoint1 = NSMakePoint(startPoint.x, startPoint.y - controlPoint1Offset);
+				} else {
+					startPoint = NSMakePoint(CGRectGetMidX(linkRect), CGRectGetMaxY(linkRect) - 5);
+					controlPoint1Offset = Math.max(Math.abs(dropPoint.y - startPoint.y)/2, 200);
+					controlPoint1 = NSMakePoint(startPoint.x, startPoint.y + controlPoint1Offset);
+				}
+				controlPoint2OffsetX = 0;
+				controlPoint2OffsetY = -160;
+
+			} else {
+				startPoint = NSMakePoint(CGRectGetMaxX(linkRect) - 5, CGRectGetMidY(linkRect));
+				controlPoint1Offset = Math.max(Math.abs(dropPoint.x - startPoint.x)/2, 100);
+				controlPoint1 = NSMakePoint(startPoint.x + controlPoint1Offset, startPoint.y);
+				controlPoint2OffsetY = 0;
+				controlPoint2OffsetX = Math.max(Math.abs(dropPoint.x - startPoint.x)/2, 100);
+				arrowRotation = 0;
+				arrowOffsetX = 0;
+			}
+
+			controlPoint2 = NSMakePoint(dropPoint.x - controlPoint2OffsetX, dropPoint.y + controlPoint2OffsetY);
 		}
 
 		linkRect = NSInsetRect(NSMakeRect(startPoint.x, startPoint.y, 0, 0), -5, -5);
@@ -1096,10 +1308,11 @@ var drawConnections = function(connections, parent, exportScale) {
 		parent.addLayers([hitAreaLayer]);
 		connectionLayers.push(hitAreaLayer);
 
+		
 		linePath = NSBezierPath.bezierPath();
 		linePath.moveToPoint(startPoint);
 		if (connectionType == "curved") {
-			linePath.curveToPoint_controlPoint1_controlPoint2(dropPoint, controlPoint1, NSMakePoint(dropPoint.x - controlPoint2OffsetX, dropPoint.y + controlPoint2OffsetY));
+			linePath.curveToPoint_controlPoint1_controlPoint2(dropPoint, controlPoint1, controlPoint2);
 		} else if (connectionType == "straight") {
 			linePath.lineToPoint(dropPoint);
 			originPoint = CGPointMake(dropPoint.x - startPoint.x, dropPoint.y - startPoint.y);
@@ -1107,6 +1320,7 @@ var drawConnections = function(connections, parent, exportScale) {
     		arrowRotation = (degrees > 0.0 ? degrees : (360.0 + degrees));
     		if (arrowRotation < 110 || arrowRotation > 255) { arrowOffsetX = 2 };
 		}
+		
 
 		lineLayer = MSShapeGroup.shapeWithBezierPath(linePath);
 		lineLayer.setName("Flow arrow");
@@ -1117,19 +1331,105 @@ var drawConnections = function(connections, parent, exportScale) {
 		parent.addLayers([lineLayer]);
 		connectionLayers.push(lineLayer);
 
-		var arrowSize = Math.max(12, strokeWidth*3);
-		path = NSBezierPath.bezierPath();
-		path.moveToPoint(NSMakePoint(dropPoint.x+(arrowSize*0.6), dropPoint.y));
-		path.lineToPoint(NSMakePoint(dropPoint.x-arrowSize, dropPoint.y+(arrowSize*0.6)));
-		path.lineToPoint(NSMakePoint(dropPoint.x-(arrowSize*0.6), dropPoint.y));
-		path.lineToPoint(NSMakePoint(dropPoint.x-arrowSize, dropPoint.y-(arrowSize*0.6)));
-		path.closePath();
-		var arrow = MSShapeGroup.shapeWithBezierPath(path);
-		arrow.style().addStylePartOfType(0).setColor(hitAreaBorderColor);
-		arrow.setRotation(-arrowRotation);
-		arrow.absoluteRect().setX(arrow.absoluteRect().x() + arrowOffsetX);
-		parent.addLayers([arrow]);
-		connectionLayers.push(arrow);
+		// draw backlink and crossPage layers
+		if (connection.isBackAction) {
+
+			var backLabel = MSTextLayer.new();
+				backLabel.setName("Back");
+				backLabel.absoluteRect().setX(dropPoint.x);
+				backLabel.absoluteRect().setY(dropPoint.y);
+				backLabel.frame().setWidth(300);
+				backLabel.setTextBehaviour(0);
+				backLabel.setStringValue("BACK");
+				backLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 11*exportScale));
+				backLabel.setTextColor(labelColor);
+				backLabel.adjustFrameToFit();
+
+			var padding = (14*exportScale);
+			var backBackgroundWidth = Math.ceil(backLabel.frame().width()) + padding;
+			var backBackgroundHeight = Math.ceil(backLabel.frame().height()) + padding;
+			
+			var backBG = MSShapeGroup.shapeWithPath(MSRectangleShape.alloc().initWithFrame(NSMakeRect(0, 0, backBackgroundWidth, backBackgroundHeight)));
+			backBG.firstLayer().setCornerRadiusFloat(5);
+			backBG.style().addStylePartOfType(0).setColor(hitAreaBorderColor);
+
+			backBG.absoluteRect().setX(dropPoint.x - backBackgroundWidth);
+			backBG.absoluteRect().setY(dropPoint.y - (backBackgroundHeight / 2));
+
+			backLabel.absoluteRect().setX(dropPoint.x - backBackgroundWidth + (padding/2));
+			backLabel.absoluteRect().setY(backBG.absoluteRect().y() + (padding/2));
+
+			parent.addLayers([backBG, backLabel]);
+
+			connectionLayers.push(backBG);
+			connectionLayers.push(backLabel);
+
+		}
+		else if(connection.linkIsCrossPage) {
+
+			var pageNameLabel = MSTextLayer.new();
+				pageNameLabel.setName(connection.artboardParentName);
+				pageNameLabel.absoluteRect().setX(dropPoint.x);
+				pageNameLabel.absoluteRect().setY(dropPoint.y);
+				pageNameLabel.frame().setWidth(300);
+				pageNameLabel.setTextBehaviour(0);
+				pageNameLabel.setStringValue(connection.artboardParentName);
+				pageNameLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 11*exportScale));
+				pageNameLabel.setTextColor(labelColor);
+				pageNameLabel.adjustFrameToFit();
+				pageNameLabel.style().contextSettings().setOpacity(0.6);
+
+			var artboardNameLabel = MSTextLayer.new();
+				artboardNameLabel.setName("↳ " + connection.artboardName);
+				artboardNameLabel.absoluteRect().setX(dropPoint.x);
+				artboardNameLabel.absoluteRect().setY(dropPoint.y);
+				artboardNameLabel.frame().setWidth(300);
+				artboardNameLabel.setTextBehaviour(0);
+				artboardNameLabel.setStringValue("  ↳ " + connection.artboardName);
+				artboardNameLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 12*exportScale));
+				artboardNameLabel.setTextColor(labelColor);
+				artboardNameLabel.adjustFrameToFit();
+
+			var padding = (18*exportScale);
+			var linkBackgroundWidth = Math.ceil(Math.max(pageNameLabel.frame().width(), artboardNameLabel.frame().width())) + padding;
+			var linkBackgroundHeight = Math.ceil(pageNameLabel.frame().height() + 3 + artboardNameLabel.frame().height()) + padding;
+			
+			var linkBG = MSShapeGroup.shapeWithPath(MSRectangleShape.alloc().initWithFrame(NSMakeRect(0, 0, linkBackgroundWidth, linkBackgroundHeight)));
+			linkBG.firstLayer().setCornerRadiusFloat(5);
+			linkBG.style().addStylePartOfType(0).setColor(hitAreaBorderColor);
+
+			linkBG.absoluteRect().setX(dropPoint.x);
+			linkBG.absoluteRect().setY(dropPoint.y - (linkBackgroundHeight / 2));
+
+			pageNameLabel.absoluteRect().setX(dropPoint.x + (padding/2));
+			pageNameLabel.absoluteRect().setY(linkBG.absoluteRect().y() + (padding/2));
+
+			artboardNameLabel.absoluteRect().setX(dropPoint.x + (padding/2));
+			artboardNameLabel.absoluteRect().setY(pageNameLabel.absoluteRect().y() + pageNameLabel.absoluteRect().height() + 3);
+
+			parent.addLayers([linkBG, pageNameLabel, artboardNameLabel]);
+
+			connectionLayers.push(linkBG);
+			connectionLayers.push(pageNameLabel);
+			connectionLayers.push(artboardNameLabel);
+
+		}
+		else {
+			// Draw arrow
+			var arrowSize = Math.max(12, strokeWidth*3);
+			path = NSBezierPath.bezierPath();
+			path.moveToPoint(NSMakePoint(dropPoint.x+(arrowSize*0.6), dropPoint.y));
+			path.lineToPoint(NSMakePoint(dropPoint.x-arrowSize, dropPoint.y+(arrowSize*0.6)));
+			path.lineToPoint(NSMakePoint(dropPoint.x-(arrowSize*0.6), dropPoint.y));
+			path.lineToPoint(NSMakePoint(dropPoint.x-arrowSize, dropPoint.y-(arrowSize*0.6)));
+			path.closePath();
+			var arrow = MSShapeGroup.shapeWithBezierPath(path);
+			arrow.style().addStylePartOfType(0).setColor(hitAreaBorderColor);
+			arrow.setRotation(-arrowRotation);
+			arrow.absoluteRect().setX(arrow.absoluteRect().x() + arrowOffsetX);
+			parent.addLayers([arrow]);
+			connectionLayers.push(arrow);
+		}
 
 	}
 
@@ -1288,6 +1588,14 @@ var editSettings = function(context) {
 	settingsWindow.addAccessoryView(separator);
 	// ------------
 
+	var autoUpdateConnections = NSUserDefaults.standardUserDefaults().objectForKey(kAutoUpdateConnectionsKey) || 1;
+	var autoUpdateConnectionsCheckbox = NSButton.alloc().initWithFrame(NSMakeRect(0,0,300,22));
+	autoUpdateConnectionsCheckbox.setButtonType(NSSwitchButton);
+	autoUpdateConnectionsCheckbox.setBezelStyle(0);
+	autoUpdateConnectionsCheckbox.setTitle(strings["settings-autoUpdateConnections"]);
+	autoUpdateConnectionsCheckbox.setState(autoUpdateConnections);
+	settingsWindow.addAccessoryView(autoUpdateConnectionsCheckbox);
+
 	var response = settingsWindow.runModal();
 
 	if (response == "1000") {
@@ -1318,6 +1626,9 @@ var editSettings = function(context) {
 		NSUserDefaults.standardUserDefaults().setObject_forKey(userNameField.stringValue(), kFullNameKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(showNameCheckbox.state(), kShowModifiedDateKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(scaleDownBitmapsCheckbox.state(), kScalesDownFlowBitmaps);
+		NSUserDefaults.standardUserDefaults().setObject_forKey(autoUpdateConnectionsCheckbox.state(), kAutoUpdateConnectionsKey);
+		
+		updateManifestForSettingsChange(context, autoUpdateConnectionsCheckbox.state());
 		applySettings(context);
 		logEvent("settingsChanged", {
 			exportScale : exportScale,
@@ -1342,6 +1653,9 @@ var editSettings = function(context) {
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kShowModifiedDateKey);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kScalesDownFlowBitmaps);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kConditionFontSizeKey);
+		NSUserDefaults.standardUserDefaults().removeObjectForKey(kAutoUpdateConnectionsKey);
+
+		updateManifestForSettingsChange(context, 0);
 		applySettings(context);
 		logEvent("settingsReset", nil);
 
@@ -1359,6 +1673,30 @@ var applySettings = function(context) {
 			newConnections = redrawConnections(context);
 		newConnections.setIsVisible(isVisible);
 	}
+}
+
+var updateManifestForSettingsChange = function(context, autoUpdateConnections) {
+
+	var manifestPath = context.plugin.url().URLByAppendingPathComponent("Contents").URLByAppendingPathComponent("Sketch").URLByAppendingPathComponent("manifest.json").path(),
+		manifest = NSJSONSerialization.JSONObjectWithData_options_error(NSData.dataWithContentsOfFile(manifestPath), NSJSONReadingMutableContainers, nil),
+		commands = manifest.commands,
+		commandsCount = commands.count(),
+		command, actions;
+
+	for (var i = 0; i < commandsCount; i++) {
+		command = commands[i];
+		if (command.identifier == "actionHandler") {
+			actions = command.handlers.actions;
+			if (autoUpdateConnections == 1) {
+				actions.setObject_forKey("onLayersMoved", "LayersMoved.finish");
+			} else {
+				actions.removeObjectForKey("LayersMoved.finish");
+			}
+		}
+	}
+
+	NSString.alloc().initWithData_encoding(NSJSONSerialization.dataWithJSONObject_options_error(manifest, NSJSONWritingPrettyPrinted, nil), NSUTF8StringEncoding).writeToFile_atomically_encoding_error(manifestPath, true, NSUTF8StringEncoding, nil);
+	AppController.sharedInstance().pluginManager().reloadPlugins();
 }
 
 var editShortcuts = function(context) {
@@ -1492,6 +1830,16 @@ var editLanguage = function(context) {
 		NSString.alloc().initWithData_encoding(NSJSONSerialization.dataWithJSONObject_options_error(manifest, NSJSONWritingPrettyPrinted, nil), NSUTF8StringEncoding).writeToFile_atomically_encoding_error(manifestPath, true, NSUTF8StringEncoding, nil);
 		AppController.sharedInstance().pluginManager().reloadPlugins();
 
+	}
+}
+
+var onLayersMoved = function(context) {
+	
+	var doc = context.actionContext.document;
+	var connectionsGroup = getConnectionsGroupInPage(doc.currentPage());
+
+	if (connectionsGroup) {
+		redrawConnections(context);
 	}
 }
 

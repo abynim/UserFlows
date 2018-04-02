@@ -132,6 +132,8 @@
 	<string>Dit Navn</string>
 	<key>settings-showDate</key>
 	<string>Vis Dato og Navn på Flows</string>
+	<key>settings-autoUpdateConnections</key>
+	<string>Auto-redraw connections (experimental)</string>
 	<key>settings-connectionCurved</key>
 	<string>Curved</string>
 	<key>settings-connectionStraight</key>

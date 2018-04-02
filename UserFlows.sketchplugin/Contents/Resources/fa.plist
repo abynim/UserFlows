@@ -132,6 +132,8 @@
 	<string>نام شما</string>
 	<key>settings-showDate</key>
 	<string>نمایش تاریخ و نام روی مسیرها</string>
+	<key>settings-autoUpdateConnections</key>
+	<string>Auto-redraw connections (experimental)</string>
 	<key>settings-connectionCurved</key>
 	<string>منحنی</string>
 	<key>settings-connectionStraight</key>
