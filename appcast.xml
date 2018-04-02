@@ -6,6 +6,18 @@
     <description>Generate flow diagrams from Artboards in Sketch</description>
     <language>en</language>
       <item>
+        <title>UserFlows 2.1</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>Include native Sketch Prototype flow connections in generated diagrams.</li>
+              <li>Auto-redraw connections on layers moved (experimental)</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://github.com/abynim/UserFlows/archive/v2.zip" sparkle:version="2.1" />
+      </item>
+      <item>
         <title>UserFlows 2.0.8</title>
         <description>
           <![CDATA[
