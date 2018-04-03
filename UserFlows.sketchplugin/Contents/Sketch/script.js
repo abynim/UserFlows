@@ -364,7 +364,6 @@ var editConditionsForArtboard = function(currentArtboard, context, forceNewCondi
 	settingsWindow.alert().window().setInitialFirstResponder(conditionField);
 
 	var response = settingsWindow.runModal();
-	log(response);
 
 	if (response != "1001") {
 
@@ -952,7 +951,6 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 	flowNameLabel.setTextColor(primaryTextColor);
 	flowNameLabel.setLineHeight(36*1.3);
 	flowNameLabel.adjustFrameToFit();
-	//flowNameLabel.setIsLocked(1);
 	flowBoard.addLayers([flowNameLabel]);
 
 	var yPos = outerPadding + flowNameLabel.frame().height() + 18;
@@ -969,7 +967,6 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 		flowDescriptionLabel.setTextColor(secondaryTextColor);
 		flowDescriptionLabel.setLineHeight(16*1.4);
 		flowDescriptionLabel.adjustFrameToFit();
-		//flowDescriptionLabel.setIsLocked(1);
 		flowBoard.addLayers([flowDescriptionLabel]);
 		yPos = flowDescriptionLabel.frame().y() + flowDescriptionLabel.frame().height();
 	}
@@ -1000,7 +997,6 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 		modifiedDateLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 12*exportScale));
 		modifiedDateLabel.setTextColor(secondaryTextColor);
 		modifiedDateLabel.adjustFrameToFit();
-		modifiedDateLabel.setIsLocked(1);
 		flowBoard.addLayers([modifiedDateLabel]);
 
 		yPos += modifiedDateLabel.frame().height();
@@ -1081,13 +1077,14 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 
 	doc.setCurrentPage(flowPage);
 	flowBoard.select_byExtendingSelection(true, false);
-	var visibleContentRect = settings.visibleContentRect || NSInsetRect(flowBoard.absoluteRect().rect(), -60, -60);
+	var visibleContentRect = NSInsetRect(flowBoard.absoluteRect().rect(), -60, -60);
 	var currentView = sketchVersion < 480 ? doc.currentView() : doc.contentDrawView();
 	currentView.zoomToFitRect(visibleContentRect);
 
 	NSUserDefaults.standardUserDefaults().setObject_forKey(shouldOrganize, kKeepOrganizedKey);
 
-	logEvent("generatedFlow", {numberOfScreens : screenNumber, format : exportFormat, exportScale : exportScale});
+	var eventID = settings.updatingFlow ? "updatedFlow" : "generatedFlow";
+	logEvent(eventID, {numberOfScreens : screenNumber, format : exportFormat, exportScale : exportScale});
 }
 
 var updateFlow = function(context) {
@@ -1153,9 +1150,8 @@ var updateFlow = function(context) {
 
 		linkLayerPredicate = NSPredicate.predicateWithFormat("userInfo != nil && function(userInfo, 'valueForKeyPath:', %@).destinationArtboardID != nil", kPluginDomain);
 
-		var currentView = sketchVersion < 480 ? doc.currentView() : doc.contentDrawView();
 		var settings = {
-			visibleContentRect : currentView.visibleContentRect(),
+			updatingFlow : true,
 			flowName : nameField.stringValue(),
 			flowDescription : descriptionField.stringValue(),
 			shouldOrganizeFlowPage : keepFlowPageOrganized,
