@@ -618,7 +618,7 @@ var generateFlow = function(context) {
 	var pageContainsFlowConnections = currentPage.ancestry().layer().containsFlowWithSymbolsFromDocument(doc.immutableDocumentData());
 
 	linkLayerPredicate = NSPredicate.predicateWithFormat("userInfo != nil && function(userInfo, 'valueForKeyPath:', %@).destinationArtboardID != nil", kPluginDomain);
-	var linkLayers = doc.currentPage().children().filteredArrayUsingPredicate(linkLayerPredicate);
+	var linkLayers = currentPage.children().filteredArrayUsingPredicate(linkLayerPredicate);
 
 
 	if (linkLayers.count() == 0 && !pageContainsFlowConnections) {
@@ -640,7 +640,7 @@ var generateFlow = function(context) {
 		artboardsDropdown.menu().addItem(menuItem);
 	}
 
-	var homeScreenID = context.command.valueForKey_onLayer_forPluginIdentifier("homeScreenID", doc.currentPage(), kPluginDomain);
+	var homeScreenID = context.command.valueForKey_onLayer_forPluginIdentifier("homeScreenID", currentPage, kPluginDomain);
 	if (homeScreenID) {
 		var artboardIDs = artboardsWithLinks.valueForKeyPath("@unionOfObjects.objectID");
 		var homeScreenIndex = Math.max(0, artboardIDs.indexOfObject(homeScreenID));
@@ -648,12 +648,16 @@ var generateFlow = function(context) {
 	}
 	settingsWindow.addAccessoryView(artboardsDropdown);
 
+	var lastUsedFlowTitle = context.command.valueForKey_onLayer_forPluginIdentifier("lastUsedFlowTitle", currentPage, kPluginDomain);
 	settingsWindow.addTextLabelWithValue(strings["generateFlow-flowName"]);
 	var nameField = NSTextField.alloc().initWithFrame(NSMakeRect(0,0,300,23));
+	nameField.setStringValue( lastUsedFlowTitle || "" );
 	settingsWindow.addAccessoryView(nameField);
 
+	var lastUsedFlowDescription = context.command.valueForKey_onLayer_forPluginIdentifier("lastUsedFlowDescription", currentPage, kPluginDomain);
 	settingsWindow.addTextLabelWithValue(strings["generateFlow-description"]);
 	var descriptionField = NSTextField.alloc().initWithFrame(NSMakeRect(0,0,300,100));
+	descriptionField.setStringValue( lastUsedFlowDescription || "" );
 	settingsWindow.addAccessoryView(descriptionField);
 
 	var separator = NSBox.alloc().initWithFrame(NSMakeRect(0,0,300,10));
@@ -691,7 +695,7 @@ var generateFlow = function(context) {
 	if (response == "1000") {
 
 		var connectionsOverlayPredicate = NSPredicate.predicateWithFormat("userInfo != nil && function(userInfo, 'valueForKeyPath:', %@).isConnectionsContainer == true", kPluginDomain),
-			connectionsOverlay = doc.currentPage().children().filteredArrayUsingPredicate(connectionsOverlayPredicate).firstObject(),
+			connectionsOverlay = currentPage.children().filteredArrayUsingPredicate(connectionsOverlayPredicate).firstObject(),
 			connectionsGroupVisible;
 		if (connectionsOverlay) {
 			connectionsOverlayVisible = connectionsOverlay.isVisible();
@@ -719,7 +723,9 @@ var generateFlow = function(context) {
 			tempFolderURL = NSFileManager.defaultManager().URLsForDirectory_inDomains(NSCachesDirectory, NSUserDomainMask).lastObject().URLByAppendingPathComponent(kPluginDomain),
 			artboard, detachedArtboard, artboardID, linkLayers, linkLayersCount, destinationArtboard, destinationArtboardID, linkLayer, screenLayer, exportRequest, exportURL, screenShadow, connection, artboardNameLabel, primaryTextColor, secondaryTextColor, flowBackgroundColor, artboardIsConditional, isCondition, destinationArtboardIsConditional, linkRect, destinationRect;
 
-		context.command.setValue_forKey_onLayer_forPluginIdentifier(initialArtboard.objectID(), "homeScreenID", doc.currentPage(), kPluginDomain);
+		context.command.setValue_forKey_onLayer_forPluginIdentifier(initialArtboard.objectID(), "homeScreenID", currentPage, kPluginDomain);
+		context.command.setValue_forKey_onLayer_forPluginIdentifier(flowName, "lastUsedFlowTitle", currentPage, kPluginDomain);
+		context.command.setValue_forKey_onLayer_forPluginIdentifier(flowDescription, "lastUsedFlowDescription", currentPage, kPluginDomain);
 		screenShadowColor.setAlpha(.2);
 		exportFormat = exportFormat.toLowerCase();
 
@@ -765,7 +771,7 @@ var generateFlow = function(context) {
 			doc.saveArtboardOrSlice_toFile(exportRequest, exportURL.path());
 
 			screenLayer = MSBitmapLayer.bitmapLayerWithImageFromPath(exportURL);
-			doc.currentPage().addLayers([screenLayer]);
+			currentPage.addLayers([screenLayer]);
 			screenLayer.absoluteRect().setX(artboard.absoluteRect().x());
 			screenLayer.absoluteRect().setY(artboard.absoluteRect().y());
 			screenLayer.absoluteRect().setWidth(artboard.absoluteRect().width());
@@ -781,7 +787,7 @@ var generateFlow = function(context) {
 
 			if (artboardIsConditional == 0) {
 				artboardNameLabel = MSTextLayer.new();
-				doc.currentPage().addLayers([artboardNameLabel]);
+				currentPage.addLayers([artboardNameLabel]);
 				artboardNameLabel.setName(artboard.name());
 				artboardNameLabel.absoluteRect().setX(artboard.absoluteRect().x());
 				artboardNameLabel.absoluteRect().setY(artboard.absoluteRect().y());
@@ -806,7 +812,7 @@ var generateFlow = function(context) {
 			  linkLayer = linkLayers.objectAtIndex(i);
 			  destinationArtboardID = context.command.valueForKey_onLayer_forPluginIdentifier("destinationArtboardID", linkLayer, kPluginDomain);
 
-			  destinationArtboard = doc.currentPage().artboards().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("objectID == %@", destinationArtboardID)).firstObject();
+			  destinationArtboard = currentPage.artboards().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("objectID == %@", destinationArtboardID)).firstObject();
 
 			  if (destinationArtboard) {
 			  	destinationArtboardIsConditional = context.command.valueForKey_onLayer_forPluginIdentifier(kConditionalArtboardKey, destinationArtboard, kPluginDomain) || 0;
@@ -862,7 +868,7 @@ var generateFlow = function(context) {
 
 						} else {
 							destinationArtboard = flowConnection.destinationArtboard();
-							connection.linkIsCrossPage = destinationArtboard.parentPage() != doc.currentPage();
+							connection.linkIsCrossPage = destinationArtboard.parentPage() != currentPage;
 
 							if(connection.linkIsCrossPage) {
 								dropPointX = artboard.absoluteRect().x() + artboard.absoluteRect().width() + (50*exportScale);
@@ -899,7 +905,7 @@ var generateFlow = function(context) {
 			connectionsOverlay.setIsVisible(connectionsOverlayVisible);
 		}
 
-		var connectionLayers = MSLayerArray.arrayWithLayers(drawConnections(connections, doc.currentPage(), exportScale, flowBackgroundColor));
+		var connectionLayers = MSLayerArray.arrayWithLayers(drawConnections(connections, currentPage, exportScale, flowBackgroundColor));
 		var connectionsGroup = MSLayerGroup.groupFromLayers(connectionLayers);
 		connectionsGroup.setName(strings["generateFlow-connectionsGroupName"]);
 		artboardBitmapLayers.push(connectionsGroup);
@@ -923,7 +929,7 @@ var generateFlow = function(context) {
 		flowNameLabel.setName(flowName);
 		flowNameLabel.frame().setX(outerPadding);
 		flowNameLabel.frame().setY(outerPadding);
-		flowNameLabel.frame().setWidth(groupBounds.size.width);
+		flowNameLabel.frame().setWidth(Math.min(groupBounds.size.width, 1200));
 		flowNameLabel.setTextBehaviour(1);
 		flowNameLabel.setStringValue(flowName);
 		flowNameLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 36*exportScale));
@@ -939,7 +945,7 @@ var generateFlow = function(context) {
 			flowDescriptionLabel.setName(strings["generateFlow-description"]);
 			flowDescriptionLabel.frame().setX(outerPadding);
 			flowDescriptionLabel.frame().setY(yPos);
-			flowDescriptionLabel.frame().setWidth(groupBounds.size.width);
+			flowDescriptionLabel.frame().setWidth(Math.min(groupBounds.size.width, 600));
 			flowDescriptionLabel.setTextBehaviour(1);
 			flowDescriptionLabel.setStringValue(flowDescription);
 			flowDescriptionLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 16*exportScale));
@@ -970,7 +976,7 @@ var generateFlow = function(context) {
 			modifiedDateLabel.setName(strings["generateFlow-modifiedDate"]);
 			modifiedDateLabel.frame().setX(outerPadding);
 			modifiedDateLabel.frame().setY(yPos);
-			modifiedDateLabel.frame().setWidth(groupBounds.size.width - (outerPadding*2));
+			modifiedDateLabel.frame().setWidth(Math.min(groupBounds.size.width - (outerPadding*2), 600));
 			modifiedDateLabel.setTextBehaviour(1);
 			modifiedDateLabel.setStringValue(modifiedOnText);
 			modifiedDateLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 12*exportScale));
@@ -994,14 +1000,14 @@ var generateFlow = function(context) {
 		newGroup.ungroup();
 
 		var labelWidth = flowBoard.frame().width() - (outerPadding*2);
-		flowNameLabel.frame().setWidth(labelWidth)
+		flowNameLabel.frame().setWidth(Math.min(labelWidth, 1200));
 		flowNameLabel.setTextAlignment( 0 );
 		if (flowDescriptionLabel) {
-			flowDescriptionLabel.frame().setWidth(labelWidth);
+			flowDescriptionLabel.frame().setWidth(Math.min(labelWidth, 600));
 			flowDescriptionLabel.setTextAlignment( 0 );
 		}
 		if (modifiedDateLabel) {
-			modifiedDateLabel.frame().setWidth(labelWidth);
+			modifiedDateLabel.frame().setWidth(Math.min(labelWidth, 600));
 			modifiedDateLabel.setTextAlignment( 0 );
 		}
 
@@ -1040,6 +1046,8 @@ var generateFlow = function(context) {
 		}
 
 		context.command.setValue_forKey_onDocument_forPluginIdentifier(flowPageName, "lastUsedFlowPage", doc.documentData(), kPluginDomain);
+		context.command.setValue_forKey_onLayer_forPluginIdentifier(initialArtboard.objectID(), "homeScreenID", flowBoard, kPluginDomain);
+		context.command.setValue_forKey_onLayer_forPluginIdentifier(currentPage.objectID(), "pageID", flowBoard, kPluginDomain);
 
 		flowBoard.setConstrainProportions(false);
 		flowBoard.resizeToFitChildrenWithOption(0);
@@ -1058,6 +1066,9 @@ var generateFlow = function(context) {
 }
 
 var updateFlow = function(context) {
+
+	var doc = context.document;
+	
 
 }
 
