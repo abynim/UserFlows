@@ -694,382 +694,481 @@ var generateFlow = function(context) {
 	var response = settingsWindow.runModal();
 	if (response == "1000") {
 
-		var connectionsOverlayPredicate = NSPredicate.predicateWithFormat("userInfo != nil && function(userInfo, 'valueForKeyPath:', %@).isConnectionsContainer == true", kPluginDomain),
-			connectionsOverlay = currentPage.children().filteredArrayUsingPredicate(connectionsOverlayPredicate).firstObject(),
-			connectionsGroupVisible;
-		if (connectionsOverlay) {
-			connectionsOverlayVisible = connectionsOverlay.isVisible();
-			connectionsOverlay.setIsVisible(0);
-		}
+		var settings = {
+			flowName : nameField.stringValue(),
+			flowDescription : descriptionField.stringValue(),
+			shouldOrganizeFlowPage : keepOrganizedCheckbox.state(),
+			flowPageName : pagesDropdown.titleOfSelectedItem()
+		};
 
-		var exportScale = NSUserDefaults.standardUserDefaults().objectForKey(kExportScaleKey) || 1,
-			shouldScaleDownBitmaps = NSUserDefaults.standardUserDefaults().objectForKey(kScalesDownFlowBitmaps) || false,
-			bitmapExportScale = exportScale,
-			exportFormat = NSUserDefaults.standardUserDefaults().objectForKey(kExportFormatKey) || "pdf",
-			modifiedBy = NSUserDefaults.standardUserDefaults().objectForKey(kFullNameKey),
-			showModifiedDate = NSUserDefaults.standardUserDefaults().objectForKey(kShowModifiedDateKey) || false,
-			flowBackground = NSUserDefaults.standardUserDefaults().objectForKey(kFlowBackgroundKey) || "Light",
-			flowName = nameField.stringValue(),
-			flowDescription = descriptionField.stringValue(),
-			artboardBitmapLayers = [],
-			connections = [],
-			exportedArtboardIDs = {},
-			outerPadding = 40*exportScale,
-			spacing = 50*exportScale,
-			screenNumber = 1,
-			initialArtboard = artboardsWithLinks.objectAtIndex(artboardsDropdown.indexOfSelectedItem()),
-			artboardsToExport = [initialArtboard],
-			screenShadowColor = MSImmutableColor.colorWithSVGString("#00000").newMutableCounterpart(),
-			tempFolderURL = NSFileManager.defaultManager().URLsForDirectory_inDomains(NSCachesDirectory, NSUserDomainMask).lastObject().URLByAppendingPathComponent(kPluginDomain),
-			artboard, detachedArtboard, artboardID, linkLayers, linkLayersCount, destinationArtboard, destinationArtboardID, linkLayer, screenLayer, exportRequest, exportURL, screenShadow, connection, artboardNameLabel, primaryTextColor, secondaryTextColor, flowBackgroundColor, artboardIsConditional, isCondition, destinationArtboardIsConditional, linkRect, destinationRect;
-
-		context.command.setValue_forKey_onLayer_forPluginIdentifier(initialArtboard.objectID(), "homeScreenID", currentPage, kPluginDomain);
-		context.command.setValue_forKey_onLayer_forPluginIdentifier(flowName, "lastUsedFlowTitle", currentPage, kPluginDomain);
-		context.command.setValue_forKey_onLayer_forPluginIdentifier(flowDescription, "lastUsedFlowDescription", currentPage, kPluginDomain);
-		screenShadowColor.setAlpha(.2);
-		exportFormat = exportFormat.toLowerCase();
-
-		if (shouldScaleDownBitmaps == 1) {
-			exportScale = 1;
-		}
-
-		if (flowBackground == "Dark") {
-			flowBackgroundColor = MSImmutableColor.colorWithSVGString("#1E1D1C").newMutableCounterpart();
-			primaryTextColor = MSImmutableColor.colorWithSVGString("#FFFFFF");
-			secondaryTextColor = MSImmutableColor.colorWithSVGString("#9B9B9B");
-		} else {
-			flowBackgroundColor = MSImmutableColor.colorWithSVGString("#FFFFFF").newMutableCounterpart();
-			primaryTextColor = MSImmutableColor.colorWithSVGString("#121212");
-			secondaryTextColor = MSImmutableColor.colorWithSVGString("#999999");
-		}
-
-		if(sketchVersion < 480) {
-			primaryTextColor = primaryTextColor.newMutableCounterpart();
-			secondaryTextColor = secondaryTextColor.newMutableCounterpart();
-		}
-
-		while(artboardsToExport.length) {
-			artboard = artboardsToExport.shift();
-			artboardID = artboard.objectID();
-			if (exportedArtboardIDs[artboardID] == 1) {
-				continue;
-			}
-			exportedArtboardIDs[artboardID] = 1;
-
-			artboardIsConditional = context.command.valueForKey_onLayer_forPluginIdentifier(kConditionalArtboardKey, artboard, kPluginDomain) || 0;
-
-			exportRequest = MSExportRequest.alloc().init();
-			exportRequest.setRect(artboard.absoluteRect().rect());
-			exportRequest.setScale(bitmapExportScale);
-			exportRequest.setShouldTrim(0);
-			exportRequest.setSaveForWeb(1);
-			exportRequest.setBackgroundColor(( artboard.hasBackgroundColor() ? artboard.backgroundColor() : MSImmutableColor.colorWithSVGString("#FFFFFF").newMutableCounterpart() ));
-			exportRequest.setIncludeArtboardBackground(1);
-			exportRequest.setName(artboard.objectID());
-			exportRequest.setFormat(exportFormat);
-			exportURL = tempFolderURL.URLByAppendingPathComponent(artboard.objectID()).URLByAppendingPathExtension(exportFormat);
-			doc.saveArtboardOrSlice_toFile(exportRequest, exportURL.path());
-
-			screenLayer = MSBitmapLayer.bitmapLayerWithImageFromPath(exportURL);
-			currentPage.addLayers([screenLayer]);
-			screenLayer.absoluteRect().setX(artboard.absoluteRect().x());
-			screenLayer.absoluteRect().setY(artboard.absoluteRect().y());
-			screenLayer.absoluteRect().setWidth(artboard.absoluteRect().width());
-			screenLayer.absoluteRect().setHeight(artboard.absoluteRect().height());
-
-			screenShadow = screenLayer.style().addStylePartOfType(1);
-			screenShadow.setColor(screenShadowColor);
-			screenShadow.setPosition(2);
-			screenShadow.setThickness(1/exportScale);
-
-			artboardBitmapLayers.push(screenLayer);
-			NSFileManager.defaultManager().removeItemAtURL_error(exportURL, nil);
-
-			if (artboardIsConditional == 0) {
-				artboardNameLabel = MSTextLayer.new();
-				currentPage.addLayers([artboardNameLabel]);
-				artboardNameLabel.setName(artboard.name());
-				artboardNameLabel.absoluteRect().setX(artboard.absoluteRect().x());
-				artboardNameLabel.absoluteRect().setY(artboard.absoluteRect().y());
-				artboardNameLabel.frame().setWidth(artboard.frame().width());
-				artboardNameLabel.setTextBehaviour(0);
-				artboardNameLabel.setStringValue(screenNumber + ": " + artboard.name());
-				artboardNameLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 12*exportScale));
-				artboardNameLabel.setTextColor(primaryTextColor);
-				artboardNameLabel.adjustFrameToFit();
-				artboardNameLabel.absoluteRect().setY(artboard.absoluteRect().y() - (artboardNameLabel.absoluteRect().height()/exportScale) - (6*exportScale));
-
-				artboardBitmapLayers.push(artboardNameLabel);
-
-				screenNumber++;
-			}
-
-			linkLayers = artboard.children().filteredArrayUsingPredicate(linkLayerPredicate).sortedArrayUsingDescriptors([
-				NSSortDescriptor.sortDescriptorWithKey_ascending("absoluteRect.rulerY", true)
-			]);
-			linkLayersCount = linkLayers.count();
-			for (var i=0; i < linkLayersCount; i++) {
-			  linkLayer = linkLayers.objectAtIndex(i);
-			  destinationArtboardID = context.command.valueForKey_onLayer_forPluginIdentifier("destinationArtboardID", linkLayer, kPluginDomain);
-
-			  destinationArtboard = currentPage.artboards().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("objectID == %@", destinationArtboardID)).firstObject();
-
-			  if (destinationArtboard) {
-			  	destinationArtboardIsConditional = context.command.valueForKey_onLayer_forPluginIdentifier(kConditionalArtboardKey, destinationArtboard, kPluginDomain) || 0;
-
-			  	isCondition = context.command.valueForKey_onLayer_forPluginIdentifier("isConditionGroup", linkLayer, kPluginDomain) || 0;
-
-			  	linkRect = linkLayer.parentArtboard() == nil ? linkLayer.absoluteRect().rect() : CGRectIntersection(linkLayer.absoluteRect().rect(), linkLayer.parentArtboard().absoluteRect().rect());
-
-			  	destinationRect = destinationArtboard.absoluteRect().rect();
-
-			  	connection = {
-			  		linkRect : linkRect,
-			  		linkID : linkLayer.objectID(),
-			  		linkIsCondition : isCondition,
-			  		destinationIsConditional : destinationArtboardIsConditional,
-			  		destinationRect : destinationRect,
-			  		dropPoint : {
-			  			x : destinationArtboard.absoluteRect().x() - (10*exportScale),
-			  			y : destinationArtboard.absoluteRect().y() - (10*exportScale)
-			  		}
-			  	}
-			  	connections.push(connection);
-				artboardsToExport.push(destinationArtboard);
-
-			  }
-			}
-
-			// Flow Connections
-			if (sketchVersion >= 490) {
-				var immutableArtboard = artboard.ancestry().layer();
-				if (immutableArtboard.containsFlowWithSymbolsFromDocument(doc.immutableDocumentData())) {
-					
-					detachedArtboard = artboardWithDetachedSymbolsFromArtboard(artboard);
-
-					var flowConnections = detachedArtboard.valueForKeyPath("children.@distinctUnionOfObjects.flow");
-					var loop = flowConnections.objectEnumerator(), flowConnection, dropPointX, dropPointY;
-
-					while (flowConnection = loop.nextObject()) {
-						
-						linkLayer = flowConnection.sendingLayer();
-						linkRect = CGRectIntersection(linkLayer.absoluteRect().rect(), linkLayer.parentArtboard().absoluteRect().rect());
-
-						connection = {
-					  		linkRect : linkRect,
-					  		isBackAction : flowConnection.isBackAction(),
-					  		linkIsCrossPage : false
-					  	};
-
-						if (flowConnection.isBackAction()) {
-							dropPointX = artboard.absoluteRect().x() - (30*exportScale);
-							dropPointY = artboard.absoluteRect().y() - (30*exportScale);
-							connection.destinationRect = CGRectMake(dropPointX - 20, dropPointY, 10, 10);
-
-						} else {
-							destinationArtboard = flowConnection.destinationArtboard();
-							connection.linkIsCrossPage = destinationArtboard.parentPage() != currentPage;
-
-							if(connection.linkIsCrossPage) {
-								dropPointX = artboard.absoluteRect().x() + artboard.absoluteRect().width() + (50*exportScale);
-								dropPointY = artboard.absoluteRect().y() - (30*exportScale);
-
-								connection.destinationRect = CGRectMake(dropPointX, dropPointY, 10, 10);
-								connection.artboardName = destinationArtboard.name();
-								connection.artboardParentName = destinationArtboard.parentPage().name();
-
-							} else {
-								dropPointX = destinationArtboard.absoluteRect().x() - (10*exportScale);
-								dropPointY = destinationArtboard.absoluteRect().y() + (destinationArtboard.absoluteRect().height()/2);
-
-								destinationRect = destinationArtboard.absoluteRect().rect();
-								connection.destinationRect = destinationRect;
-
-								artboardsToExport.push(destinationArtboard);
-							}
-
-						}
-
-					  	connections.push(connection);
-
-					}
-
-					detachedArtboard.removeFromParent();
-					detachedArtboard = nil;
-
-				}
-			}
-		}
-
-		if (connectionsOverlay) {
-			connectionsOverlay.setIsVisible(connectionsOverlayVisible);
-		}
-
-		var connectionLayers = MSLayerArray.arrayWithLayers(drawConnections(connections, currentPage, exportScale, flowBackgroundColor));
-		var connectionsGroup = MSLayerGroup.groupFromLayers(connectionLayers);
-		connectionsGroup.setName(strings["generateFlow-connectionsGroupName"]);
-		artboardBitmapLayers.push(connectionsGroup);
-		connectionsGroup.setIsLocked(1);
-
-		var groupBounds = CGRectZero;
-		for (var i = 0; i < artboardBitmapLayers.length; i++) {
-			groupBounds = CGRectUnion(groupBounds, artboardBitmapLayers[i].absoluteRect().rect());
-		}
-		var layers = MSLayerArray.arrayWithLayers(artboardBitmapLayers);
-		var newGroup = MSLayerGroup.groupFromLayers(layers);
-		newGroup.setName(strings["generateFlow-flowGroupName"]);
-		newGroup.resizeToFitChildrenWithOption(1);
-
-		var flowBoard = MSArtboardGroup.new();
-		flowBoard.setName(flowName);
-		flowBoard.setHasBackgroundColor(1);
-		flowBoard.setBackgroundColor(flowBackgroundColor);
-
-		var flowNameLabel = MSTextLayer.new();
-		flowNameLabel.setName(flowName);
-		flowNameLabel.frame().setX(outerPadding);
-		flowNameLabel.frame().setY(outerPadding);
-		flowNameLabel.frame().setWidth(Math.min(groupBounds.size.width, 1200));
-		flowNameLabel.setTextBehaviour(1);
-		flowNameLabel.setStringValue(flowName);
-		flowNameLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 36*exportScale));
-		flowNameLabel.setTextColor(primaryTextColor);
-		flowNameLabel.adjustFrameToFit();
-		flowNameLabel.setIsLocked(1);
-		flowBoard.addLayers([flowNameLabel]);
-
-		var yPos = outerPadding + flowNameLabel.frame().height() + 18;
-		var flowDescriptionLabel;
-		if (flowDescription && flowDescription != "") {
-			flowDescriptionLabel = MSTextLayer.new();
-			flowDescriptionLabel.setName(strings["generateFlow-description"]);
-			flowDescriptionLabel.frame().setX(outerPadding);
-			flowDescriptionLabel.frame().setY(yPos);
-			flowDescriptionLabel.frame().setWidth(Math.min(groupBounds.size.width, 600));
-			flowDescriptionLabel.setTextBehaviour(1);
-			flowDescriptionLabel.setStringValue(flowDescription);
-			flowDescriptionLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 16*exportScale));
-			flowDescriptionLabel.setTextColor(secondaryTextColor);
-			flowDescriptionLabel.adjustFrameToFit();
-			flowDescriptionLabel.setIsLocked(1);
-			flowBoard.addLayers([flowDescriptionLabel]);
-			yPos = flowDescriptionLabel.frame().y() + flowDescriptionLabel.frame().height();
-		}
-
-		var modifiedDateLabel;
-		if (showModifiedDate == 1) {
-
-			var formatter = NSDateFormatter.alloc().init();
-			formatter.setTimeStyle(NSDateFormatterNoStyle);
-			formatter.setDateStyle(NSDateFormatterMediumStyle);
-
-			modifiedDateLabel = MSTextLayer.new();
-			var modifiedOnText;
-			if (modifiedBy && modifiedBy != "") {
-				modifiedOnText = strings["generateFlow-modifiedBy"].stringByReplacingOccurrencesOfString_withString("%date%", formatter.stringFromDate(NSDate.date())).stringByReplacingOccurrencesOfString_withString("%user%", modifiedBy);
-			} else {
-				modifiedOnText = strings["generateFlow-modifiedOnDate"].stringByReplacingOccurrencesOfString_withString("%date%", formatter.stringFromDate(NSDate.date()))
-			}
-
-			yPos += 12;
-
-			modifiedDateLabel.setName(strings["generateFlow-modifiedDate"]);
-			modifiedDateLabel.frame().setX(outerPadding);
-			modifiedDateLabel.frame().setY(yPos);
-			modifiedDateLabel.frame().setWidth(Math.min(groupBounds.size.width - (outerPadding*2), 600));
-			modifiedDateLabel.setTextBehaviour(1);
-			modifiedDateLabel.setStringValue(modifiedOnText);
-			modifiedDateLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 12*exportScale));
-			modifiedDateLabel.setTextColor(secondaryTextColor);
-			modifiedDateLabel.adjustFrameToFit();
-			modifiedDateLabel.setIsLocked(1);
-			flowBoard.addLayers([modifiedDateLabel]);
-
-			yPos += modifiedDateLabel.frame().height();
-		}
-
-		yPos += 60;
-
-		newGroup.removeFromParent();
-		flowBoard.addLayers([newGroup]);
-		newGroup.frame().scaleBy(exportScale);
-		newGroup.frame().setX(outerPadding);
-		newGroup.frame().setY(yPos);
-		flowBoard.frame().setWidth(newGroup.frame().width() + (outerPadding*2));
-		flowBoard.frame().setHeight(yPos + newGroup.frame().height() + outerPadding);
-		newGroup.ungroup();
-
-		var labelWidth = flowBoard.frame().width() - (outerPadding*2);
-		flowNameLabel.frame().setWidth(Math.min(labelWidth, 1200));
-		flowNameLabel.setTextAlignment( 0 );
-		if (flowDescriptionLabel) {
-			flowDescriptionLabel.frame().setWidth(Math.min(labelWidth, 600));
-			flowDescriptionLabel.setTextAlignment( 0 );
-		}
-		if (modifiedDateLabel) {
-			modifiedDateLabel.frame().setWidth(Math.min(labelWidth, 600));
-			modifiedDateLabel.setTextAlignment( 0 );
-		}
-
-		var flowPageName = pagesDropdown.titleOfSelectedItem(),
-			flowPage = doc.pages().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("name == %@", flowPageName)).firstObject();;
-		if (!flowPage) {
-			flowPage = doc.addBlankPage();
-			if (flowPageName == newPageItemTitle) {
-				flowPageName = "Page " + doc.pages().count();
-			}
-			flowPage.setName(flowPageName);
-		}
-
-		flowPage.addLayers([flowBoard]);
-		var shouldOrganize = keepOrganizedCheckbox.state();
-		if (shouldOrganize && flowPageName == "_Flows") {
-
-			var loop = flowPage.artboards().objectEnumerator(),
-				i = 0, newX = 0, newY = 0, maxHeight = 0,
-				spacing = 160, artboard;
-			while (artboard = loop.nextObject()) {
-				artboard.frame().setX(newX);
-				artboard.frame().setY(newY);
-				newX += artboard.frame().width() + spacing;
-				maxHeight = Math.max(artboard.frame().height(), maxHeight);
-				if (++i == 6) {
-					i = 0
-					newY += maxHeight + (spacing * 2);
-					newX = maxHeight = 0;
-				}
-			}
-		} else {
-			var originForNewArtboard = flowPage.originForNewArtboard();
-			flowBoard.absoluteRect().setX(originForNewArtboard.x);
-			flowBoard.absoluteRect().setY(originForNewArtboard.y);
-		}
-
-		context.command.setValue_forKey_onDocument_forPluginIdentifier(flowPageName, "lastUsedFlowPage", doc.documentData(), kPluginDomain);
-		context.command.setValue_forKey_onLayer_forPluginIdentifier(initialArtboard.objectID(), "homeScreenID", flowBoard, kPluginDomain);
-		context.command.setValue_forKey_onLayer_forPluginIdentifier(currentPage.objectID(), "pageID", flowBoard, kPluginDomain);
-
-		flowBoard.setConstrainProportions(false);
-		flowBoard.resizeToFitChildrenWithOption(0);
-		flowBoard.exportOptions().addExportFormat();
-
-		doc.setCurrentPage(flowPage);
-		flowBoard.select_byExtendingSelection(true, false);
-		var currentView = sketchVersion < 480 ? doc.currentView() : doc.contentDrawView();
-		currentView.zoomToFitRect(NSInsetRect(flowBoard.absoluteRect().rect(), -60, -60));
-
-		// update defaults
-		NSUserDefaults.standardUserDefaults().setObject_forKey(shouldOrganize, kKeepOrganizedKey);
-
-		logEvent("generatedFlow", {numberOfScreens : screenNumber, format : exportFormat, exportScale : exportScale});
+		var initialArtboard = artboardsWithLinks.objectAtIndex(artboardsDropdown.indexOfSelectedItem());
+		generateFlowWithSettings(context, settings, initialArtboard, currentPage);
+		
 	}
 }
 
-var updateFlow = function(context) {
+var generateFlowWithSettings = function(context, settings, initialArtboard, sourcePage) {
 
 	var doc = context.document;
-	
+	var connectionsOverlayPredicate = NSPredicate.predicateWithFormat("userInfo != nil && function(userInfo, 'valueForKeyPath:', %@).isConnectionsContainer == true", kPluginDomain),
+		connectionsOverlay = sourcePage.children().filteredArrayUsingPredicate(connectionsOverlayPredicate).firstObject(),
+		connectionsGroupVisible;
+	if (connectionsOverlay) {
+		connectionsOverlayVisible = connectionsOverlay.isVisible();
+		connectionsOverlay.setIsVisible(0);
+	}
 
+	var exportScale = NSUserDefaults.standardUserDefaults().objectForKey(kExportScaleKey) || 1,
+		shouldScaleDownBitmaps = NSUserDefaults.standardUserDefaults().objectForKey(kScalesDownFlowBitmaps) || false,
+		bitmapExportScale = exportScale,
+		exportFormat = NSUserDefaults.standardUserDefaults().objectForKey(kExportFormatKey) || "pdf",
+		modifiedBy = NSUserDefaults.standardUserDefaults().objectForKey(kFullNameKey),
+		showModifiedDate = NSUserDefaults.standardUserDefaults().objectForKey(kShowModifiedDateKey) || false,
+		flowBackground = NSUserDefaults.standardUserDefaults().objectForKey(kFlowBackgroundKey) || "Light",
+		flowName = settings.flowName,
+		flowDescription = settings.flowDescription,
+		artboardBitmapLayers = [],
+		connections = [],
+		exportedArtboardIDs = {},
+		outerPadding = 40*exportScale,
+		spacing = 50*exportScale,
+		screenNumber = 1,
+		artboardsToExport = [initialArtboard],
+		screenShadowColor = MSImmutableColor.colorWithSVGString("#00000").newMutableCounterpart(),
+		tempFolderURL = NSFileManager.defaultManager().URLsForDirectory_inDomains(NSCachesDirectory, NSUserDomainMask).lastObject().URLByAppendingPathComponent(kPluginDomain),
+		artboard, detachedArtboard, artboardID, linkLayers, linkLayersCount, destinationArtboard, destinationArtboardID, linkLayer, screenLayer, exportRequest, exportURL, screenShadow, connection, artboardNameLabel, primaryTextColor, secondaryTextColor, flowBackgroundColor, artboardIsConditional, isCondition, destinationArtboardIsConditional, linkRect, destinationRect;
+
+	
+	context.command.setValue_forKey_onLayer_forPluginIdentifier(initialArtboard.objectID(), "homeScreenID", sourcePage, kPluginDomain);
+	context.command.setValue_forKey_onLayer_forPluginIdentifier(flowName, "lastUsedFlowTitle", sourcePage, kPluginDomain);
+	context.command.setValue_forKey_onLayer_forPluginIdentifier(flowDescription, "lastUsedFlowDescription", sourcePage, kPluginDomain);
+	screenShadowColor.setAlpha(.2);
+	exportFormat = exportFormat.toLowerCase();
+
+	if (shouldScaleDownBitmaps == 1) {
+		exportScale = 1;
+	}
+
+	if (flowBackground == "Dark") {
+		flowBackgroundColor = MSImmutableColor.colorWithSVGString("#1E1D1C").newMutableCounterpart();
+		primaryTextColor = MSImmutableColor.colorWithSVGString("#FFFFFF");
+		secondaryTextColor = MSImmutableColor.colorWithSVGString("#9B9B9B");
+	} else {
+		flowBackgroundColor = MSImmutableColor.colorWithSVGString("#FFFFFF").newMutableCounterpart();
+		primaryTextColor = MSImmutableColor.colorWithSVGString("#121212");
+		secondaryTextColor = MSImmutableColor.colorWithSVGString("#999999");
+	}
+
+	if(sketchVersion < 480) {
+		primaryTextColor = primaryTextColor.newMutableCounterpart();
+		secondaryTextColor = secondaryTextColor.newMutableCounterpart();
+	}
+
+	while(artboardsToExport.length) {
+		artboard = artboardsToExport.shift();
+		artboardID = artboard.objectID();
+		if (exportedArtboardIDs[artboardID] == 1) {
+			continue;
+		}
+		exportedArtboardIDs[artboardID] = 1;
+		
+		artboardIsConditional = context.command.valueForKey_onLayer_forPluginIdentifier(kConditionalArtboardKey, artboard, kPluginDomain) || 0;
+
+		exportRequest = MSExportRequest.alloc().init();
+		exportRequest.setRect(artboard.absoluteRect().rect());
+		exportRequest.setScale(bitmapExportScale);
+		exportRequest.setShouldTrim(0);
+		exportRequest.setSaveForWeb(1);
+		exportRequest.setBackgroundColor(( artboard.hasBackgroundColor() ? artboard.backgroundColor() : MSImmutableColor.colorWithSVGString("#FFFFFF").newMutableCounterpart() ));
+		exportRequest.setIncludeArtboardBackground(1);
+		exportRequest.setName(artboard.objectID());
+		exportRequest.setFormat(exportFormat);
+		exportURL = tempFolderURL.URLByAppendingPathComponent(artboard.objectID()).URLByAppendingPathExtension(exportFormat);
+		doc.saveArtboardOrSlice_toFile(exportRequest, exportURL.path());
+
+		screenLayer = MSBitmapLayer.bitmapLayerWithImageFromPath(exportURL);
+		sourcePage.addLayers([screenLayer]);
+		screenLayer.absoluteRect().setX(artboard.absoluteRect().x());
+		screenLayer.absoluteRect().setY(artboard.absoluteRect().y());
+		screenLayer.absoluteRect().setWidth(artboard.absoluteRect().width());
+		screenLayer.absoluteRect().setHeight(artboard.absoluteRect().height());
+
+		screenShadow = screenLayer.style().addStylePartOfType(1);
+		screenShadow.setColor(screenShadowColor);
+		screenShadow.setPosition(2);
+		screenShadow.setThickness(1/exportScale);
+
+		artboardBitmapLayers.push(screenLayer);
+		NSFileManager.defaultManager().removeItemAtURL_error(exportURL, nil);
+
+		if (artboardIsConditional == 0) {
+			artboardNameLabel = MSTextLayer.new();
+			sourcePage.addLayers([artboardNameLabel]);
+			artboardNameLabel.setName(artboard.name());
+			artboardNameLabel.absoluteRect().setX(artboard.absoluteRect().x());
+			artboardNameLabel.absoluteRect().setY(artboard.absoluteRect().y());
+			artboardNameLabel.frame().setWidth(artboard.frame().width());
+			artboardNameLabel.setTextBehaviour(0);
+			artboardNameLabel.setStringValue(screenNumber + ": " + artboard.name());
+			artboardNameLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 12*exportScale));
+			artboardNameLabel.setTextColor(primaryTextColor);
+			artboardNameLabel.adjustFrameToFit();
+			artboardNameLabel.absoluteRect().setY(artboard.absoluteRect().y() - (artboardNameLabel.absoluteRect().height()/exportScale) - (6*exportScale));
+
+			artboardBitmapLayers.push(artboardNameLabel);
+
+			screenNumber++;
+		}
+
+		linkLayers = artboard.children().filteredArrayUsingPredicate(linkLayerPredicate).sortedArrayUsingDescriptors([
+			NSSortDescriptor.sortDescriptorWithKey_ascending("absoluteRect.rulerY", true)
+		]);
+		linkLayersCount = linkLayers.count();
+		for (var i=0; i < linkLayersCount; i++) {
+		  linkLayer = linkLayers.objectAtIndex(i);
+		  destinationArtboardID = context.command.valueForKey_onLayer_forPluginIdentifier("destinationArtboardID", linkLayer, kPluginDomain);
+
+		  destinationArtboard = sourcePage.artboards().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("objectID == %@", destinationArtboardID)).firstObject();
+
+		  if (destinationArtboard) {
+		  	destinationArtboardIsConditional = context.command.valueForKey_onLayer_forPluginIdentifier(kConditionalArtboardKey, destinationArtboard, kPluginDomain) || 0;
+
+		  	isCondition = context.command.valueForKey_onLayer_forPluginIdentifier("isConditionGroup", linkLayer, kPluginDomain) || 0;
+
+		  	linkRect = linkLayer.parentArtboard() == nil ? linkLayer.absoluteRect().rect() : CGRectIntersection(linkLayer.absoluteRect().rect(), linkLayer.parentArtboard().absoluteRect().rect());
+
+		  	destinationRect = destinationArtboard.absoluteRect().rect();
+
+		  	connection = {
+		  		linkRect : linkRect,
+		  		linkID : linkLayer.objectID(),
+		  		linkIsCondition : isCondition,
+		  		destinationIsConditional : destinationArtboardIsConditional,
+		  		destinationRect : destinationRect,
+		  		dropPoint : {
+		  			x : destinationArtboard.absoluteRect().x() - (10*exportScale),
+		  			y : destinationArtboard.absoluteRect().y() - (10*exportScale)
+		  		}
+		  	}
+		  	connections.push(connection);
+			artboardsToExport.push(destinationArtboard);
+
+		  }
+		}
+
+		// Flow Connections
+		if (sketchVersion >= 490) {
+			var immutableArtboard = artboard.ancestry().layer();
+			if (immutableArtboard.containsFlowWithSymbolsFromDocument(doc.immutableDocumentData())) {
+				
+				detachedArtboard = artboardWithDetachedSymbolsFromArtboard(artboard);
+
+				var flowConnections = detachedArtboard.valueForKeyPath("children.@distinctUnionOfObjects.flow");
+				var loop = flowConnections.objectEnumerator(), flowConnection, dropPointX, dropPointY;
+
+				while (flowConnection = loop.nextObject()) {
+					
+					linkLayer = flowConnection.sendingLayer();
+					linkRect = CGRectIntersection(linkLayer.absoluteRect().rect(), linkLayer.parentArtboard().absoluteRect().rect());
+
+					connection = {
+				  		linkRect : linkRect,
+				  		isBackAction : flowConnection.isBackAction(),
+				  		linkIsCrossPage : false
+				  	};
+
+					if (flowConnection.isBackAction()) {
+						dropPointX = artboard.absoluteRect().x() - (30*exportScale);
+						dropPointY = artboard.absoluteRect().y() - (30*exportScale);
+						connection.destinationRect = CGRectMake(dropPointX - 20, dropPointY, 10, 10);
+
+					} else {
+						destinationArtboard = flowConnection.destinationArtboard();
+						connection.linkIsCrossPage = destinationArtboard.parentPage() != sourcePage;
+
+						if(connection.linkIsCrossPage) {
+							dropPointX = artboard.absoluteRect().x() + artboard.absoluteRect().width() + (50*exportScale);
+							dropPointY = artboard.absoluteRect().y() - (30*exportScale);
+
+							connection.destinationRect = CGRectMake(dropPointX, dropPointY, 10, 10);
+							connection.artboardName = destinationArtboard.name();
+							connection.artboardParentName = destinationArtboard.parentPage().name();
+
+						} else {
+							dropPointX = destinationArtboard.absoluteRect().x() - (10*exportScale);
+							dropPointY = destinationArtboard.absoluteRect().y() + (destinationArtboard.absoluteRect().height()/2);
+
+							destinationRect = destinationArtboard.absoluteRect().rect();
+							connection.destinationRect = destinationRect;
+
+							artboardsToExport.push(destinationArtboard);
+						}
+
+					}
+
+				  	connections.push(connection);
+
+				}
+
+				detachedArtboard.removeFromParent();
+				detachedArtboard = nil;
+
+			}
+		}
+	}
+
+	if (connectionsOverlay) {
+		connectionsOverlay.setIsVisible(connectionsOverlayVisible);
+	}
+
+	var connectionLayers = MSLayerArray.arrayWithLayers(drawConnections(connections, sourcePage, exportScale, flowBackgroundColor));
+	var connectionsGroup = MSLayerGroup.groupFromLayers(connectionLayers);
+	connectionsGroup.setName(strings["generateFlow-connectionsGroupName"]);
+	artboardBitmapLayers.push(connectionsGroup);
+	connectionsGroup.setIsLocked(1);
+
+	var groupBounds = CGRectZero;
+	for (var i = 0; i < artboardBitmapLayers.length; i++) {
+		groupBounds = CGRectUnion(groupBounds, artboardBitmapLayers[i].absoluteRect().rect());
+	}
+	var layers = MSLayerArray.arrayWithLayers(artboardBitmapLayers);
+	var newGroup = MSLayerGroup.groupFromLayers(layers);
+	newGroup.setName(strings["generateFlow-flowGroupName"]);
+	newGroup.resizeToFitChildrenWithOption(1);
+
+	var flowBoard = MSArtboardGroup.new();
+	flowBoard.setName(flowName);
+	flowBoard.setHasBackgroundColor(1);
+	flowBoard.setBackgroundColor(flowBackgroundColor);
+
+	var flowNameLabel = MSTextLayer.new();
+	flowNameLabel.setName(flowName);
+	flowNameLabel.frame().setX(outerPadding);
+	flowNameLabel.frame().setY(outerPadding);
+	flowNameLabel.frame().setWidth(Math.min(groupBounds.size.width, 1200));
+	flowNameLabel.setTextBehaviour(1);
+	flowNameLabel.setStringValue(flowName);
+	flowNameLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 36*exportScale));
+	flowNameLabel.setTextColor(primaryTextColor);
+	flowNameLabel.setLineHeight(36*1.3);
+	flowNameLabel.adjustFrameToFit();
+	//flowNameLabel.setIsLocked(1);
+	flowBoard.addLayers([flowNameLabel]);
+
+	var yPos = outerPadding + flowNameLabel.frame().height() + 18;
+	var flowDescriptionLabel;
+	if (flowDescription && flowDescription != "") {
+		flowDescriptionLabel = MSTextLayer.new();
+		flowDescriptionLabel.setName(strings["generateFlow-description"]);
+		flowDescriptionLabel.frame().setX(outerPadding);
+		flowDescriptionLabel.frame().setY(yPos);
+		flowDescriptionLabel.frame().setWidth(Math.min(groupBounds.size.width, 600));
+		flowDescriptionLabel.setTextBehaviour(1);
+		flowDescriptionLabel.setStringValue(flowDescription);
+		flowDescriptionLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 16*exportScale));
+		flowDescriptionLabel.setTextColor(secondaryTextColor);
+		flowDescriptionLabel.setLineHeight(16*1.4);
+		flowDescriptionLabel.adjustFrameToFit();
+		//flowDescriptionLabel.setIsLocked(1);
+		flowBoard.addLayers([flowDescriptionLabel]);
+		yPos = flowDescriptionLabel.frame().y() + flowDescriptionLabel.frame().height();
+	}
+
+	var modifiedDateLabel;
+	if (showModifiedDate == 1) {
+
+		var formatter = NSDateFormatter.alloc().init();
+		formatter.setTimeStyle(NSDateFormatterNoStyle);
+		formatter.setDateStyle(NSDateFormatterMediumStyle);
+
+		modifiedDateLabel = MSTextLayer.new();
+		var modifiedOnText;
+		if (modifiedBy && modifiedBy != "") {
+			modifiedOnText = strings["generateFlow-modifiedBy"].stringByReplacingOccurrencesOfString_withString("%date%", formatter.stringFromDate(NSDate.date())).stringByReplacingOccurrencesOfString_withString("%user%", modifiedBy);
+		} else {
+			modifiedOnText = strings["generateFlow-modifiedOnDate"].stringByReplacingOccurrencesOfString_withString("%date%", formatter.stringFromDate(NSDate.date()))
+		}
+
+		yPos += 12;
+
+		modifiedDateLabel.setName(strings["generateFlow-modifiedDate"]);
+		modifiedDateLabel.frame().setX(outerPadding);
+		modifiedDateLabel.frame().setY(yPos);
+		modifiedDateLabel.frame().setWidth(Math.min(groupBounds.size.width - (outerPadding*2), 600));
+		modifiedDateLabel.setTextBehaviour(1);
+		modifiedDateLabel.setStringValue(modifiedOnText);
+		modifiedDateLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 12*exportScale));
+		modifiedDateLabel.setTextColor(secondaryTextColor);
+		modifiedDateLabel.adjustFrameToFit();
+		modifiedDateLabel.setIsLocked(1);
+		flowBoard.addLayers([modifiedDateLabel]);
+
+		yPos += modifiedDateLabel.frame().height();
+	}
+
+	yPos += 60;
+
+	newGroup.removeFromParent();
+	flowBoard.addLayers([newGroup]);
+	newGroup.frame().scaleBy(exportScale);
+	newGroup.frame().setX(outerPadding);
+	newGroup.frame().setY(yPos);
+	flowBoard.frame().setWidth(newGroup.frame().width() + (outerPadding*2));
+	flowBoard.frame().setHeight(yPos + newGroup.frame().height() + outerPadding);
+	newGroup.ungroup();
+
+	var labelWidth = flowBoard.frame().width() - (outerPadding*2);
+	flowNameLabel.frame().setWidth(Math.min(labelWidth, 1200));
+	flowNameLabel.setTextAlignment( 0 );
+	if (flowDescriptionLabel) {
+		flowDescriptionLabel.frame().setWidth(Math.min(labelWidth, 600));
+		flowDescriptionLabel.setTextAlignment( 0 );
+	}
+	if (modifiedDateLabel) {
+		modifiedDateLabel.frame().setWidth(Math.min(labelWidth, 600));
+		modifiedDateLabel.setTextAlignment( 0 );
+	}
+
+	var flowPageName = settings.flowPageName,
+		flowPage = doc.pages().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("name == %@", flowPageName)).firstObject();;
+	if (!flowPage) {
+		flowPage = doc.addBlankPage();
+		if (flowPageName == newPageItemTitle) {
+			flowPageName = "Page " + doc.pages().count();
+		}
+		flowPage.setName(flowPageName);
+	}
+
+	flowPage.addLayers([flowBoard]);
+	var shouldOrganize = settings.shouldOrganizeFlowPage;
+	if (shouldOrganize && flowPageName == "_Flows") {
+
+		var loop = flowPage.artboards().objectEnumerator(),
+			i = 0, newX = 0, newY = 0, maxHeight = 0,
+			spacing = 160, artboard;
+		while (artboard = loop.nextObject()) {
+			artboard.frame().setX(newX);
+			artboard.frame().setY(newY);
+			newX += artboard.frame().width() + spacing;
+			maxHeight = Math.max(artboard.frame().height(), maxHeight);
+			if (++i == 6) {
+				i = 0
+				newY += maxHeight + (spacing * 2);
+				newX = maxHeight = 0;
+			}
+		}
+	} else {
+		var originForNewArtboard = flowPage.originForNewArtboard();
+		flowBoard.absoluteRect().setX(originForNewArtboard.x);
+		flowBoard.absoluteRect().setY(originForNewArtboard.y);
+	}
+
+	context.command.setValue_forKey_onDocument_forPluginIdentifier(flowPageName, "lastUsedFlowPage", doc.documentData(), kPluginDomain);
+	context.command.setValue_forKey_onLayer_forPluginIdentifier(initialArtboard.objectID(), "homeScreenID", flowBoard, kPluginDomain);
+	context.command.setValue_forKey_onLayer_forPluginIdentifier(sourcePage.objectID(), "pageID", flowBoard, kPluginDomain);
+	context.command.setValue_forKey_onLayer_forPluginIdentifier(shouldOrganize, "keepFlowPageOrganized", flowBoard, kPluginDomain);
+
+	if(flowNameLabel) {
+		context.command.setValue_forKey_onLayer_forPluginIdentifier(flowNameLabel.objectID(), "titleLayerID", flowBoard, kPluginDomain);
+	}
+	if (flowDescriptionLabel) {
+		context.command.setValue_forKey_onLayer_forPluginIdentifier(flowDescriptionLabel.objectID(), "descriptionLayerID", flowBoard, kPluginDomain);
+	}
+
+	flowBoard.setConstrainProportions(false);
+	flowBoard.resizeToFitChildrenWithOption(0);
+	flowBoard.exportOptions().addExportFormat();
+
+	doc.setCurrentPage(flowPage);
+	flowBoard.select_byExtendingSelection(true, false);
+	var visibleContentRect = settings.visibleContentRect || NSInsetRect(flowBoard.absoluteRect().rect(), -60, -60);
+	var currentView = sketchVersion < 480 ? doc.currentView() : doc.contentDrawView();
+	currentView.zoomToFitRect(visibleContentRect);
+
+	NSUserDefaults.standardUserDefaults().setObject_forKey(shouldOrganize, kKeepOrganizedKey);
+
+	logEvent("generatedFlow", {numberOfScreens : screenNumber, format : exportFormat, exportScale : exportScale});
+}
+
+var updateFlow = function(context) {
+	
+	parseContext(context);
+		
+	var doc = context.document;
+	var currentArtboard = doc.currentPage().currentArtboard();
+
+	var homeScreenID = context.command.valueForKey_onLayer_forPluginIdentifier("homeScreenID", currentArtboard, kPluginDomain);
+	var sourcePageID = context.command.valueForKey_onLayer_forPluginIdentifier("pageID", currentArtboard, kPluginDomain);
+	if (!homeScreenID || !sourcePageID) {
+		showAlert(strings["updateFlow-noFlowArtboard"], strings["updateFlow-noFlowArtboardMessage"]);
+		return;
+	}
+
+	var sourcePage = doc.documentData().layerWithID(sourcePageID);
+	var initialArtboard = doc.documentData().layerWithID(homeScreenID);
+	if(!sourcePage || !initialArtboard) {
+		showAlert(strings["updateFlow-noInitialArtboard"], strings["updateFlow-noInitialArtboardMessage"]);
+		return;
+	}
+
+	var settingsWindow = getAlertWindow();
+	settingsWindow.addButtonWithTitle(strings["updateFlow-saveButtonTitle"]);
+	settingsWindow.addButtonWithTitle(strings["alerts-cancel"]);
+
+	settingsWindow.setMessageText(strings["updateFlow-message"]);
+
+	var titleLabelID = context.command.valueForKey_onLayer_forPluginIdentifier("titleLayerID", currentArtboard, kPluginDomain);
+	var descriptionLabelID = context.command.valueForKey_onLayer_forPluginIdentifier("descriptionLayerID", currentArtboard, kPluginDomain);
+	var keepFlowPageOrganized = context.command.valueForKey_onLayer_forPluginIdentifier("keepFlowPageOrganized", currentArtboard, kPluginDomain);
+	
+	var flowName = "";
+	if (titleLabelID) {
+		var titleLabel = doc.documentData().layerWithID(titleLabelID)
+		if(titleLabel) flowName = titleLabel.stringValue();
+	}
+
+	settingsWindow.addTextLabelWithValue(strings["generateFlow-flowName"]);
+	var nameField = NSTextField.alloc().initWithFrame(NSMakeRect(0,0,300,23));
+	nameField.setStringValue(flowName);
+	settingsWindow.addAccessoryView(nameField);
+
+
+	var flowDescription = "";
+	if (descriptionLabelID) {
+		var descriptionLabel = doc.documentData().layerWithID(descriptionLabelID)
+		if(descriptionLabel) flowDescription = descriptionLabel.stringValue();
+	}
+
+	settingsWindow.addTextLabelWithValue(strings["generateFlow-description"]);
+	var descriptionField = NSTextField.alloc().initWithFrame(NSMakeRect(0,0,300,100));
+	descriptionField.setStringValue( flowDescription );
+	settingsWindow.addAccessoryView(descriptionField);
+
+	settingsWindow.alert().window().setInitialFirstResponder(nameField);
+	nameField.setNextKeyView(descriptionField);
+	descriptionField.setNextKeyView(nameField);
+
+	var response = settingsWindow.runModal();
+	if (response == "1000") {
+
+		linkLayerPredicate = NSPredicate.predicateWithFormat("userInfo != nil && function(userInfo, 'valueForKeyPath:', %@).destinationArtboardID != nil", kPluginDomain);
+
+		var currentView = sketchVersion < 480 ? doc.currentView() : doc.contentDrawView();
+		var settings = {
+			visibleContentRect : currentView.visibleContentRect(),
+			flowName : nameField.stringValue(),
+			flowDescription : descriptionField.stringValue(),
+			shouldOrganizeFlowPage : keepFlowPageOrganized,
+			flowPageName : doc.currentPage().name()
+		};
+
+		currentArtboard.removeFromParent();
+
+		doc.setCurrentPage(sourcePage);
+
+		generateFlowWithSettings(context, settings, initialArtboard, sourcePage);
+		doc.showMessage("✅ " + strings["updateFlow-completed"]);
+	}
 }
 
 var hideConnections = function(context) {

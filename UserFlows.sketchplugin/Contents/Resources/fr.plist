@@ -37,7 +37,7 @@
 	<key>defineLink-invalidSelectionTitle</key>
 	<string>Sélection nulle</string>
 	<key>defineLink-invalidSelectionMessage</key>
-	<string>Sélectionnez un claque ou un groupe d'où faire partir un lien, Sélectionnez le plan de travail de destination, puis réexécuter cette commande.</string>
+	<string>Sélectionnez un claque ou un groupe d&apos;où faire partir un lien, Sélectionnez le plan de travail de destination, puis réexécuter cette commande.</string>
 	<key>defineLink-linkDefined</key>
 	<string>Lien créé:</string>
 	<key>removeLink-invalidSelectionMessage</key>
@@ -67,7 +67,7 @@
 	<key>addCondition-saveAndAdd</key>
 	<string>Sauvegarder + Ajouter</string>
 	<key>addCondition-ifConditionPlaceholder</key>
-	<string>Ex: Si l'utilisateur est connecté</string>
+	<string>Ex: Si l&apos;utilisateur est connecté</string>
 	<key>addCondition-else</key>
 	<string>Sinon...</string>
 	<key>addCondition-conditionArtboardName</key>
@@ -77,15 +77,15 @@
 	<key>gotoArtboard-invalidSelectionTitle</key>
 	<string>Sélection nulle</string>
 	<key>gotoArtboard-invalidSelectionMessage</key>
-	<string>Sélectionnez un claque d'où part un lien, puis réexécuter cette commande.</string>
+	<string>Sélectionnez un claque d&apos;où part un lien, puis réexécuter cette commande.</string>
 	<key>generateFlow-message</key>
-	<string>Générer un flux d'utilisateur</string>
+	<string>Générer un flux d&apos;utilisateur</string>
 	<key>generateFlow-startFrom</key>
 	<string>Départ de:</string>
 	<key>generateFlow-noLinksTitle</key>
 	<string>Pas de liens créés!</string>
 	<key>generateFlow-noLinksMessage</key>
-	<string>Cette page n'a pas de liens créés. Créez au moins un lien en allant sur `Plugins &gt; User Flows &gt; Créer un lien `</string>
+	<string>Cette page n&apos;a pas de liens créés. Créez au moins un lien en allant sur `Plugins &gt; User Flows &gt; Créer un lien `</string>
 	<key>generateFlow-flowName</key>
 	<string>Flow Name</string>
 	<key>generateFlow-description</key>
@@ -108,14 +108,28 @@
 	<string>Date de modification</string>
 	<key>generateFlow-saveButtonTitle</key>
 	<string>Générer le diagramme</string>
+	<key>updateFlow-saveButtonTitle</key>
+	<string>Update Diagram</string>
+	<key>updateFlow-message</key>
+	<string>Update Flow Diagram</string>
+	<key>updateFlow-completed</key>
+	<string>Updated!</string>
+	<key>updateFlow-noFlowArtboard</key>
+	<string>Flow artboard not found</string>
+	<key>updateFlow-noFlowArtboardMessage</key>
+	<string>Select the exported flow artboard that you wish to update, then run the command again.</string>
+	<key>updateFlow-noInitialArtboard</key>
+	<string>Cannot update diagram</string>
+	<key>updateFlow-noInitialArtboardMessage</key>
+	<string>The initial artboard of this diagram was not found in this document. Please generate the flow again.</string>
 	<key>settings-restoreDefaults</key>
 	<string>Rétablir les paramètres par defaut</string>
 	<key>settings-title</key>
 	<string>Paramètre de User Flow</string>
 	<key>settings-exportOptions</key>
-	<string>Option d'export des plans de travail</string>
+	<string>Option d&apos;export des plans de travail</string>
 	<key>settings-scaleOptions</key>
-	<string>Options d'échelle</string>
+	<string>Options d&apos;échelle</string>
 	<key>settings-flowBackground</key>
 	<string>Arrière plan du diagramme</string>
 	<key>settings-bgLight</key>
@@ -141,7 +155,7 @@
 	<key>shortcuts-title</key>
 	<string>Raccourcis clavier User Flows</string>
 	<key>shortcuts-message</key>
-	<string>Les raccourcis clavier sont définis par une combinaison d'une touche de modification (cmd, control, shift, option) et n'importe quelle autre touche. Par exemple – 'cmd shift y'. N'oubliez pas de vous assurez que la combinaison n'est pas déjà utilisée par Sketch ou un autre plugin.</string>
+	<string>Les raccourcis clavier sont définis par une combinaison d&apos;une touche de modification (cmd, control, shift, option) et n&apos;importe quelle autre touche. Par exemple – &apos;cmd shift y&apos;. N&apos;oubliez pas de vous assurez que la combinaison n&apos;est pas déjà utilisée par Sketch ou un autre plugin.</string>
 	<key>checkUpdates-checking</key>
 	<string>Recherche de mises à jour...</string>
 	<key>checkUpdates-updateAvailableTitle</key>

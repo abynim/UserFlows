@@ -108,6 +108,20 @@
 	<string>Ændret Dato</string>
 	<key>generateFlow-saveButtonTitle</key>
 	<string>Generer Diagram</string>
+	<key>updateFlow-saveButtonTitle</key>
+	<string>Update Diagram</string>
+	<key>updateFlow-message</key>
+	<string>Update Flow Diagram</string>
+	<key>updateFlow-completed</key>
+	<string>Updated!</string>
+	<key>updateFlow-noFlowArtboard</key>
+	<string>Flow artboard not found</string>
+	<key>updateFlow-noFlowArtboardMessage</key>
+	<string>Select the exported flow artboard that you wish to update, then run the command again.</string>
+	<key>updateFlow-noInitialArtboard</key>
+	<string>Cannot update diagram</string>
+	<key>updateFlow-noInitialArtboardMessage</key>
+	<string>The initial artboard of this diagram was not found in this document. Please generate the flow again.</string>
 	<key>settings-restoreDefaults</key>
 	<string>Gendan Default</string>
 	<key>settings-title</key>
