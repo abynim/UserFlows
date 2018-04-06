@@ -96,6 +96,8 @@
 	<string>Nuova Pagina</string>
 	<key>generateFlow-keepOrganized</key>
 	<string>Mantieni la pagina _Flows Organizzata</string>
+	<key>generateFlow-includePrototypingConnections</key>
+	<string>Include Prototyping Connections</string>
 	<key>generateFlow-flowGroupName</key>
 	<string>Gruppo del Flusso</string>
 	<key>generateFlow-connectionsGroupName</key>

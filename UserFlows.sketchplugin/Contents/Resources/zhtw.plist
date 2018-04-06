@@ -96,6 +96,8 @@
 	<string>新頁面</string>
 	<key>generateFlow-keepOrganized</key>
 	<string>保持 _Flows 頁面整齊</string>
+	<key>generateFlow-includePrototypingConnections</key>
+	<string>Include Prototyping Connections</string>
 	<key>generateFlow-flowGroupName</key>
 	<string>Flow 群組</string>
 	<key>generateFlow-connectionsGroupName</key>

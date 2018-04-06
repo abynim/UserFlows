@@ -96,6 +96,8 @@
 	<string>Новая страница</string>
 	<key>generateFlow-keepOrganized</key>
 	<string>Держать страницу _Flows упорядоченной</string>
+	<key>generateFlow-includePrototypingConnections</key>
+	<string>Include Prototyping Connections</string>
 	<key>generateFlow-flowGroupName</key>
 	<string>Flow-группа</string>
 	<key>generateFlow-connectionsGroupName</key>

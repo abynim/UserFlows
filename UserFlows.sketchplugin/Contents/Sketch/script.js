@@ -1,5 +1,6 @@
 var kPluginDomain = "com.abynim.sketchplugins.userflows";
 var kKeepOrganizedKey = "com.abynim.userflows.keepOrganized";
+var kIncludePrototypingKey = "com.abynim.userflows.includePrototypingInExport";
 var kExportScaleKey = "com.abynim.userflows.exportScale";
 var kExportFormatKey = "com.abynim.userflows.exportFormat";
 var kShowModifiedDateKey = "com.abynim.userflows.showModifiedDate";
@@ -686,6 +687,19 @@ var generateFlow = function(context) {
 	keepOrganizedCheckbox.setState(keepOrganized);
 	settingsWindow.addAccessoryView(keepOrganizedCheckbox);
 
+
+	var separator = NSBox.alloc().initWithFrame(NSMakeRect(0,0,300,10));
+	separator.setBoxType(2);
+	settingsWindow.addAccessoryView(separator);
+
+	var includePrototypingConnections = NSUserDefaults.standardUserDefaults().objectForKey(kIncludePrototypingKey) || 1;
+	var includePrototypingCheckbox = NSButton.alloc().initWithFrame(NSMakeRect(0,0,300,22));
+	includePrototypingCheckbox.setButtonType(NSSwitchButton);
+	includePrototypingCheckbox.setBezelStyle(0);
+	includePrototypingCheckbox.setTitle(strings["generateFlow-includePrototypingConnections"]);
+	includePrototypingCheckbox.setState(includePrototypingConnections);
+	settingsWindow.addAccessoryView(includePrototypingCheckbox);
+
 	settingsWindow.alert().window().setInitialFirstResponder(nameField);
 	nameField.setNextKeyView(descriptionField);
 	descriptionField.setNextKeyView(nameField);
@@ -697,7 +711,8 @@ var generateFlow = function(context) {
 			flowName : nameField.stringValue(),
 			flowDescription : descriptionField.stringValue(),
 			shouldOrganizeFlowPage : keepOrganizedCheckbox.state(),
-			flowPageName : pagesDropdown.titleOfSelectedItem()
+			flowPageName : pagesDropdown.titleOfSelectedItem(),
+			includePrototypingConnections : includePrototypingCheckbox.state()
 		};
 
 		var initialArtboard = artboardsWithLinks.objectAtIndex(artboardsDropdown.indexOfSelectedItem());
@@ -856,7 +871,7 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 		}
 
 		// Flow Connections
-		if (sketchVersion >= 490) {
+		if (settings.includePrototypingConnections && sketchVersion >= 490) {
 			var immutableArtboard = artboard.ancestry().layer();
 			if (immutableArtboard.containsFlowWithSymbolsFromDocument(doc.immutableDocumentData())) {
 				
@@ -949,7 +964,7 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 	flowNameLabel.setStringValue(flowName);
 	flowNameLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 36*exportScale));
 	flowNameLabel.setTextColor(primaryTextColor);
-	flowNameLabel.setLineHeight(36*1.3);
+	flowNameLabel.setLineHeight(36*1.3*exportScale);
 	flowNameLabel.adjustFrameToFit();
 	flowBoard.addLayers([flowNameLabel]);
 
@@ -965,7 +980,7 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 		flowDescriptionLabel.setStringValue(flowDescription);
 		flowDescriptionLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 16*exportScale));
 		flowDescriptionLabel.setTextColor(secondaryTextColor);
-		flowDescriptionLabel.setLineHeight(16*1.4);
+		flowDescriptionLabel.setLineHeight(16*1.4*exportScale);
 		flowDescriptionLabel.adjustFrameToFit();
 		flowBoard.addLayers([flowDescriptionLabel]);
 		yPos = flowDescriptionLabel.frame().y() + flowDescriptionLabel.frame().height();
@@ -1063,6 +1078,7 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 	context.command.setValue_forKey_onLayer_forPluginIdentifier(initialArtboard.objectID(), "homeScreenID", flowBoard, kPluginDomain);
 	context.command.setValue_forKey_onLayer_forPluginIdentifier(sourcePage.objectID(), "pageID", flowBoard, kPluginDomain);
 	context.command.setValue_forKey_onLayer_forPluginIdentifier(shouldOrganize, "keepFlowPageOrganized", flowBoard, kPluginDomain);
+	context.command.setValue_forKey_onLayer_forPluginIdentifier(settings.includePrototypingConnections, "includePrototypingConnections", flowBoard, kPluginDomain);
 
 	if(flowNameLabel) {
 		context.command.setValue_forKey_onLayer_forPluginIdentifier(flowNameLabel.objectID(), "titleLayerID", flowBoard, kPluginDomain);
@@ -1082,6 +1098,7 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 	currentView.zoomToFitRect(visibleContentRect);
 
 	NSUserDefaults.standardUserDefaults().setObject_forKey(shouldOrganize, kKeepOrganizedKey);
+	NSUserDefaults.standardUserDefaults().setObject_forKey(settings.includePrototypingConnections, kIncludePrototypingKey);
 
 	var eventID = settings.updatingFlow ? "updatedFlow" : "generatedFlow";
 	logEvent(eventID, {numberOfScreens : screenNumber, format : exportFormat, exportScale : exportScale});
@@ -1117,6 +1134,7 @@ var updateFlow = function(context) {
 	var titleLabelID = context.command.valueForKey_onLayer_forPluginIdentifier("titleLayerID", currentArtboard, kPluginDomain);
 	var descriptionLabelID = context.command.valueForKey_onLayer_forPluginIdentifier("descriptionLayerID", currentArtboard, kPluginDomain);
 	var keepFlowPageOrganized = context.command.valueForKey_onLayer_forPluginIdentifier("keepFlowPageOrganized", currentArtboard, kPluginDomain);
+	var includePrototypingConnections = context.command.valueForKey_onLayer_forPluginIdentifier("includePrototypingConnections". currentArtboard, kPluginDomain);
 	
 	var flowName = "";
 	if (titleLabelID) {
@@ -1155,7 +1173,8 @@ var updateFlow = function(context) {
 			flowName : nameField.stringValue(),
 			flowDescription : descriptionField.stringValue(),
 			shouldOrganizeFlowPage : keepFlowPageOrganized,
-			flowPageName : doc.currentPage().name()
+			flowPageName : doc.currentPage().name(),
+			includePrototypingConnections : includePrototypingConnections
 		};
 
 		currentArtboard.removeFromParent();
@@ -1297,7 +1316,7 @@ var drawConnections = function(connections, parent, exportScale, labelColor) {
 
 		if (destinationRect) {
 
-			destinationRect = CGRectInset(destinationRect, (-14*exportScale), (-14*exportScale));
+			destinationRect = CGRectInset(destinationRect, -12, -12);
 
 			if (CGRectGetMinX(destinationRect) >= CGRectGetMaxX(linkRect)) {
 				connectionPosition = "right";

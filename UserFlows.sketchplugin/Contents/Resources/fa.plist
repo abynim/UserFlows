@@ -96,6 +96,8 @@
 	<string>صفحه جدید</string>
 	<key>generateFlow-keepOrganized</key>
 	<string>صفحه مسیرها را مرتب نگه دار</string>
+	<key>generateFlow-includePrototypingConnections</key>
+	<string>Include Prototyping Connections</string>
 	<key>generateFlow-flowGroupName</key>
 	<string>گروه مسیر</string>
 	<key>generateFlow-connectionsGroupName</key>

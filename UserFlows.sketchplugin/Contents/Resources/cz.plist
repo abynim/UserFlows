@@ -96,6 +96,8 @@
 	<string>Nová Stránka</string>
 	<key>generateFlow-keepOrganized</key>
 	<string>Ponechat _Flows Stránku Organizovanou</string>
+	<key>generateFlow-includePrototypingConnections</key>
+	<string>Include Prototyping Connections</string>
 	<key>generateFlow-flowGroupName</key>
 	<string>Flow Skupina</string>
 	<key>generateFlow-connectionsGroupName</key>
