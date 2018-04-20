@@ -712,7 +712,8 @@ var generateFlow = function(context) {
 			flowDescription : descriptionField.stringValue(),
 			shouldOrganizeFlowPage : keepOrganizedCheckbox.state(),
 			flowPageName : pagesDropdown.titleOfSelectedItem(),
-			includePrototypingConnections : includePrototypingCheckbox.state()
+			includePrototypingConnections : includePrototypingCheckbox.state(),
+			newPageItemTitle : newPageItemTitle
 		};
 
 		var initialArtboard = artboardsWithLinks.objectAtIndex(artboardsDropdown.indexOfSelectedItem());
@@ -732,9 +733,9 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 		connectionsOverlay.setIsVisible(0);
 	}
 
-	var exportScale = NSUserDefaults.standardUserDefaults().objectForKey(kExportScaleKey) || 1,
-		shouldScaleDownBitmaps = NSUserDefaults.standardUserDefaults().objectForKey(kScalesDownFlowBitmaps) || false,
-		bitmapExportScale = exportScale,
+	var exportScale = 1,
+		shouldScaleDownBitmaps = true,
+		bitmapExportScale = 2,
 		exportFormat = NSUserDefaults.standardUserDefaults().objectForKey(kExportFormatKey) || "pdf",
 		modifiedBy = NSUserDefaults.standardUserDefaults().objectForKey(kFullNameKey),
 		showModifiedDate = NSUserDefaults.standardUserDefaults().objectForKey(kShowModifiedDateKey) || false,
@@ -1021,7 +1022,6 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 
 	newGroup.removeFromParent();
 	flowBoard.addLayers([newGroup]);
-	newGroup.frame().scaleBy(exportScale);
 	newGroup.frame().setX(outerPadding);
 	newGroup.frame().setY(yPos);
 	flowBoard.frame().setWidth(newGroup.frame().width() + (outerPadding*2));
@@ -1041,16 +1041,34 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 	}
 
 	var flowPageName = settings.flowPageName,
-		flowPage = doc.pages().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("name == %@", flowPageName)).firstObject();;
+		flowPage = doc.pages().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("name == %@", flowPageName)).firstObject();
 	if (!flowPage) {
 		flowPage = doc.addBlankPage();
-		if (flowPageName == newPageItemTitle) {
+		if (flowPageName == settings.newPageItemTitle) {
 			flowPageName = "Page " + doc.pages().count();
 		}
 		flowPage.setName(flowPageName);
 	}
 
 	flowPage.addLayers([flowBoard]);
+
+	context.command.setValue_forKey_onDocument_forPluginIdentifier(flowPageName, "lastUsedFlowPage", doc.documentData(), kPluginDomain);
+	context.command.setValue_forKey_onLayer_forPluginIdentifier(initialArtboard.objectID(), "homeScreenID", flowBoard, kPluginDomain);
+	context.command.setValue_forKey_onLayer_forPluginIdentifier(sourcePage.objectID(), "pageID", flowBoard, kPluginDomain);
+	context.command.setValue_forKey_onLayer_forPluginIdentifier(shouldOrganize, "keepFlowPageOrganized", flowBoard, kPluginDomain);
+	context.command.setValue_forKey_onLayer_forPluginIdentifier(settings.includePrototypingConnections, "includePrototypingConnections", flowBoard, kPluginDomain);
+
+	if(flowNameLabel) {
+		context.command.setValue_forKey_onLayer_forPluginIdentifier(flowNameLabel.objectID(), "titleLayerID", flowBoard, kPluginDomain);
+	}
+	if (flowDescriptionLabel) {
+		context.command.setValue_forKey_onLayer_forPluginIdentifier(flowDescriptionLabel.objectID(), "descriptionLayerID", flowBoard, kPluginDomain);
+	}
+
+	flowBoard.setConstrainProportions(false);
+	flowBoard.resizeToFitChildrenWithOption(0);
+	flowBoard.exportOptions().addExportFormat();
+
 	var shouldOrganize = settings.shouldOrganizeFlowPage;
 	if (shouldOrganize && flowPageName == "_Flows") {
 
@@ -1069,27 +1087,15 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 			}
 		}
 	} else {
-		var originForNewArtboard = flowPage.originForNewArtboard();
+		var originForNewArtboard;
+		if (flowPage.originForNewArtboard) {
+			originForNewArtboard = flowPage.originForNewArtboard();
+		} else {
+			originForNewArtboard = flowPage.originForNewArtboardWithSize(flowBoard.absoluteRect().rect().size);
+		}
 		flowBoard.absoluteRect().setX(originForNewArtboard.x);
 		flowBoard.absoluteRect().setY(originForNewArtboard.y);
 	}
-
-	context.command.setValue_forKey_onDocument_forPluginIdentifier(flowPageName, "lastUsedFlowPage", doc.documentData(), kPluginDomain);
-	context.command.setValue_forKey_onLayer_forPluginIdentifier(initialArtboard.objectID(), "homeScreenID", flowBoard, kPluginDomain);
-	context.command.setValue_forKey_onLayer_forPluginIdentifier(sourcePage.objectID(), "pageID", flowBoard, kPluginDomain);
-	context.command.setValue_forKey_onLayer_forPluginIdentifier(shouldOrganize, "keepFlowPageOrganized", flowBoard, kPluginDomain);
-	context.command.setValue_forKey_onLayer_forPluginIdentifier(settings.includePrototypingConnections, "includePrototypingConnections", flowBoard, kPluginDomain);
-
-	if(flowNameLabel) {
-		context.command.setValue_forKey_onLayer_forPluginIdentifier(flowNameLabel.objectID(), "titleLayerID", flowBoard, kPluginDomain);
-	}
-	if (flowDescriptionLabel) {
-		context.command.setValue_forKey_onLayer_forPluginIdentifier(flowDescriptionLabel.objectID(), "descriptionLayerID", flowBoard, kPluginDomain);
-	}
-
-	flowBoard.setConstrainProportions(false);
-	flowBoard.resizeToFitChildrenWithOption(0);
-	flowBoard.exportOptions().addExportFormat();
 
 	doc.setCurrentPage(flowPage);
 	flowBoard.select_byExtendingSelection(true, false);
@@ -1134,7 +1140,7 @@ var updateFlow = function(context) {
 	var titleLabelID = context.command.valueForKey_onLayer_forPluginIdentifier("titleLayerID", currentArtboard, kPluginDomain);
 	var descriptionLabelID = context.command.valueForKey_onLayer_forPluginIdentifier("descriptionLayerID", currentArtboard, kPluginDomain);
 	var keepFlowPageOrganized = context.command.valueForKey_onLayer_forPluginIdentifier("keepFlowPageOrganized", currentArtboard, kPluginDomain);
-	var includePrototypingConnections = context.command.valueForKey_onLayer_forPluginIdentifier("includePrototypingConnections". currentArtboard, kPluginDomain);
+	var includePrototypingConnections = context.command.valueForKey_onLayer_forPluginIdentifier("includePrototypingConnections", currentArtboard, kPluginDomain);
 	
 	var flowName = "";
 	if (titleLabelID) {
@@ -1464,10 +1470,10 @@ var drawConnections = function(connections, parent, exportScale, labelColor) {
 				backLabel.absoluteRect().setX(dropPoint.x);
 				backLabel.absoluteRect().setY(dropPoint.y);
 				backLabel.frame().setWidth(300);
-				backLabel.setTextBehaviour(0);
 				backLabel.setStringValue("BACK");
 				backLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", 11*exportScale));
 				backLabel.setTextColor(labelColor);
+				backLabel.setTextBehaviour(0);
 				backLabel.adjustFrameToFit();
 
 			var padding = (14*exportScale);
@@ -1479,7 +1485,7 @@ var drawConnections = function(connections, parent, exportScale, labelColor) {
 			backBG.style().addStylePartOfType(0).setColor(hitAreaBorderColor);
 
 			backBG.absoluteRect().setX(dropPoint.x - backBackgroundWidth);
-			backBG.absoluteRect().setY(dropPoint.y - (backBackgroundHeight / 2));
+			backBG.absoluteRect().setY(dropPoint.y - Math.ceil(backBackgroundHeight / 2));
 
 			backLabel.absoluteRect().setX(dropPoint.x - backBackgroundWidth + (padding/2));
 			backLabel.absoluteRect().setY(backBG.absoluteRect().y() + (padding/2));
@@ -1573,33 +1579,7 @@ var editSettings = function(context) {
 	settingsWindow.setInformativeText("v" + version + " | © Aby Nimbalkar | @abynim");
 
 	settingsWindow.addTextLabelWithValue(strings["settings-exportOptions"]);
-	var scaleOptions = [1, 2];
-	var numOptions = scaleOptions.length;
-	var exportScale = NSUserDefaults.standardUserDefaults().objectForKey(kExportScaleKey) || 1;
-	var buttonCellViews = [];
-	var scaleOption;
-
-	var fakeFunc = function() {
-		log("Fake func");
-	}
-
-	var exportOptionsView = NSView.alloc().initWithFrame(NSMakeRect(0,0,300,30));
-
-	for (var i = 0; i<numOptions; i++) {
-		scaleOption = scaleOptions[i];
-
-		var buttonCell = NSButton.alloc().initWithFrame(NSMakeRect(42*i,1,42,22));
-		buttonCell.setTitle(scaleOption+"x");
-		buttonCell.setButtonType(NSRadioButton);
-		buttonCell.setAction(fakeFunc);
-
-		if (exportScale == scaleOption) {
-			buttonCell.setState(NSOnState);
-		}
-		buttonCellViews.push(buttonCell);
-		exportOptionsView.addSubview(buttonCell);
-	}
-
+	var exportScale = 1;
 	var formatOptions = NSArray.arrayWithArray(["PDF", "PNG", "JPG", "TIFF"]);
 	var exportFormat = NSUserDefaults.standardUserDefaults().objectForKey(kExportFormatKey) || "PNG";
 	var selectedIndex = formatOptions.indexOfObject(exportFormat);
@@ -1607,16 +1587,7 @@ var editSettings = function(context) {
 	formatDropdown.addItemsWithTitles(formatOptions);
 	formatDropdown.selectItemAtIndex(selectedIndex);
 
-	exportOptionsView.addSubview(formatDropdown);
-	settingsWindow.addAccessoryView(exportOptionsView);
-
-	var scaleDownFlowBitmaps = NSUserDefaults.standardUserDefaults().objectForKey(kScalesDownFlowBitmaps) || 0;
-	var scaleDownBitmapsCheckbox = NSButton.alloc().initWithFrame(NSMakeRect(0,0,300,22));
-	scaleDownBitmapsCheckbox.setButtonType(NSSwitchButton);
-	scaleDownBitmapsCheckbox.setBezelStyle(0);
-	scaleDownBitmapsCheckbox.setTitle("Always generate flows at 1x");
-	scaleDownBitmapsCheckbox.setState(scaleDownFlowBitmaps);
-	settingsWindow.addAccessoryView(scaleDownBitmapsCheckbox);
+	settingsWindow.addAccessoryView(formatDropdown);
 
 	// ------------
 	var separator = NSBox.alloc().initWithFrame(NSMakeRect(0,0,300,10));
@@ -1725,20 +1696,9 @@ var editSettings = function(context) {
 
 	if (response == "1000") {
 
-		var exportScale = 1;
-		for (var i = 0; i < buttonCellViews.length; i++) {
-			var exportScaleButton = buttonCellViews[i];
-			if (exportScaleButton.state() == NSOnState) {
-				exportScale = parseInt(exportScaleButton.title());
-				break;
-			}
-		};
-		//var exportScale = parseInt(scaleOptionsMatrix.selectedCell().title());
-
 		var flowIndicatorMSColor = MSColor.colorWithNSColor(flowIndicatorColorWell.color()).immutableModelObject();
 		var flowIndicatorColor = flowIndicatorMSColor.svgRepresentation()
 		var flowIndicatorAlpha = flowIndicatorMSColor.alpha();
-		NSUserDefaults.standardUserDefaults().setObject_forKey(exportScale, kExportScaleKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(formatDropdown.titleOfSelectedItem(), kExportFormatKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(bgOptions.objectAtIndex(bgDropdown.indexOfSelectedItem()), kFlowBackgroundKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(flowIndicatorColor, kFlowIndicatorColorKey);
@@ -1750,7 +1710,6 @@ var editSettings = function(context) {
 		NSUserDefaults.standardUserDefaults().setObject_forKey(showLinksCheckbox.state(), kShowsLinkRectsKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(userNameField.stringValue(), kFullNameKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(showNameCheckbox.state(), kShowModifiedDateKey);
-		NSUserDefaults.standardUserDefaults().setObject_forKey(scaleDownBitmapsCheckbox.state(), kScalesDownFlowBitmaps);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(autoUpdateConnectionsCheckbox.state(), kAutoUpdateConnectionsKey);
 		
 		updateManifestForSettingsChange(context, autoUpdateConnectionsCheckbox.state());
@@ -1765,7 +1724,6 @@ var editSettings = function(context) {
 
 	} else if (response == "1002") {
 
-		NSUserDefaults.standardUserDefaults().removeObjectForKey(kExportScaleKey);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kExportFormatKey);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kFlowBackgroundKey);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kFlowIndicatorColorKey);
@@ -1776,7 +1734,6 @@ var editSettings = function(context) {
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kShowsLinkRectsKey);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kFullNameKey);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kShowModifiedDateKey);
-		NSUserDefaults.standardUserDefaults().removeObjectForKey(kScalesDownFlowBitmaps);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kConditionFontSizeKey);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kAutoUpdateConnectionsKey);
 
