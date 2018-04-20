@@ -144,6 +144,10 @@
 	<string>Taille minimum de la zone liée</string>
 	<key>settings-drawBorders</key>
 	<string>Ajouter un bord aux calques liés</string>
+	<key>settings-artboardMagnets</key>
+	<string>Artboard Magnets</string>
+	<key>settings-conditionFontSize</key>
+	<string>Condition Font Size</string>
 	<key>settings-yourName</key>
 	<string>Votre nom</string>
 	<key>settings-showDate</key>

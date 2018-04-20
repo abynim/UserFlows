@@ -144,6 +144,10 @@
 	<string>Minimální Plocha Linku</string>
 	<key>settings-drawBorders</key>
 	<string>Nakreslit okraje kolem link vrstev</string>
+	<key>settings-artboardMagnets</key>
+	<string>Artboard Magnets</string>
+	<key>settings-conditionFontSize</key>
+	<string>Condition Font Size</string>
 	<key>settings-yourName</key>
 	<string>Vaše Jméno</string>
 	<key>settings-showDate</key>

@@ -20,6 +20,7 @@ var kStrokeWidthKey = "com.abynim.userflows.strokeWidth";
 var kConditionalArtboardKey = "com.abynim.userflows.conditionalArtboard";
 var kLanguageCodeKey = "com.abynim.userflows.languageCode";
 var kConnectionTypeKey = "com.abynim.userflows.connectionStrokeType";
+var kMagnetsTypeKey = "com.abynim.userflows.artboardMagnetsType";
 var kRelinkWarningKey = "com.abynim.userflows.showsRelinkWarning";
 
 var linkLayerPredicate;
@@ -917,9 +918,16 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 							connection.destinationRect = destinationRect;
 
 							artboardsToExport.push(destinationArtboard);
+
+							connection.dropPoint = {
+								x: dropPointX,
+								y: destinationArtboard.absoluteRect().y()
+							}
 						}
 
 					}
+
+
 
 				  	connections.push(connection);
 
@@ -1284,6 +1292,7 @@ var drawConnections = function(connections, parent, exportScale, labelColor) {
 		showLinkRects = NSUserDefaults.standardUserDefaults().objectForKey(kShowsLinkRectsKey) || 1,
 		strokeWidth = NSUserDefaults.standardUserDefaults().objectForKey(kStrokeWidthKey) || 3,
 		connectionType = NSUserDefaults.standardUserDefaults().objectForKey(kConnectionTypeKey) || "curved",
+		magnetsType = NSUserDefaults.standardUserDefaults().objectForKey(kMagnetsTypeKey) || "nsew",
 		connectionLayers = [],
 		hitAreaColor = MSImmutableColor.colorWithSVGString("#000000").newMutableCounterpart(),
 		hitAreaBorderColor = MSImmutableColor.colorWithSVGString(flowIndicatorColor).newMutableCounterpart(),
@@ -1320,9 +1329,10 @@ var drawConnections = function(connections, parent, exportScale, labelColor) {
 		destinationArtboardIsConditional = connection.destinationIsConditional == 1;
 		destinationRect = connection.destinationRect;
 
-		if (destinationRect) {
+		if (destinationRect && (magnetsType == "nsew" || connection.isBackAction || connection.linkIsCrossPage)) {
 
 			destinationRect = CGRectInset(destinationRect, -12, -12);
+
 
 			if (CGRectGetMinX(destinationRect) >= CGRectGetMaxX(linkRect)) {
 				connectionPosition = "right";
@@ -1398,7 +1408,6 @@ var drawConnections = function(connections, parent, exportScale, labelColor) {
 				break;			
 
 			}
-
 		}
 		else {
 
@@ -1652,7 +1661,33 @@ var editSettings = function(context) {
 	settingsWindow.addAccessoryView(separator);
 	// ------------
 
-	settingsWindow.addTextLabelWithValue("Condition Font Size");
+	settingsWindow.addTextLabelWithValue(strings["settings-artboardMagnets"]);
+	var currentMagnetsType = NSUserDefaults.standardUserDefaults().objectForKey(kMagnetsTypeKey) || "nsew";
+	var magnetsTypeDropdown = NSPopUpButton.alloc().initWithFrame_pullsDown(NSMakeRect(0,0,120,22), false);
+
+	var topLeftItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent("Top Left", nil, "");
+	var topLeftImage = NSImage.alloc().initByReferencingURL(context.plugin.urlForResourceNamed("images/magnets--topleft.tiff"));
+	topLeftItem.setRepresentedObject("topleft");
+	topLeftItem.setImage(topLeftImage);
+	magnetsTypeDropdown.menu().addItem(topLeftItem);
+	if(currentMagnetsType == "topleft") magnetsTypeDropdown.selectItem(topLeftItem);
+
+	var nsewItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent("N,S,E,W", nil, "");
+	var nsewImage = NSImage.alloc().initByReferencingURL(context.plugin.urlForResourceNamed("images/magnets--nsew.tiff"));
+	nsewItem.setRepresentedObject("nsew");
+	nsewItem.setImage(nsewImage);
+	magnetsTypeDropdown.menu().addItem(nsewItem);
+	if(currentMagnetsType == "nsew") magnetsTypeDropdown.selectItem(nsewItem);
+
+	settingsWindow.addAccessoryView(magnetsTypeDropdown);
+
+	// ------------
+	var separator = NSBox.alloc().initWithFrame(NSMakeRect(0,0,300,10));
+	separator.setBoxType(2);
+	settingsWindow.addAccessoryView(separator);
+	// ------------
+
+	settingsWindow.addTextLabelWithValue(strings["settings-conditionFontSize"]);
 	var conditionFontSizeField = NSTextField.alloc().initWithFrame(NSMakeRect(0, 0, 50, 23));
 	var conditionFontSize = NSUserDefaults.standardUserDefaults().objectForKey(kConditionFontSizeKey) || 16;
 	conditionFontSizeField.setStringValue(conditionFontSize + "pt");
@@ -1704,6 +1739,7 @@ var editSettings = function(context) {
 		NSUserDefaults.standardUserDefaults().setObject_forKey(flowIndicatorColor, kFlowIndicatorColorKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(flowIndicatorAlpha, kFlowIndicatorAlphaKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(connectionTypes.objectAtIndex(connectionTypeDropdown.indexOfSelectedItem()), kConnectionTypeKey);
+		NSUserDefaults.standardUserDefaults().setObject_forKey(magnetsTypeDropdown.selectedItem().representedObject(), kMagnetsTypeKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(parseInt(strokeWidthField.stringValue()), kStrokeWidthKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(parseInt(tapAreaField.stringValue()), kMinTapAreaKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(parseInt(conditionFontSizeField.stringValue()), kConditionFontSizeKey);
@@ -1719,7 +1755,8 @@ var editSettings = function(context) {
 			format : formatDropdown.titleOfSelectedItem(),
 			backgroundMode : bgDropdown.titleOfSelectedItem(),
 			showsName : showNameCheckbox.state(),
-			flowIndicatorColor : flowIndicatorColor
+			flowIndicatorColor : flowIndicatorColor,
+			artboardMagnets : magnetsTypeDropdown.selectedItem().representedObject()
 		});
 
 	} else if (response == "1002") {
@@ -1729,6 +1766,7 @@ var editSettings = function(context) {
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kFlowIndicatorColorKey);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kFlowIndicatorAlphaKey);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kConnectionTypeKey);
+		NSUserDefaults.standardUserDefaults().removeObjectForKey(kMagnetsTypeKey);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kStrokeWidthKey);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kMinTapAreaKey);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kShowsLinkRectsKey);

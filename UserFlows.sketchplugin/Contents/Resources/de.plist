@@ -144,6 +144,10 @@
 	<string>Kleinste Link Fläche</string>
 	<key>settings-drawBorders</key>
 	<string>Rahmen um verlinkte Ebenen zeichnen</string>
+	<key>settings-artboardMagnets</key>
+	<string>Artboard Magnets</string>
+	<key>settings-conditionFontSize</key>
+	<string>Condition Font Size</string>
 	<key>settings-yourName</key>
 	<string>Dein Name</string>
 	<key>settings-showDate</key>

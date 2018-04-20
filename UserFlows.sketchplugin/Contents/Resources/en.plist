@@ -144,6 +144,10 @@
 	<string>Minimum Link Area</string>
 	<key>settings-drawBorders</key>
 	<string>Draw borders around link layers</string>
+	<key>settings-artboardMagnets</key>
+	<string>Artboard Magnets</string>
+	<key>settings-conditionFontSize</key>
+	<string>Condition Font Size</string>
 	<key>settings-yourName</key>
 	<string>Your Name</string>
 	<key>settings-showDate</key>

@@ -144,6 +144,10 @@
 	<string>Минимальная область ссылки</string>
 	<key>settings-drawBorders</key>
 	<string>Отрисовывать границы вокруг соединенных слоев</string>
+	<key>settings-artboardMagnets</key>
+	<string>Artboard Magnets</string>
+	<key>settings-conditionFontSize</key>
+	<string>Condition Font Size</string>
 	<key>settings-yourName</key>
 	<string>Ваше имя</string>
 	<key>settings-showDate</key>

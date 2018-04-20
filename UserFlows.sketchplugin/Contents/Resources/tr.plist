@@ -144,6 +144,10 @@
 	<string>Minimum Bağlantı Alanı</string>
 	<key>settings-drawBorders</key>
 	<string>Bağlantı katmanları çevresinde kenarlıklar çiz</string>
+	<key>settings-artboardMagnets</key>
+	<string>Artboard Magnets</string>
+	<key>settings-conditionFontSize</key>
+	<string>Condition Font Size</string>
 	<key>settings-yourName</key>
 	<string>Adınız</string>
 	<key>settings-showDate</key>

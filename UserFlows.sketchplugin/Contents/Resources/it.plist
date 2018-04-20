@@ -144,6 +144,10 @@
 	<string>Area minima collegamento</string>
 	<key>settings-drawBorders</key>
 	<string>Disegna bordi attorno al livello di collegamento</string>
+	<key>settings-artboardMagnets</key>
+	<string>Artboard Magnets</string>
+	<key>settings-conditionFontSize</key>
+	<string>Condition Font Size</string>
 	<key>settings-yourName</key>
 	<string>Il tuo nome</string>
 	<key>settings-showDate</key>

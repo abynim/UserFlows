@@ -144,6 +144,10 @@
 	<string>最小連線區域</string>
 	<key>settings-drawBorders</key>
 	<string>繪製連線圖層邊框</string>
+	<key>settings-artboardMagnets</key>
+	<string>Artboard Magnets</string>
+	<key>settings-conditionFontSize</key>
+	<string>Condition Font Size</string>
 	<key>settings-yourName</key>
 	<string>你的名字</string>
 	<key>settings-showDate</key>

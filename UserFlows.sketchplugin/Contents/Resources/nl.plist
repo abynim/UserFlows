@@ -144,6 +144,10 @@
 	<string>Minimale grootte van beginpunt</string>
 	<key>settings-drawBorders</key>
 	<string>Teken randen rondom het beginpunt</string>
+	<key>settings-artboardMagnets</key>
+	<string>Artboard Magnets</string>
+	<key>settings-conditionFontSize</key>
+	<string>Condition Font Size</string>
 	<key>settings-yourName</key>
 	<string>Je naam</string>
 	<key>settings-showDate</key>
