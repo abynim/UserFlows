@@ -96,6 +96,8 @@
 	<string>Nieuwe pagina</string>
 	<key>generateFlow-keepOrganized</key>
 	<string>Keep _Flows Page Organized</string>
+	<key>generateFlow-includePrototypingConnections</key>
+	<string>Include Prototyping Connections</string>
 	<key>generateFlow-flowGroupName</key>
 	<string>Flow groep</string>
 	<key>generateFlow-connectionsGroupName</key>
@@ -142,6 +144,10 @@
 	<string>Minimale grootte van beginpunt</string>
 	<key>settings-drawBorders</key>
 	<string>Teken randen rondom het beginpunt</string>
+	<key>settings-artboardMagnets</key>
+	<string>Artboard Magnets</string>
+	<key>settings-conditionFontSize</key>
+	<string>Condition Font Size</string>
 	<key>settings-yourName</key>
 	<string>Je naam</string>
 	<key>settings-showDate</key>

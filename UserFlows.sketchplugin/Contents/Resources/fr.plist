@@ -96,6 +96,8 @@
 	<string>Nouvelle page</string>
 	<key>generateFlow-keepOrganized</key>
 	<string>Garder la page _Flows organisée</string>
+	<key>generateFlow-includePrototypingConnections</key>
+	<string>Include Prototyping Connections</string>
 	<key>generateFlow-flowGroupName</key>
 	<string>Groupe de flux</string>
 	<key>generateFlow-connectionsGroupName</key>
@@ -142,6 +144,10 @@
 	<string>Taille minimum de la zone liée</string>
 	<key>settings-drawBorders</key>
 	<string>Ajouter un bord aux calques liés</string>
+	<key>settings-artboardMagnets</key>
+	<string>Artboard Magnets</string>
+	<key>settings-conditionFontSize</key>
+	<string>Condition Font Size</string>
 	<key>settings-yourName</key>
 	<string>Votre nom</string>
 	<key>settings-showDate</key>

@@ -6,6 +6,19 @@
     <description>Generate flow diagrams from Artboards in Sketch</description>
     <language>en</language>
       <item>
+        <title>UserFlows 2.1.2</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>Added artboard magnets</li>
+              <li>Fixed `newPageTitle` bug</li>
+              <li>Simplified export options</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://github.com/abynim/UserFlows/archive/v2.zip" sparkle:version="2.1.2" />
+      </item>
+      <item>
         <title>UserFlows 2.1.1</title>
         <description>
           <![CDATA[

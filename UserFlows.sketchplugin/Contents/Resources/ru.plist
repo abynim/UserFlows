@@ -96,6 +96,8 @@
 	<string>Новая страница</string>
 	<key>generateFlow-keepOrganized</key>
 	<string>Держать страницу _Flows упорядоченной</string>
+	<key>generateFlow-includePrototypingConnections</key>
+	<string>Include Prototyping Connections</string>
 	<key>generateFlow-flowGroupName</key>
 	<string>Flow-группа</string>
 	<key>generateFlow-connectionsGroupName</key>
@@ -142,6 +144,10 @@
 	<string>Минимальная область ссылки</string>
 	<key>settings-drawBorders</key>
 	<string>Отрисовывать границы вокруг соединенных слоев</string>
+	<key>settings-artboardMagnets</key>
+	<string>Artboard Magnets</string>
+	<key>settings-conditionFontSize</key>
+	<string>Condition Font Size</string>
 	<key>settings-yourName</key>
 	<string>Ваше имя</string>
 	<key>settings-showDate</key>

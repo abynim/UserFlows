@@ -96,6 +96,8 @@
 	<string>新页面</string>
 	<key>generateFlow-keepOrganized</key>
 	<string>保持 _Flows 页面有条理</string>
+	<key>generateFlow-includePrototypingConnections</key>
+	<string>Include Prototyping Connections</string>
 	<key>generateFlow-flowGroupName</key>
 	<string>Flow 分组</string>
 	<key>generateFlow-connectionsGroupName</key>
@@ -142,6 +144,10 @@
 	<string>最小连接区域</string>
 	<key>settings-drawBorders</key>
 	<string>为连接图层绘制边框</string>
+	<key>settings-artboardMagnets</key>
+	<string>Artboard Magnets</string>
+	<key>settings-conditionFontSize</key>
+	<string>Condition Font Size</string>
 	<key>settings-yourName</key>
 	<string>你的名字</string>
 	<key>settings-showDate</key>

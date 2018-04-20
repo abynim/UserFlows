@@ -96,6 +96,8 @@
 	<string>صفحه جدید</string>
 	<key>generateFlow-keepOrganized</key>
 	<string>صفحه مسیرها را مرتب نگه دار</string>
+	<key>generateFlow-includePrototypingConnections</key>
+	<string>Include Prototyping Connections</string>
 	<key>generateFlow-flowGroupName</key>
 	<string>گروه مسیر</string>
 	<key>generateFlow-connectionsGroupName</key>
@@ -142,6 +144,10 @@
 	<string>حداقل منطقه لینک</string>
 	<key>settings-drawBorders</key>
 	<string>ترسیم حاشیه روی لایه‌های لینک</string>
+	<key>settings-artboardMagnets</key>
+	<string>Artboard Magnets</string>
+	<key>settings-conditionFontSize</key>
+	<string>Condition Font Size</string>
 	<key>settings-yourName</key>
 	<string>نام شما</string>
 	<key>settings-showDate</key>

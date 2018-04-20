@@ -96,6 +96,8 @@
 	<string>Nuova Pagina</string>
 	<key>generateFlow-keepOrganized</key>
 	<string>Mantieni la pagina _Flows Organizzata</string>
+	<key>generateFlow-includePrototypingConnections</key>
+	<string>Include Prototyping Connections</string>
 	<key>generateFlow-flowGroupName</key>
 	<string>Gruppo del Flusso</string>
 	<key>generateFlow-connectionsGroupName</key>
@@ -142,6 +144,10 @@
 	<string>Area minima collegamento</string>
 	<key>settings-drawBorders</key>
 	<string>Disegna bordi attorno al livello di collegamento</string>
+	<key>settings-artboardMagnets</key>
+	<string>Artboard Magnets</string>
+	<key>settings-conditionFontSize</key>
+	<string>Condition Font Size</string>
 	<key>settings-yourName</key>
 	<string>Il tuo nome</string>
 	<key>settings-showDate</key>

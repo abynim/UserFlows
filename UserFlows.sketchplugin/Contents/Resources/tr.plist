@@ -96,6 +96,8 @@
 	<string>Yeni Sayfa</string>
 	<key>generateFlow-keepOrganized</key>
 	<string>_Flows Sayfasını Düzenli Tutun.</string>
+	<key>generateFlow-includePrototypingConnections</key>
+	<string>Include Prototyping Connections</string>
 	<key>generateFlow-flowGroupName</key>
 	<string>Akış Grubu</string>
 	<key>generateFlow-connectionsGroupName</key>
@@ -142,6 +144,10 @@
 	<string>Minimum Bağlantı Alanı</string>
 	<key>settings-drawBorders</key>
 	<string>Bağlantı katmanları çevresinde kenarlıklar çiz</string>
+	<key>settings-artboardMagnets</key>
+	<string>Artboard Magnets</string>
+	<key>settings-conditionFontSize</key>
+	<string>Condition Font Size</string>
 	<key>settings-yourName</key>
 	<string>Adınız</string>
 	<key>settings-showDate</key>

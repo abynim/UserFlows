@@ -96,6 +96,8 @@
 	<string>Nueva Página</string>
 	<key>generateFlow-keepOrganized</key>
 	<string>Mantener páginas _Flows organizadas</string>
+	<key>generateFlow-includePrototypingConnections</key>
+	<string>Include Prototyping Connections</string>
 	<key>generateFlow-flowGroupName</key>
 	<string>Grupo de Flujo</string>
 	<key>generateFlow-connectionsGroupName</key>
@@ -142,6 +144,10 @@
 	<string>Area mínima de Enlace</string>
 	<key>settings-drawBorders</key>
 	<string>Pintar bordes en las capas con Enlace</string>
+	<key>settings-artboardMagnets</key>
+	<string>Artboard Magnets</string>
+	<key>settings-conditionFontSize</key>
+	<string>Condition Font Size</string>
 	<key>settings-yourName</key>
 	<string>Tu Nombre</string>
 	<key>settings-showDate</key>
