@@ -897,8 +897,9 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 						dropPointX = artboard.absoluteRect().x() - (30*exportScale);
 						dropPointY = artboard.absoluteRect().y() - (30*exportScale);
 						connection.destinationRect = CGRectMake(dropPointX - 20, dropPointY, 10, 10);
+				  		connections.push(connection);
 
-					} else {
+					} else if (flowConnection.destinationArtboard()) {
 						destinationArtboard = flowConnection.destinationArtboard();
 						connection.linkIsCrossPage = destinationArtboard.parentPage() != sourcePage;
 
@@ -925,11 +926,9 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 							}
 						}
 
+				  		connections.push(connection);
+
 					}
-
-
-
-				  	connections.push(connection);
 
 				}
 
@@ -1223,6 +1222,8 @@ var redrawConnections = function(context) {
 	var doc = context.document || context.actionContext.document;
 	var selectedLayers = doc.selectedLayers().layers();
 
+	sketchVersion = getVersionNumberFromString(NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString"));
+
 	var connectionsGroup = getConnectionsGroupInPage(doc.currentPage());
 	if (connectionsGroup) {
 		connectionsGroup.removeFromParent();
@@ -1316,7 +1317,7 @@ var drawConnections = function(connections, parent, exportScale, labelColor) {
 			}
 
 			path = NSBezierPath.bezierPathWithRect(linkRect);
-			hitAreaLayer = MSShapeGroup.shapeWithBezierPath(path);
+			hitAreaLayer = sketchVersion < 500 ? MSShapeGroup.shapeWithBezierPath(path) : MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
 			hitAreaLayer.style().addStylePartOfType(0).setColor(hitAreaColor);
 			hitAreaBorder = hitAreaLayer.style().addStylePartOfType(1);
 			hitAreaBorder.setColor(hitAreaBorderColor);
@@ -1443,7 +1444,7 @@ var drawConnections = function(connections, parent, exportScale, labelColor) {
 
 		linkRect = NSInsetRect(NSMakeRect(startPoint.x, startPoint.y, 0, 0), -5, -5);
 		path = NSBezierPath.bezierPathWithOvalInRect(linkRect);
-		hitAreaLayer = MSShapeGroup.shapeWithBezierPath(path);
+		hitAreaLayer = sketchVersion < 500 ? MSShapeGroup.shapeWithBezierPath(path) : MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
 		hitAreaLayer.style().addStylePartOfType(0).setColor(hitAreaBorderColor);
 		parent.addLayers([hitAreaLayer]);
 		connectionLayers.push(hitAreaLayer);
@@ -1462,7 +1463,7 @@ var drawConnections = function(connections, parent, exportScale, labelColor) {
 		}
 		
 
-		lineLayer = MSShapeGroup.shapeWithBezierPath(linePath);
+		lineLayer = sketchVersion < 500 ? MSShapeGroup.shapeWithBezierPath(linePath) : MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(linePath));
 		lineLayer.setName("Flow arrow");
 		hitAreaBorder = lineLayer.style().addStylePartOfType(1);
 		hitAreaBorder.setColor(hitAreaBorderColor);
@@ -1563,7 +1564,7 @@ var drawConnections = function(connections, parent, exportScale, labelColor) {
 			path.lineToPoint(NSMakePoint(dropPoint.x-(arrowSize*0.6), dropPoint.y));
 			path.lineToPoint(NSMakePoint(dropPoint.x-arrowSize, dropPoint.y-(arrowSize*0.6)));
 			path.closePath();
-			var arrow = MSShapeGroup.shapeWithBezierPath(path);
+			var arrow = sketchVersion < 500 ? MSShapeGroup.shapeWithBezierPath(path) : MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
 			arrow.style().addStylePartOfType(0).setColor(hitAreaBorderColor);
 			arrow.setRotation(-arrowRotation);
 			arrow.absoluteRect().setX(arrow.absoluteRect().x() + arrowOffsetX);
@@ -1982,7 +1983,7 @@ var getConnectionsGroupInPage = function(page) {
 }
 
 var parseContext = function(context) {
-	iconImage = NSImage.alloc().initByReferencingFile(context.plugin.urlForResourceNamed("icon.png").path());
+	iconImage = NSImage.alloc().initByReferencingFile(context.plugin.urlForResourceNamed("icon-internal.png").path());
 	version = context.plugin.version();
 	sketchVersion = getVersionNumberFromString(NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString"));
 
