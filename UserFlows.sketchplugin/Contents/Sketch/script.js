@@ -22,6 +22,8 @@ var kLanguageCodeKey = "com.abynim.userflows.languageCode";
 var kConnectionTypeKey = "com.abynim.userflows.connectionStrokeType";
 var kMagnetsTypeKey = "com.abynim.userflows.artboardMagnetsType";
 var kRelinkWarningKey = "com.abynim.userflows.showsRelinkWarning";
+var kStartMarkerTypeKey = "com.abynim.userflows.startMarkerType";
+var kEndMarkerTypeKey = "com.abynim.userflows.endMarkerType";
 
 var linkLayerPredicate;
 var iconImage;
@@ -1299,7 +1301,7 @@ var drawConnections = function(connections, parent, exportScale, labelColor) {
 		hitAreaBorderColor = MSImmutableColor.colorWithSVGString(flowIndicatorColor).newMutableCounterpart(),
 		arrowRotation = 0,
 		arrowOffsetX = 0,
-		path, hitAreaLayer, linkRect, destinationRect, dropPoint, hitAreaBorder, startPoint, controlPoint1, controlPoint2, controlPoint1Offset, controlPoint2OffsetX, controlPoint2OffsetY, linePath, lineLayer, destinationArtboardIsConditional, originPoint, degrees, connectionPosition, controlPointOffset, minControlPointOffset;
+		path, hitAreaLayer, linkRect, destinationRect, dropPoint, hitAreaBorder, startPoint, controlPoint1, controlPoint2, controlPoint1Offset, controlPoint2OffsetX, controlPoint2OffsetY, linePath, lineLayer, destinationArtboardIsConditional, originPoint, degrees, connectionPosition, controlPointOffset, minControlPointOffset, shouldUseMarkers;
 	hitAreaColor.setAlpha(0);
 	hitAreaBorderColor.setAlpha(flowIndicatorAlpha);
 
@@ -1442,12 +1444,16 @@ var drawConnections = function(connections, parent, exportScale, labelColor) {
 			controlPoint2 = NSMakePoint(dropPoint.x - controlPoint2OffsetX, dropPoint.y + controlPoint2OffsetY);
 		}
 
-		linkRect = NSInsetRect(NSMakeRect(startPoint.x, startPoint.y, 0, 0), -5, -5);
-		path = NSBezierPath.bezierPathWithOvalInRect(linkRect);
-		hitAreaLayer = sketchVersion < 500 ? MSShapeGroup.shapeWithBezierPath(path) : MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
-		hitAreaLayer.style().addStylePartOfType(0).setColor(hitAreaBorderColor);
-		parent.addLayers([hitAreaLayer]);
-		connectionLayers.push(hitAreaLayer);
+		shouldUseMarkers = sketchVersion >= 510;
+
+		if(!shouldUseMarkers) {
+			linkRect = NSInsetRect(NSMakeRect(startPoint.x, startPoint.y, 0, 0), -5, -5);
+			path = NSBezierPath.bezierPathWithOvalInRect(linkRect);
+			hitAreaLayer = sketchVersion < 500 ? MSShapeGroup.shapeWithBezierPath(path) : MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
+			hitAreaLayer.style().addStylePartOfType(0).setColor(hitAreaBorderColor);
+			parent.addLayers([hitAreaLayer]);
+			connectionLayers.push(hitAreaLayer);
+		}
 
 		
 		linePath = NSBezierPath.bezierPath();
@@ -1470,6 +1476,14 @@ var drawConnections = function(connections, parent, exportScale, labelColor) {
 		hitAreaBorder.setThickness(strokeWidth*exportScale);
 		hitAreaBorder.setPosition(0);
 		parent.addLayers([lineLayer]);
+
+		if (shouldUseMarkers && !connection.isBackAction && !connection.linkIsCrossPage) {
+			var startMarkerType = NSUserDefaults.standardUserDefaults().objectForKey(kStartMarkerTypeKey) || "4";
+			var endMarkerType = NSUserDefaults.standardUserDefaults().objectForKey(kEndMarkerTypeKey) || "2";
+			lineLayer.style().setStartMarkerType(parseInt(startMarkerType));
+			lineLayer.style().setEndMarkerType(parseInt(endMarkerType));
+		}
+
 		connectionLayers.push(lineLayer);
 
 		// draw backlink and crossPage layers
@@ -1556,20 +1570,22 @@ var drawConnections = function(connections, parent, exportScale, labelColor) {
 
 		}
 		else {
-			// Draw arrow
-			var arrowSize = Math.max(12, strokeWidth*3);
-			path = NSBezierPath.bezierPath();
-			path.moveToPoint(NSMakePoint(dropPoint.x+(arrowSize*0.6), dropPoint.y));
-			path.lineToPoint(NSMakePoint(dropPoint.x-arrowSize, dropPoint.y+(arrowSize*0.6)));
-			path.lineToPoint(NSMakePoint(dropPoint.x-(arrowSize*0.6), dropPoint.y));
-			path.lineToPoint(NSMakePoint(dropPoint.x-arrowSize, dropPoint.y-(arrowSize*0.6)));
-			path.closePath();
-			var arrow = sketchVersion < 500 ? MSShapeGroup.shapeWithBezierPath(path) : MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
-			arrow.style().addStylePartOfType(0).setColor(hitAreaBorderColor);
-			arrow.setRotation(-arrowRotation);
-			arrow.absoluteRect().setX(arrow.absoluteRect().x() + arrowOffsetX);
-			parent.addLayers([arrow]);
-			connectionLayers.push(arrow);
+			// Draw arrow if before Sketch 50
+			if (!shouldUseMarkers) {
+				var arrowSize = Math.max(12, strokeWidth*3);
+				path = NSBezierPath.bezierPath();
+				path.moveToPoint(NSMakePoint(dropPoint.x+(arrowSize*0.6), dropPoint.y));
+				path.lineToPoint(NSMakePoint(dropPoint.x-arrowSize, dropPoint.y+(arrowSize*0.6)));
+				path.lineToPoint(NSMakePoint(dropPoint.x-(arrowSize*0.6), dropPoint.y));
+				path.lineToPoint(NSMakePoint(dropPoint.x-arrowSize, dropPoint.y-(arrowSize*0.6)));
+				path.closePath();
+				var arrow = sketchVersion < 500 ? MSShapeGroup.shapeWithBezierPath(path) : MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
+				arrow.style().addStylePartOfType(0).setColor(hitAreaBorderColor);
+				arrow.setRotation(-arrowRotation);
+				arrow.absoluteRect().setX(arrow.absoluteRect().x() + arrowOffsetX);
+				parent.addLayers([arrow]);
+				connectionLayers.push(arrow);
+			}
 		}
 
 	}
@@ -1641,6 +1657,50 @@ var editSettings = function(context) {
 	flowIndicatorOptionsView.addSubview(strokeWidthField);
 	flowIndicatorOptionsView.addSubview(connectionTypeDropdown);
 	settingsWindow.addAccessoryView(flowIndicatorOptionsView);
+
+	if (sketchVersion >= 510) {
+		var markerTypes = ["0", "4", "5", "6", "7", "1", "2", "3"];
+		var markerTypeNames = ["None", "Open Arrow", "Filled Arrow", "Line", "Open Circle", "Filled Circle", "Open Square", "Filled Square"];
+		var startMarkerType = NSUserDefaults.standardUserDefaults().objectForKey(kStartMarkerTypeKey) || "4";
+		startMarkerType = ""+startMarkerType;
+		var endMarkerType = NSUserDefaults.standardUserDefaults().objectForKey(kEndMarkerTypeKey) || "2";
+		endMarkerType = ""+endMarkerType;
+
+		var startMarkerTypeDropdown = NSPopUpButton.alloc().initWithFrame_pullsDown(NSMakeRect(0,0,80,22), false);
+		var endMarkerTypeDropdown = NSPopUpButton.alloc().initWithFrame_pullsDown(NSMakeRect(84,0,80,22), false);
+		
+		startMarkerTypeDropdown.setImagePosition(NSImageOnly);
+		endMarkerTypeDropdown.setImagePosition(NSImageOnly);
+
+		var markerType, markerTypeInt, menuItem, markerImage, markerName, markerImageName;
+		for (var i = 0; i < markerTypes.length; i++) {
+			markerType = markerTypes[i];
+			markerTypeInt = parseInt(markerType);
+			markerName = markerTypeNames[markerTypeInt];
+
+			markerImageName = "startMarker-"+markerType;
+			menuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent(markerName, nil, "");
+			markerImage = NSImage.alloc().initByReferencingURL(context.plugin.urlForResourceNamed("images/"+markerImageName+".tiff"));
+			menuItem.setImage(markerImage);			
+			menuItem.setRepresentedObject(markerType);
+			startMarkerTypeDropdown.menu().addItem(menuItem);
+
+			markerImageName = "endMarker-"+markerType;
+			menuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent(markerName, nil, "");
+			markerImage = NSImage.alloc().initByReferencingURL(context.plugin.urlForResourceNamed("images/"+markerImageName+".tiff"));
+			menuItem.setImage(markerImage);
+			menuItem.setRepresentedObject(markerType);
+			endMarkerTypeDropdown.menu().addItem(menuItem);
+		}
+
+		startMarkerTypeDropdown.selectItemAtIndex(markerTypes.indexOf(startMarkerType));
+		endMarkerTypeDropdown.selectItemAtIndex(markerTypes.indexOf(endMarkerType));
+
+		var markerOptionsView = NSView.alloc().initWithFrame(NSMakeRect(0,0,300,23));
+		markerOptionsView.addSubview(startMarkerTypeDropdown);
+		markerOptionsView.addSubview(endMarkerTypeDropdown);
+		settingsWindow.addAccessoryView(markerOptionsView);
+	}
 
 	settingsWindow.addTextLabelWithValue(strings["settings-minArea"]);
 	var tapAreaField = NSTextField.alloc().initWithFrame(NSMakeRect(0,0,50,23));
@@ -1748,6 +1808,9 @@ var editSettings = function(context) {
 		NSUserDefaults.standardUserDefaults().setObject_forKey(userNameField.stringValue(), kFullNameKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(showNameCheckbox.state(), kShowModifiedDateKey);
 		NSUserDefaults.standardUserDefaults().setObject_forKey(autoUpdateConnectionsCheckbox.state(), kAutoUpdateConnectionsKey);
+
+		NSUserDefaults.standardUserDefaults().setObject_forKey(startMarkerTypeDropdown.selectedItem().representedObject(), kStartMarkerTypeKey);
+		NSUserDefaults.standardUserDefaults().setObject_forKey(endMarkerTypeDropdown.selectedItem().representedObject(), kEndMarkerTypeKey);
 		
 		updateManifestForSettingsChange(context, autoUpdateConnectionsCheckbox.state());
 		applySettings(context);
@@ -1775,6 +1838,8 @@ var editSettings = function(context) {
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kShowModifiedDateKey);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kConditionFontSizeKey);
 		NSUserDefaults.standardUserDefaults().removeObjectForKey(kAutoUpdateConnectionsKey);
+		NSUserDefaults.standardUserDefaults().removeObjectForKey(kStartMarkerTypeKey);
+		NSUserDefaults.standardUserDefaults().removeObjectForKey(kEndMarkerTypeKey);
 
 		updateManifestForSettingsChange(context, 0);
 		applySettings(context);
