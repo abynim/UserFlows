@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>menu-defineLink</key>
+	<string>Criar link</string>
+	<key>menu-removeLink</key>
+	<string>Remover link</string>
+	<key>menu-removeAllLinks</key>
+	<string>Remover todos os links</string>
+	<key>menu-relinkArtboardsAfterCopy</key>
+	<string>Relinkar Artboards Duplicados</string>
+	<key>menu-addCondition</key>
+	<string>Adicionar/Editar Condi&ccedil;&otilde;es</string>
+	<key>menu-generateFlow</key>
+	<string>Gerar Diagrama de Fluxo</string>
+	<key>menu-updateFlow</key>
+	<string>Atualizar Diagrama de Fluxo</string>
+	<key>menu-showConnections</key>
+	<string>Mostrar ou Redesenhar Conex&otilde;es</string>
+	<key>menu-hideConnections</key>
+	<string>Esconder Conex&otilde;es</string>
+	<key>menu-gotoDestinationArtboard</key>
+	<string>Ir para Artboard linkado</string>
+	<key>menu-goBackToLink</key>
+	<string>Voltar para Layer linkado</string>
+	<key>menu-editSettings</key>
+	<string>Configura&ccedil;&otilde;es...</string>
+	<key>menu-editShortcuts</key>
+	<string>Teclas de atalho...</string>
+	<key>menu-editLanguage</key>
+	<string>L&iacute;ngua...</string>
+	<key>menu-checkForUpdates</key>
+	<string>Procurar por atualiza&ccedil;&otilde;es...</string>
+	<key>manifest-description</key>
+	<string>Gerar diagrama de fluxo de usu&aacute;rio &agrave; partir de um artboard do Sketch.</string>
+	<key>defineLink-invalidSelectionTitle</key>
+	<string>Sele&ccedil;&atilde;o Inv&aacute;lida</string>
+	<key>defineLink-invalidSelectionMessage</key>
+	<string>Seleciona uma camada ou grupo para definir como link, selecione o artboard destino, e ent&atilde;o execute o comando novamente.</string>
+	<key>defineLink-linkDefined</key>
+	<string>Link definido:</string>
+	<key>removeLink-invalidSelectionMessage</key>
+	<string>Selecione uma camada que j&aacute; definida como link, para remove-lo.</string>
+	<key>removeLink-linkRemoved</key>
+	<string>Link removido</string>
+	<key>removeLink-linksRemoved</key>
+	<string>Links removidos</string>
+	<key>removeLinks-title</key>
+	<string>Remover todos os links de:</string>
+	<key>removeLinks-scopeSelectedArtboards</key>
+	<string>Artboards selecionado</string>
+	<key>removeLinks-scopeCurrentPage</key>
+	<string>P&aacute;gina atual</string>
+	<key>relinkArtboards-confirm</key>
+	<string>Relinkar Artboards</string>
+	<key>relinkArtboards-title</key>
+	<string>Tem certeza?</string>
+	<key>relinkArtboards-description</key>
+	<string>Este comando ir&aacute; tentar relinkar artboards que foram duplicados e perderam as conex&otilde;es.</string>
+	<key>relinkArtboards-dontShowAgain</key>
+	<string>N&atilde;o mostrar esta mensagem novamente</string>
+	<key>relinkArtboards-relinkComplete</key>
+	<string>%count% artboards foram relinkados</string>
+	<key>addCondition-title</key>
+	<string>Adicionar ou editar Condi&ccedil;&otilde;es</string>
+	<key>addCondition-saveAndAdd</key>
+	<string>Salvar + Adicionar</string>
+	<key>addCondition-ifConditionPlaceholder</key>
+	<string>Ex: Se usu&aacute;rio est&aacute; logado</string>
+	<key>addCondition-else</key>
+	<string>Se n&atilde;o...</string>
+	<key>addCondition-conditionArtboardName</key>
+	<string>Condi&ccedil;&otilde;es</string>
+	<key>addCondition-conditionGroupName</key>
+	<string>Condi&ccedil;&atilde;o</string>
+	<key>gotoArtboard-invalidSelectionTitle</key>
+	<string>Sele&ccedil;&atilde;o inv&aacute;lida</string>
+	<key>gotoArtboard-invalidSelectionMessage</key>
+	<string>Selecione uma camada que foi definida como link, ent&atilde;o execute este comando novamente.</string>
+	<key>generateFlow-message</key>
+	<string>Gerar um fluxo de usu&aacute;rio</string>
+	<key>generateFlow-startFrom</key>
+	<string>Inicia em::</string>
+	<key>generateFlow-noLinksTitle</key>
+	<string>Sem links definidos!</string>
+	<key>generateFlow-noLinksMessage</key>
+	<string>Esta p&aacute;gina n&atilde;o possui camadas com links definidos. Defina pelo menos um camada com link pelo meno: `Plugins &gt; Fluxos do usu&aacute;rio &gt; Definir link`</string>
+	<key>generateFlow-flowName</key>
+	<string>Nome do fluxo</string>
+	<key>generateFlow-description</key>
+	<string>Descri&ccedil;&atilde;o do fluxo</string>
+	<key>generateFlow-addToPage</key>
+	<string>Adicionar na p&aacute;gina</string>
+	<key>generateFlow-newPage</key>
+	<string>Nova p&aacute;gina</string>
+	<key>generateFlow-keepOrganized</key>
+	<string>Manter P&aacute;gina do _Fluxo Organizada</string>
+	<key>generateFlow-includePrototypingConnections</key>
+	<string>Incluir Conex&otilde;es a Prot&oacute;tipos</string>
+	<key>generateFlow-flowGroupName</key>
+	<string>Grupo de Fluxos</string>
+	<key>generateFlow-connectionsGroupName</key>
+	<string>Conex&otilde;es</string>
+	<key>generateFlow-modifiedOnDate</key>
+	<string>Modificado em %date%</string>
+	<key>generateFlow-modifiedBy</key>
+	<string>Modificado em %date% por %user%</string>
+	<key>generateFlow-modifiedDate</key>
+	<string>Data de modifica&ccedil;&acilde;o</string>
+	<key>generateFlow-saveButtonTitle</key>
+	<string>Gerar Diagrama</string>
+	<key>updateFlow-saveButtonTitle</key>
+	<string>Atualizar Diagrama</string>
+	<key>updateFlow-message</key>
+	<string>Atualizar Diagrama de Fluxo</string>
+	<key>updateFlow-completed</key>
+	<string>Atualizado!</string>
+	<key>updateFlow-noFlowArtboard</key>
+	<string>Artboard do fluxo n&atilde;o encontrado</string>
+	<key>updateFlow-noFlowArtboardMessage</key>
+	<string>Selecione um artboard de fluxo exportado que voc&ecirc; gostaria de atualizar, ent&atilde;o execute este comando novamente.</string>
+	<key>updateFlow-noInitialArtboard</key>
+	<string>N&atilde;o &eacute; poss&iacute;vel atual o diagrama</string>
+	<key>updateFlow-noInitialArtboardMessage</key>
+	<string>O artboard inicial deste diagrama n&atilde;o foi encontrado no documento atual. Por favor gere o fluxo novamente.</string>
+	<key>settings-restoreDefaults</key>
+	<string>Restaurar Padr&otilde;es</string>
+	<key>settings-title</key>
+	<string>Configura&ccedil;&otilde;es do Fluxo de Usu&aacute;rio</string>
+	<key>settings-exportOptions</key>
+	<string>Op&ccedil;&otilde;es de Exporta&ccedil;&atilde;o do Artboard</string>
+	<key>settings-scaleOptions</key>
+	<string>Op&ccedil;&otilde;es de Escala</string>
+	<key>settings-flowBackground</key>
+	<string>Fundo do Fluxo</string>
+	<key>settings-bgLight</key>
+	<string>Claro</string>
+	<key>settings-bgDark</key>
+	<string>Escuro</string>
+	<key>settings-flowIndicatorStroke</key>
+	<string>Tra&ccedil;o do Indicador de Fluxo</string>
+	<key>settings-minArea</key>
+	<string>Área m&iacute;nima do Link</string>
+	<key>settings-drawBorders</key>
+	<string>Desenhar bordas ao redor das camadas de link</string>
+	<key>settings-artboardMagnets</key>
+	<string>Ím&atilde;s de Artboard</string>
+	<key>settings-conditionFontSize</key>
+	<string>Tamanho da fonte para Condi&ccedil;&otilde;es</string>
+	<key>settings-yourName</key>
+	<string>Seu Nome</string>
+	<key>settings-showDate</key>
+	<string>Mostrar Data e Nome nos Fluxos</string>
+	<key>settings-autoUpdateConnections</key>
+	<string>Auto-redesenhar conex&otilde;es (experimental)</string>
+	<key>settings-connectionCurved</key>
+	<string>Curvado</string>
+	<key>settings-connectionStraight</key>
+	<string>Reto</string>
+	<key>shortcuts-title</key>
+	<string>Atalhos para teclado de fluxos de usu&aacute;rio</string>
+	<key>shortcuts-message</key>
+	<string>Atalhos s&atilde;o definidos usando combina&ccedil;&otilde;es de modificadores (cmd, control, shift, option) e qualquer outra tecla. Por exemplo – &apos;cmd shift y&apos;. Lembre-se  de verificar se o atalho j&aacute; n&atilde;o est&aacute; sendo usado por outro plugin ou pelo pr&oacute;prio Sketch.</string>
+	<key>checkUpdates-checking</key>
+	<string>Procurando por atualiza&ccedil;&otilde;es...</string>
+	<key>checkUpdates-updateAvailableTitle</key>
+	<string>Uma atualiza&ccedil;&atilde;o est&aacute; dispon&iacute;vel!</string>
+	<key>checkUpdates-noUpdateAvailableTitle</key>
+	<string>Voc&ecirc; &eacute; bom!</string>
+	<key>checkUpdates-updateAvailableMessage</key>
+	<string>A vers&atilde;o mais recente &eacute; %currentVersion% a voc&ecirc; tem instalado a vers&atilde;o %installedVersion%. Por favor baixe e instale o plugin &agrave; partir do site.</string>
+	<key>checkUpdates-noUpdateAvailableMessage</key>
+	<string>You have the most recent version of UserFlows installed 👍</string>
+	<string>Voc&ecirc; possui a vers&atilde;o mais recente do UserFlows instalada 👍</string>
+	<key>checkUpdates-updateNow</key>
+	<string>Atualizar agora</string>
+	<key>checkUpdates-updateLater</key>
+	<string>Depois</string>
+	<key>language-title</key>
+	<string>Configura&ccedil;&otilde;es de Lingua</string>
+	<key>language-message</key>
+	<string>Definir a lingua para o plugin UserFlows.</string>
+	<key>artboardDescription-invalidSelectionMessage</key>
+	<string>Selecione um artboard</string>
+	<key>artboardDescription-description</key>
+	<string>Descri&ccedil;&atilde;o</string>
+	<key>artboardDescription-saved</key>
+	<string>Descri&ccedil;&atilde;o do Artboard salva</string>
+	<key>alerts-save</key>
+	<string>Salvar</string>
+	<key>alerts-cancel</key>
+	<string>Cancelar</string>
+	<key>alerts-done</key>
+	<string>Feito</string>
+</dict>
+</plist>

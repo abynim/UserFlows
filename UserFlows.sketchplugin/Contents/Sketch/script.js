@@ -31,7 +31,7 @@ var version;
 var strings;
 var sketchVersion;
 
-var supportedLanguages = ["en", "cn", "zhtw", "cz", "da", "nl", "es", "fr", "de", "it", "fa", "ru", "tr"];
+var supportedLanguages = ["en", "cn", "zhtw", "cz", "da", "nl", "es", "fr", "de", "it", "fa", "ru", "tr", "pt"];
 var languageNames = {
 	en : "English",
 	da : "Danish",
@@ -45,7 +45,8 @@ var languageNames = {
 	de : "German",
 	es : "Español",
 	it : "Italian",
-	fr : "French"
+	fr : "French",
+	pt : "Portuguese"
 };
 
 var defineLink = function(context) {
