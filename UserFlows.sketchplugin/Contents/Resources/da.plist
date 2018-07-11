@@ -40,6 +40,8 @@
 	<string>Vælg et Layer eller en Group som Link, vælg et artboard som destination og kør denne kommando igen.</string>
 	<key>defineLink-linkDefined</key>
 	<string>Link defineret:</string>
+	<key>editLinkOptions-invalidSelectionMessage</key>
+	<string>Select a layer already defined as a link to edit its connection style.</string>
 	<key>removeLink-invalidSelectionMessage</key>
 	<string>Vælg et Layer, der allerede er defineret som Link, for at fjerne dets Link egenskaber.</string>
 	<key>removeLink-linkRemoved</key>

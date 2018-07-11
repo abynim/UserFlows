@@ -40,6 +40,8 @@
 	<string>Sélectionnez un claque ou un groupe d&apos;où faire partir un lien, Sélectionnez le plan de travail de destination, puis réexécuter cette commande.</string>
 	<key>defineLink-linkDefined</key>
 	<string>Lien créé:</string>
+	<key>editLinkOptions-invalidSelectionMessage</key>
+	<string>Select a layer already defined as a link to edit its connection style.</string>
 	<key>removeLink-invalidSelectionMessage</key>
 	<string>Sélectionnez un calque avec un lien déjà défini pour retirer le lien.</string>
 	<key>removeLink-linkRemoved</key>

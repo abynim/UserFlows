@@ -40,6 +40,8 @@
 	<string>Seleciona uma camada ou grupo para definir como link, selecione o artboard destino, e ent&atilde;o execute o comando novamente.</string>
 	<key>defineLink-linkDefined</key>
 	<string>Link definido:</string>
+	<key>editLinkOptions-invalidSelectionMessage</key>
+	<string>Select a layer already defined as a link to edit its connection style.</string>
 	<key>removeLink-invalidSelectionMessage</key>
 	<string>Selecione uma camada que j&aacute; definida como link, para remove-lo.</string>
 	<key>removeLink-linkRemoved</key>

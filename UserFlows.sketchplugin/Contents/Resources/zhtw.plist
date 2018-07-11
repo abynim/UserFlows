@@ -40,6 +40,8 @@
 	<string>選擇一個要新增連線的圖層或群組，接者選取目標工作區域，再重新執行這個動作。</string>
 	<key>defineLink-linkDefined</key>
 	<string>連線定義:</string>
+	<key>editLinkOptions-invalidSelectionMessage</key>
+	<string>Select a layer already defined as a link to edit its connection style.</string>
 	<key>removeLink-invalidSelectionMessage</key>
 	<string>選擇一個已定義連線的圖層，以移除他的連線屬性</string>
 	<key>removeLink-linkRemoved</key>

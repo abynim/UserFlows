@@ -40,6 +40,8 @@
 	<string>Для создания связи выберите слой или группу, нужный артборд и повторите команду.</string>
 	<key>defineLink-linkDefined</key>
 	<string>Ссылка определена:</string>
+	<key>editLinkOptions-invalidSelectionMessage</key>
+	<string>Select a layer already defined as a link to edit its connection style.</string>
 	<key>removeLink-invalidSelectionMessage</key>
 	<string>Выберите слой-ссылку, чтобы удалить его атрибуты.</string>
 	<key>removeLink-linkRemoved</key>

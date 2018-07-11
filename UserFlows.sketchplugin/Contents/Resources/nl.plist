@@ -40,6 +40,8 @@
 	<string>Selecteer een laag of group als beginpunt, selecteer vervolgens het artboard als eindpunt, voer daarna deze actie opnieuw uit.</string>
 	<key>defineLink-linkDefined</key>
 	<string>Relatie aangemaakt:</string>
+	<key>editLinkOptions-invalidSelectionMessage</key>
+	<string>Select a layer already defined as a link to edit its connection style.</string>
 	<key>removeLink-invalidSelectionMessage</key>
 	<string>Selecteer een laag die al als beginpunt functioneert om de verbinding te verwijderen</string>
 	<key>removeLink-linkRemoved</key>
