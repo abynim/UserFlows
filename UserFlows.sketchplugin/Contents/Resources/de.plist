@@ -40,6 +40,8 @@
 	<string>Wähle eine Ebene oder Group als Link aus, wähle das gewünschte Ziel und führe diesen Befehl wieder aus.</string>
 	<key>defineLink-linkDefined</key>
 	<string>Link definiert:</string>
+	<key>editLinkOptions-invalidSelectionMessage</key>
+	<string>Select a layer already defined as a link to edit its connection style.</string>
 	<key>removeLink-invalidSelectionMessage</key>
 	<string>Wähle eine Ebene, die schon als Link definiert ist aus, um den Link zu entfernen.</string>
 	<key>removeLink-linkRemoved</key>

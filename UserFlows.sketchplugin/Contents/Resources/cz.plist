@@ -40,6 +40,8 @@
 	<string>Vyberte vrstvu nebo skupinu pro vytvoření Linku, vyberte cílový artboard, potom znovu spusťe tento příkaz.</string>
 	<key>defineLink-linkDefined</key>
 	<string>Link definován:</string>
+	<key>editLinkOptions-invalidSelectionMessage</key>
+	<string>Select a layer already defined as a link to edit its connection style.</string>
 	<key>removeLink-invalidSelectionMessage</key>
 	<string>Zvolte vrstvu definovanou jako link, abyste smazali jejich Link vlastnosti.</string>
 	<key>removeLink-linkRemoved</key>

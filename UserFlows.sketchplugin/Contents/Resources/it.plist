@@ -40,6 +40,8 @@
 	<string>Selezione un livello o gruppo come partenza del collegamento, poi selezione l&apos;artboard di destinazione, quindi riprova.</string>
 	<key>defineLink-linkDefined</key>
 	<string>Collegamento definito:</string>
+	<key>editLinkOptions-invalidSelectionMessage</key>
+	<string>Select a layer already defined as a link to edit its connection style.</string>
 	<key>removeLink-invalidSelectionMessage</key>
 	<string>Selezione un livello già definito come collegamento prima di rimuoverlo.</string>
 	<key>removeLink-linkRemoved</key>

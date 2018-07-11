@@ -40,6 +40,8 @@
 	<string>选择一个要定义连接的图层或分组，接着选择目标画板，再重新执行这个操作。</string>
 	<key>defineLink-linkDefined</key>
 	<string>Link defined:</string>
+	<key>editLinkOptions-invalidSelectionMessage</key>
+	<string>Select a layer already defined as a link to edit its connection style.</string>
 	<key>removeLink-invalidSelectionMessage</key>
 	<string>选择一个已经定义为连接的图层，以移除它的连接属性。</string>
 	<key>removeLink-linkRemoved</key>

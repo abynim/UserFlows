@@ -40,6 +40,8 @@
 	<string>Select a layer or group to define as a Link, select the destination artboard, then run this command again.</string>
 	<key>defineLink-linkDefined</key>
 	<string>Link defined:</string>
+	<key>editLinkOptions-invalidSelectionMessage</key>
+	<string>Select a layer already defined as a link to edit its connection style.</string>
 	<key>removeLink-invalidSelectionMessage</key>
 	<string>Select a layer already defined as a link, to remove its link attributes.</string>
 	<key>removeLink-linkRemoved</key>

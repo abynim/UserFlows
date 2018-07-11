@@ -40,6 +40,8 @@
 	<string>Bir Bağlantı olarak tanımlamak için bir artboard veya grup seçin, hedef çalışma yüzeyini seçin, ardından bu komutu tekrar çalıştırın.</string>
 	<key>defineLink-linkDefined</key>
 	<string>Bağlantı Tanımlandı:</string>
+	<key>editLinkOptions-invalidSelectionMessage</key>
+	<string>Select a layer already defined as a link to edit its connection style.</string>
 	<key>removeLink-invalidSelectionMessage</key>
 	<string>Bağlantı niteliklerini kaldırmak için zaten bir bağlantı olarak tanımlanan bir artboard seçin.</string>
 	<key>removeLink-linkRemoved</key>

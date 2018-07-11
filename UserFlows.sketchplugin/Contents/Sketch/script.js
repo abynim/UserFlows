@@ -49,10 +49,16 @@ var languageNames = {
 	pt : "Portuguese"
 };
 
+const sketchVersion48 = 480;
+const sketchVersion49 = 490;
+const sketchVersion50 = 500;
+const sketchVersion51 = 510;
+
 var defineLink = function(context) {
 
 	parseContext(context);
 
+	var doc = context.document;
 	var selection = context.selection;
 	var validSelection = true;
 	var destArtboard, linkLayer;
@@ -79,6 +85,44 @@ var defineLink = function(context) {
 		return;
 	}
 
+	var didModifySettings = true;
+	var lastUsedBorderStyleID = context.command.valueForKey_onDocument_forPluginIdentifier("lastUsedBorderStyleID", doc.documentData(), kPluginDomain);
+	var lastUsedForeignStyleID = context.command.valueForKey_onDocument_forPluginIdentifier("lastUsedForeignStyleID", doc.documentData(), kPluginDomain);
+
+	if (context.command.identifier() == "defineLinkWithOptions") {
+		if (sketchVersion < sketchVersion51) {
+			showAlert("Not Supported", "This feature is only available in Sketch 51 and above.");
+			return;
+		}
+
+		didModifySettings = false;
+
+		var settingsWindow = getAlertWindow();
+		settingsWindow.addButtonWithTitle(strings["alerts-save"]);
+		settingsWindow.addButtonWithTitle(strings["alerts-cancel"]);
+
+		settingsWindow.setMessageText("Select connection style");
+
+		var stylesDropdown = stylesDropdownForContext_selectedStyleID_sharedObjectID(context, lastUsedBorderStyleID, lastUsedForeignStyleID);
+		settingsWindow.addAccessoryView(stylesDropdown);
+
+		if (settingsWindow.runModal() == "1000") {
+
+			shareableObjectRef = stylesDropdown.selectedItem().representedObject();
+			var sharedStyleID = (shareableObjectRef === "default") ? nil : context.document.localObjectForObjectReference(shareableObjectRef).objectID();
+
+			context.command.setValue_forKey_onDocument_forPluginIdentifier(sharedStyleID, "lastUsedBorderStyleID", doc.documentData(), kPluginDomain);
+			lastUsedBorderStyleID = sharedStyleID;
+
+			lastUsedForeignStyleID = shareableObjectRef.sourceLibrary() ? shareableObjectRef.sharedObjectID() : nil;
+			context.command.setValue_forKey_onDocument_forPluginIdentifier(lastUsedForeignStyleID, "lastUsedForeignStyleID", doc.documentData(), kPluginDomain);
+
+			didModifySettings = true;
+		}
+	}
+
+	if (!didModifySettings) return;
+
 	var artboardID = context.command.valueForKey_onLayer_forPluginIdentifier("artboardID", destArtboard, kPluginDomain);
 	if (!artboardID || artboardID != destArtboard.objectID()) {
 		artboardID = destArtboard.objectID();
@@ -86,7 +130,13 @@ var defineLink = function(context) {
 	}
 	context.command.setValue_forKey_onLayer_forPluginIdentifier(artboardID, "destinationArtboardID", linkLayer, kPluginDomain);
 
-	var doc = context.document;
+	if (lastUsedBorderStyleID) {
+		context.command.setValue_forKey_onLayer_forPluginIdentifier(lastUsedBorderStyleID, "sharedBorderStyleID", linkLayer, kPluginDomain);
+	}
+	if(lastUsedForeignStyleID) {
+		context.command.setValue_forKey_onLayer_forPluginIdentifier(lastUsedForeignStyleID, "foreignBorderStyleID", linkLayer, kPluginDomain);
+	}
+
 	var showingConnections = NSUserDefaults.standardUserDefaults().objectForKey(kShowConnectionsKey) || 1;
 
 	if (showingConnections == 1) {
@@ -94,6 +144,134 @@ var defineLink = function(context) {
 	} else {
 		doc.showMessage(strings["defineLink-linkDefined"] + " " + linkLayer.name() + " → " + destArtboard.name());
 	}
+}
+
+
+var stylesDropdownForContext_selectedStyleID_sharedObjectID = function(context, selectedStyleID, sharedObjectID) {
+	var stylesDropdown = NSPopUpButton.alloc().initWithFrame(NSMakeRect(0,0,300,25));
+	stylesDropdown.menu().setAutoenablesItems(0);
+	var predicate = NSPredicate.predicateWithFormat("style.hasEnabledFill == NO");
+
+	var sharedStyle, menuItem, shareableObjectRef, selectedItem;
+
+	menuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent("Default", nil, "");
+	menuItem.setRepresentedObject(NSString.stringWithString("default"));
+	stylesDropdown.menu().addItem(menuItem);
+	stylesDropdown.menu().addItem(NSMenuItem.separatorItem());
+
+	var docStyles = context.document.documentData().layerStyles().sharedStyles().filteredArrayUsingPredicate(predicate);
+
+	var docStylesTitle = docStyles.count() > 0 ? "Document Styles" : "No Document Styles";
+	menuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent(docStylesTitle, nil, "");
+	menuItem.setEnabled(false);
+	stylesDropdown.menu().addItem(menuItem);
+
+	var loop = docStyles.objectEnumerator();
+	while(sharedStyle = loop.nextObject()) {
+		menuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent(sharedStyle.name(), nil, "");
+		//menuItem.setImage(generatePreviewImageForSharedBorderStyle(sharedStyle));
+		shareableObjectRef = MSShareableObjectReference.referenceForShareableObject(sharedStyle);
+		menuItem.setRepresentedObject(shareableObjectRef);
+		menuItem.setIndentationLevel(1);
+		if (selectedStyleID && sharedStyle.objectID() == selectedStyleID) {
+			selectedItem = menuItem;
+		}
+		stylesDropdown.menu().addItem(menuItem);
+	}
+
+	stylesDropdown.menu().addItem(NSMenuItem.separatorItem());
+
+	var libs = AppController.sharedInstance().librariesController().availableLibraries();
+	var lib, libStyles;
+	var libsLoop = libs.objectEnumerator();
+	var stylesLoop;
+	while(lib = libsLoop.nextObject()) {
+		libStyles = lib.document().layerStyles().sharedStyles().filteredArrayUsingPredicate(predicate);
+		if (libStyles.count() > 0) {
+			menuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent(lib.name(), nil, "");
+			menuItem.setEnabled(false);
+			stylesDropdown.menu().addItem(menuItem);
+
+			stylesLoop = libStyles.objectEnumerator();
+			while(sharedStyle = stylesLoop.nextObject()) {
+
+				menuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent(sharedStyle.name(), nil, "");
+				//menuItem.setImage(generatePreviewImageForSharedBorderStyle(sharedStyle));
+				shareableObjectRef = MSShareableObjectReference.referenceForShareableObject_inLibrary(sharedStyle, lib);
+				menuItem.setRepresentedObject(shareableObjectRef);
+				menuItem.setIndentationLevel(1);
+				if (sharedObjectID && sharedStyle.objectID() == sharedObjectID) {
+					selectedItem = menuItem;
+				}
+				stylesDropdown.menu().addItem(menuItem);
+
+			}
+
+			stylesDropdown.menu().addItem(NSMenuItem.separatorItem());
+		}
+	}
+	if(selectedItem) stylesDropdown.selectItem(selectedItem);
+	return stylesDropdown;
+}
+
+var editConnectionStyle = function(context) {
+
+	parseContext(context);
+
+	if (sketchVersion < sketchVersion51) {
+		showAlert("Not Supported", "This feature is only available in Sketch 51 and above.");
+		return;
+	}
+
+	linkLayerPredicate = NSPredicate.predicateWithFormat("userInfo != nil && function(userInfo, 'valueForKeyPath:', %@).destinationArtboardID != nil", kPluginDomain);
+	var linkLayers = context.selection.filteredArrayUsingPredicate(linkLayerPredicate);
+	var numLayers = linkLayers.count();
+
+	if (numLayers == 0) {
+		showAlert(strings["defineLink-invalidSelectionTitle"], strings["editLinkOptions-invalidSelectionMessage"]);
+		return;
+	}
+
+	var settingsWindow = getAlertWindow();
+	settingsWindow.addButtonWithTitle(strings["alerts-save"]);
+	settingsWindow.addButtonWithTitle(strings["alerts-cancel"]);
+
+	settingsWindow.setMessageText("Edit connection style");
+
+	var currentBorderStyleID = nil;
+	var currentForeignBorderStyleID = nil;
+	if(numLayers == 1 ) {
+		var linkLayer = linkLayers.firstObject();
+		currentBorderStyleID = context.command.valueForKey_onLayer_forPluginIdentifier("sharedBorderStyleID", linkLayer, kPluginDomain);
+		currentForeignBorderStyleID = context.command.valueForKey_onLayer_forPluginIdentifier("foreignBorderStyleID", linkLayer, kPluginDomain);
+	}
+	var stylesDropdown = stylesDropdownForContext_selectedStyleID_sharedObjectID(context, currentBorderStyleID, currentForeignBorderStyleID);
+	settingsWindow.addAccessoryView(stylesDropdown);
+
+	if (settingsWindow.runModal() == "1000") {
+
+		var shareableObjectRef = stylesDropdown.selectedItem().representedObject();
+		var isDefault = (shareableObjectRef == "default");
+		
+		if (shareableObjectRef) {
+			
+			var sharedStyleID = isDefault ? nil : context.document.localObjectForObjectReference(shareableObjectRef).objectID();
+			
+			var linkLayer;
+			var loop = linkLayers.objectEnumerator();
+
+			while(linkLayer = loop.nextObject()) {
+				context.command.setValue_forKey_onLayer_forPluginIdentifier(sharedStyleID, "sharedBorderStyleID", linkLayer, kPluginDomain);
+				if(!isDefault) { 
+					context.command.setValue_forKey_onLayer_forPluginIdentifier(shareableObjectRef.sharedObjectID(), "foreignBorderStyleID", linkLayer, kPluginDomain);
+				}
+			}
+
+			redrawConnections(context);
+		}
+
+	}
+
 }
 
 var removeLink = function(context) {
@@ -293,7 +471,6 @@ var editConditionsForArtboard = function(currentArtboard, context, forceNewCondi
 	settingsWindow.addButtonWithTitle(strings["addCondition-saveAndAdd"]);
 
 	settingsWindow.setMessageText(strings["addCondition-title"]);
-	// settingsWindow.setInformativeText("");
 
 	var artboardIsConditional = forceNewCondition == true ? 0 : (context.command.valueForKey_onLayer_forPluginIdentifier(kConditionalArtboardKey, currentArtboard, kPluginDomain) || 0),
 		hasElse = artboardIsConditional ? (context.command.valueForKey_onLayer_forPluginIdentifier("hasElse", currentArtboard, kPluginDomain) || 1) : 1,
@@ -424,7 +601,7 @@ var editConditionsForArtboard = function(currentArtboard, context, forceNewCondi
 			conditionLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", conditionFontSize));
 			conditionLabel.setLineHeight(conditionFontSize*1.4);
 			conditionLabelColor = MSImmutableColor.colorWithSVGString("#121212");
-			if (sketchVersion < 480) conditionLabelColor = conditionLabelColor.newMutableCounterpart();
+			if (sketchVersion < sketchVersion48) conditionLabelColor = conditionLabelColor.newMutableCounterpart();
 			conditionLabel.setTextColor(conditionLabelColor);
 			conditionLabel.adjustFrameToFit();
 			context.command.setValue_forKey_onLayer_forPluginIdentifier(1, (isElse ? "isElse" : "isCondition"), conditionLabel, kPluginDomain);
@@ -459,7 +636,7 @@ var editConditionsForArtboard = function(currentArtboard, context, forceNewCondi
 
 		conditionBoard.frame().setHeight(listY);
 		if (artboardIsConditional != 1) {
-			var currentView = sketchVersion < 480 ? context.document.currentView() : context.document.contentDrawView();
+			var currentView = sketchVersion < sketchVersion48 ? context.document.currentView() : context.document.contentDrawView();
 			var vcr = currentView.visibleContentRect(),
 				absPosition = NSMakePoint(CGRectGetMidX(vcr)-CGRectGetMidX(conditionBoard.absoluteRect().rect()), CGRectGetMidY(vcr)-CGRectGetMidY(conditionBoard.absoluteRect().rect()));
 			conditionBoard.setAbsolutePosition(absPosition);
@@ -513,7 +690,7 @@ var gotoDestinationArtboard = function(context) {
 	var doc = context.document,
 		destinationArtboard = doc.currentPage().artboards().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("objectID == %@", destinationArtboardID)).firstObject();
 	if (destinationArtboard) {
-		var currentView = sketchVersion < 480 ? doc.currentView() : doc.contentDrawView();
+		var currentView = sketchVersion < sketchVersion48 ? doc.currentView() : doc.contentDrawView();
 		var cRect = currentView.visibleContentRect(),
 			contentRect = {
 				x : cRect.origin.x,
@@ -556,7 +733,7 @@ var goBackToLink = function(context) {
 		}
 
 		var cRect = NSMakeRect(contentRect.x, contentRect.y, contentRect.width, contentRect.height);
-		var currentView = sketchVersion < 480 ? doc.currentView() : doc.contentDrawView();
+		var currentView = sketchVersion < sketchVersion48 ? doc.currentView() : doc.contentDrawView();
 		currentView.centerRect(cRect);
 
 		rects.removeLastObject();
@@ -754,12 +931,12 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 		exportedArtboardIDs = {},
 		outerPadding = 40*exportScale,
 		spacing = 50*exportScale,
-		dropPointOffset = (sketchVersion < 510) ? 10 : 4,
+		dropPointOffset = (sketchVersion < sketchVersion51) ? 10 : 4,
 		screenNumber = 1,
 		artboardsToExport = [initialArtboard],
 		screenShadowColor = MSImmutableColor.colorWithSVGString("#00000").newMutableCounterpart(),
 		tempFolderURL = NSFileManager.defaultManager().URLsForDirectory_inDomains(NSCachesDirectory, NSUserDomainMask).lastObject().URLByAppendingPathComponent(kPluginDomain),
-		artboard, detachedArtboard, artboardID, linkLayers, linkLayersCount, destinationArtboard, destinationArtboardID, linkLayer, screenLayer, exportRequest, exportURL, screenShadow, connection, artboardNameLabel, primaryTextColor, secondaryTextColor, flowBackgroundColor, artboardIsConditional, isCondition, destinationArtboardIsConditional, linkRect, destinationRect;
+		artboard, detachedArtboard, artboardID, linkLayers, linkLayersCount, destinationArtboard, destinationArtboardID, linkLayer, screenLayer, exportRequest, exportURL, screenShadow, connection, artboardNameLabel, primaryTextColor, secondaryTextColor, flowBackgroundColor, artboardIsConditional, isCondition, destinationArtboardIsConditional, linkRect, destinationRect, sharedBorderStyleID;
 
 	
 	context.command.setValue_forKey_onLayer_forPluginIdentifier(initialArtboard.objectID(), "homeScreenID", sourcePage, kPluginDomain);
@@ -782,7 +959,7 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 		secondaryTextColor = MSImmutableColor.colorWithSVGString("#999999");
 	}
 
-	if(sketchVersion < 480) {
+	if(sketchVersion < sketchVersion48) {
 		primaryTextColor = primaryTextColor.newMutableCounterpart();
 		secondaryTextColor = secondaryTextColor.newMutableCounterpart();
 	}
@@ -809,7 +986,7 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 		exportURL = tempFolderURL.URLByAppendingPathComponent(artboard.objectID()).URLByAppendingPathExtension(exportFormat);
 		doc.saveArtboardOrSlice_toFile(exportRequest, exportURL.path());
 
-		if (sketchVersion < 510) {
+		if (sketchVersion < sketchVersion51) {
 			screenLayer = MSBitmapLayer.bitmapLayerWithImageFromPath(exportURL);
 		}
 		else {
@@ -856,9 +1033,11 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 			NSSortDescriptor.sortDescriptorWithKey_ascending("absoluteRect.rulerY", true)
 		]);
 		linkLayersCount = linkLayers.count();
+
 		for (var i=0; i < linkLayersCount; i++) {
 		  linkLayer = linkLayers.objectAtIndex(i);
 		  destinationArtboardID = context.command.valueForKey_onLayer_forPluginIdentifier("destinationArtboardID", linkLayer, kPluginDomain);
+		  sharedBorderStyleID = context.command.valueForKey_onLayer_forPluginIdentifier("sharedBorderStyleID", linkLayer, kPluginDomain);
 
 		  destinationArtboard = sourcePage.artboards().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("objectID == %@", destinationArtboardID)).firstObject();
 
@@ -877,6 +1056,7 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 		  		linkIsCondition : isCondition,
 		  		destinationIsConditional : destinationArtboardIsConditional,
 		  		destinationRect : destinationRect,
+		  		sharedBorderStyleID : sharedBorderStyleID,
 		  		dropPoint : {
 		  			x : destinationArtboard.absoluteRect().x() - (10*exportScale),
 		  			y : destinationArtboard.absoluteRect().y() - (10*exportScale)
@@ -889,7 +1069,7 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 		}
 
 		// Flow Connections
-		if (settings.includePrototypingConnections && sketchVersion >= 490) {
+		if (settings.includePrototypingConnections && sketchVersion >= sketchVersion49) {
 			var immutableArtboard = artboard.ancestry().layer();
 			if (immutableArtboard.containsFlowWithSymbolsFromDocument(doc.immutableDocumentData())) {
 				
@@ -902,10 +1082,13 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 					
 					linkLayer = flowConnection.sendingLayer();
 					linkRect = CGRectIntersection(linkLayer.absoluteRect().rect(), linkLayer.parentArtboard().absoluteRect().rect());
+					
+					sharedBorderStyleID = context.command.valueForKey_onLayer_forPluginIdentifier("sharedBorderStyleID", linkLayer, kPluginDomain);
 
 					connection = {
 				  		linkRect : linkRect,
 				  		isBackAction : flowConnection.isBackAction(),
+				  		sharedBorderStyleID : sharedBorderStyleID,
 				  		linkIsCrossPage : false
 				  	};
 
@@ -959,7 +1142,8 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 		connectionsOverlay.setIsVisible(connectionsOverlayVisible);
 	}
 
-	var connectionLayers = MSLayerArray.arrayWithLayers(drawConnections(connections, sourcePage, exportScale, flowBackgroundColor));
+	var sharedLayerStyles = sharedLayerStylesForContext(context);
+	var connectionLayers = MSLayerArray.arrayWithLayers(drawConnections(connections, sourcePage, exportScale, flowBackgroundColor, sharedLayerStyles));
 	var connectionsGroup = MSLayerGroup.groupFromLayers(connectionLayers);
 	connectionsGroup.setName(strings["generateFlow-connectionsGroupName"]);
 	artboardBitmapLayers.push(connectionsGroup);
@@ -1123,7 +1307,7 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 	doc.setCurrentPage(flowPage);
 	flowBoard.select_byExtendingSelection(true, false);
 	var visibleContentRect = NSInsetRect(flowBoard.absoluteRect().rect(), -60, -60);
-	var currentView = sketchVersion < 480 ? doc.currentView() : doc.contentDrawView();
+	var currentView = sketchVersion < sketchVersion48 ? doc.currentView() : doc.contentDrawView();
 	currentView.zoomToFitRect(visibleContentRect);
 
 	NSUserDefaults.standardUserDefaults().setObject_forKey(shouldOrganize, kKeepOrganizedKey);
@@ -1234,6 +1418,28 @@ var showConnections = function(context) {
 	redrawConnections(context);
 }
 
+var sharedLayerStylesForContext = function(context) {
+
+	var dict = {};
+
+	if(sketchVersion < sketchVersion51) return dict;
+
+	var doc = context.document || context.actionContext.document,
+		localStyles = doc.documentData().layerStyles().sharedStyles(),
+		foreignStyles = doc.documentData().valueForKeyPath("foreignLayerStyles.@unionOfObjects.localSharedStyle"),
+		availableStyles = localStyles.arrayByAddingObjectsFromArray(foreignStyles),
+		predicate = NSPredicate.predicateWithFormat("style.firstEnabledFill == nil"),
+		borderStyles = availableStyles.filteredArrayUsingPredicate(predicate),
+		loop = borderStyles.objectEnumerator(),
+		sharedStyle;
+	
+	while(sharedStyle = loop.nextObject()) {
+		dict[sharedStyle.objectID()] = sharedStyle;
+	}
+
+	return dict;
+}
+
 var redrawConnections = function(context) {
 	var doc = context.document || context.actionContext.document;
 	var selectedLayers = doc.selectedLayers().layers();
@@ -1249,8 +1455,8 @@ var redrawConnections = function(context) {
 		linkLayers = doc.currentPage().children().filteredArrayUsingPredicate(linkLayersPredicate),
 		loop = linkLayers.objectEnumerator(),
 		connections = [],
-		dropPointOffset = (sketchVersion < 510) ? 10 : 4,
-		linkLayer, destinationArtboardID, destinationArtboard, isCondition, linkRect;
+		dropPointOffset = (sketchVersion < sketchVersion51) ? 10 : 4,
+		linkLayer, destinationArtboardID, destinationArtboard, isCondition, linkRect, sharedBorderStyleID;
 
 	var parentArtboards = linkLayers.valueForKeyPath("@distinctUnionOfObjects.parentArtboard"),
 		loop2 = parentArtboards.objectEnumerator(),
@@ -1262,6 +1468,7 @@ var redrawConnections = function(context) {
 	while (linkLayer = loop.nextObject()) {
 
 		destinationArtboardID = context.command.valueForKey_onLayer_forPluginIdentifier("destinationArtboardID", linkLayer, kPluginDomain);
+		sharedBorderStyleID = context.command.valueForKey_onLayer_forPluginIdentifier("sharedBorderStyleID", linkLayer, kPluginDomain);
 
 		destinationArtboard = doc.currentPage().artboards().filteredArrayUsingPredicate(NSPredicate.predicateWithFormat("objectID == %@", destinationArtboardID)).firstObject();
 
@@ -1278,6 +1485,7 @@ var redrawConnections = function(context) {
 		  		linkID : linkLayer.objectID(),
 		  		linkIsCondition : isCondition,
 		  		destinationRect : destinationArtboard.absoluteRect().rect(),
+		  		sharedBorderStyleID : sharedBorderStyleID,
 		  		dropPoint : {
 		  			x : destinationArtboard.absoluteRect().x() - dropPointOffset,
 		  			y : destinationArtboard.absoluteRect().y()
@@ -1287,7 +1495,8 @@ var redrawConnections = function(context) {
 		}
 	}
 
-	var connectionLayers = MSLayerArray.arrayWithLayers(drawConnections(connections, doc.currentPage(), 1));
+	var sharedLayerStyles = sharedLayerStylesForContext(context);
+	var connectionLayers = MSLayerArray.arrayWithLayers(drawConnections(connections, doc.currentPage(), 1, nil, sharedLayerStyles));
 	connectionsGroup = MSLayerGroup.groupFromLayers(connectionLayers);
 	connectionsGroup.setName("-Connections");
 	connectionsGroup.setIsLocked(1);
@@ -1302,7 +1511,7 @@ var redrawConnections = function(context) {
 	return connectionsGroup;
 }
 
-var drawConnections = function(connections, parent, exportScale, labelColor) {
+var drawConnections = function(connections, parent, exportScale, labelColor, sharedBorderStyles) {
 	var connectionsCount = connections.length,
 		flowIndicatorColor = NSUserDefaults.standardUserDefaults().objectForKey(kFlowIndicatorColorKey) || "#F5A623",
 		flowIndicatorAlpha = NSUserDefaults.standardUserDefaults().objectForKey(kFlowIndicatorAlphaKey) || 1,
@@ -1316,16 +1525,19 @@ var drawConnections = function(connections, parent, exportScale, labelColor) {
 		hitAreaBorderColor = MSImmutableColor.colorWithSVGString(flowIndicatorColor).newMutableCounterpart(),
 		arrowRotation = 0,
 		arrowOffsetX = 0,
-		shouldUseMarkers = sketchVersion >= 510,
+		shouldUseMarkers = sketchVersion >= sketchVersion51,
 		destinationRectInset = shouldUseMarkers ? -4 : -12,
 		dropPointYOffset = shouldUseMarkers ? 20 : 30,
-		path, hitAreaLayer, linkRect, destinationRect, dropPoint, hitAreaBorder, startPoint, controlPoint1, controlPoint2, controlPoint1Offset, controlPoint2OffsetX, controlPoint2OffsetY, linePath, lineLayer, destinationArtboardIsConditional, originPoint, degrees, connectionPosition, controlPointOffset, minControlPointOffset;
+		path, hitAreaLayer, linkRect, destinationRect, dropPoint, hitAreaBorder, startPoint, controlPoint1, controlPoint2, controlPoint1Offset, controlPoint2OffsetX, controlPoint2OffsetY, linePath, lineLayer, destinationArtboardIsConditional, originPoint, degrees, connectionPosition, controlPointOffset, minControlPointOffset, sharedBorderStyleID, sharedBorderStyle, linkLayerHasSharedStyleReference;
 	hitAreaColor.setAlpha(0);
 	hitAreaBorderColor.setAlpha(flowIndicatorAlpha);
 
 	for (var i=0; i < connectionsCount; i++) {
 		connection = connections[i];
 		linkRect = connection.linkRect;
+
+		sharedBorderStyleID = connection.sharedBorderStyleID;
+		linkLayerHasSharedStyleReference = false;
 
 		if (showLinkRects == 1 && connection.linkIsCondition != 1) {
 
@@ -1337,7 +1549,7 @@ var drawConnections = function(connections, parent, exportScale, labelColor) {
 			}
 
 			path = NSBezierPath.bezierPathWithRect(linkRect);
-			hitAreaLayer = sketchVersion < 500 ? MSShapeGroup.shapeWithBezierPath(path) : MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
+			hitAreaLayer = sketchVersion < sketchVersion50 ? MSShapeGroup.shapeWithBezierPath(path) : MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
 			hitAreaLayer.style().addStylePartOfType(0).setColor(hitAreaColor);
 			hitAreaBorder = hitAreaLayer.style().addStylePartOfType(1);
 			hitAreaBorder.setColor(hitAreaBorderColor);
@@ -1464,7 +1676,7 @@ var drawConnections = function(connections, parent, exportScale, labelColor) {
 		if(!shouldUseMarkers) {
 			linkRect = NSInsetRect(NSMakeRect(startPoint.x, startPoint.y, 0, 0), -5, -5);
 			path = NSBezierPath.bezierPathWithOvalInRect(linkRect);
-			hitAreaLayer = sketchVersion < 500 ? MSShapeGroup.shapeWithBezierPath(path) : MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
+			hitAreaLayer = sketchVersion < sketchVersion50 ? MSShapeGroup.shapeWithBezierPath(path) : MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
 			hitAreaLayer.style().addStylePartOfType(0).setColor(hitAreaBorderColor);
 			parent.addLayers([hitAreaLayer]);
 			connectionLayers.push(hitAreaLayer);
@@ -1484,15 +1696,24 @@ var drawConnections = function(connections, parent, exportScale, labelColor) {
 		}
 		
 
-		lineLayer = sketchVersion < 500 ? MSShapeGroup.shapeWithBezierPath(linePath) : MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(linePath));
+		lineLayer = sketchVersion < sketchVersion50 ? MSShapeGroup.shapeWithBezierPath(linePath) : MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(linePath));
 		lineLayer.setName("Flow arrow");
 		hitAreaBorder = lineLayer.style().addStylePartOfType(1);
 		hitAreaBorder.setColor(hitAreaBorderColor);
 		hitAreaBorder.setThickness(strokeWidth*exportScale);
 		hitAreaBorder.setPosition(0);
+
+		if (shouldUseMarkers && sharedBorderStyleID) {
+			sharedBorderStyle = sharedBorderStyles[sharedBorderStyleID];
+			if (sharedBorderStyle) {
+				linkLayerHasSharedStyleReference = true;
+				lineLayer.setStyle(sharedBorderStyle.style());
+			}
+		}
+
 		parent.addLayers([lineLayer]);
 
-		if (shouldUseMarkers && !connection.isBackAction && !connection.linkIsCrossPage) {
+		if (shouldUseMarkers && !linkLayerHasSharedStyleReference && !connection.isBackAction && !connection.linkIsCrossPage) {
 			var startMarkerType = NSUserDefaults.standardUserDefaults().objectForKey(kStartMarkerTypeKey) || "4";
 			var endMarkerType = NSUserDefaults.standardUserDefaults().objectForKey(kEndMarkerTypeKey) || "2";
 			lineLayer.style().setStartMarkerType(parseInt(startMarkerType));
@@ -1594,7 +1815,7 @@ var drawConnections = function(connections, parent, exportScale, labelColor) {
 				path.lineToPoint(NSMakePoint(dropPoint.x-(arrowSize*0.6), dropPoint.y));
 				path.lineToPoint(NSMakePoint(dropPoint.x-arrowSize, dropPoint.y-(arrowSize*0.6)));
 				path.closePath();
-				var arrow = sketchVersion < 500 ? MSShapeGroup.shapeWithBezierPath(path) : MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
+				var arrow = sketchVersion < sketchVersion50 ? MSShapeGroup.shapeWithBezierPath(path) : MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
 				arrow.style().addStylePartOfType(0).setColor(hitAreaBorderColor);
 				arrow.setRotation(-arrowRotation);
 				arrow.absoluteRect().setX(arrow.absoluteRect().x() + arrowOffsetX);
@@ -1673,7 +1894,7 @@ var editSettings = function(context) {
 	flowIndicatorOptionsView.addSubview(connectionTypeDropdown);
 	settingsWindow.addAccessoryView(flowIndicatorOptionsView);
 
-	if (sketchVersion >= 510) {
+	if (sketchVersion >= sketchVersion51) {
 		var markerTypes = ["0", "4", "5", "6", "7", "1", "2", "3"];
 		var markerTypeNames = ["None", "Open Arrow", "Filled Arrow", "Line", "Open Circle", "Filled Circle", "Open Square", "Filled Square"];
 		var startMarkerType = NSUserDefaults.standardUserDefaults().objectForKey(kStartMarkerTypeKey) || "4";

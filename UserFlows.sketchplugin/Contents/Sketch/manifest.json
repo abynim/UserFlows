@@ -14,6 +14,28 @@
     },
     {
       "script" : "script.js",
+      "shortcut" : "cmd control shift m",
+      "handlers" : {
+        "run" : "defineLink"
+      },
+      "identifier" : "defineLinkWithOptions",
+      "description" : "Select a layer\/group, select an artboard, then create a link between the two by selecting a connection style.",
+      "icon" : "icons/addLink.png",
+      "name" : "Create Link With Connection Style"
+    },
+    {
+      "script" : "script.js",
+      "shortcut" : "cmd option shift m",
+      "handlers" : {
+        "run" : "editConnectionStyle"
+      },
+      "identifier" : "editLinkOptions",
+      "description" : "Edit the style preset of a link layer's connection.",
+      "icon" : "icons/addLink.png",
+      "name" : "Edit Connection Style"
+    },
+    {
+      "script" : "script.js",
       "shortcut" : "cmd shift u",
       "handlers" : {
         "run" : "removeLink"
@@ -191,6 +213,9 @@
   "menu" : {
     "items" : [
       "defineLink",
+      "defineLinkWithOptions",
+      "editLinkOptions",
+      "-",
       "relinkArtboardsAfterCopy",
       "-",
       "removeLink",

@@ -40,6 +40,8 @@
 	<string>Selecciona una capa o grupo para definirlo como enlace, selecciona el Artboard destino, y ejecuta este comando de nuevo.</string>
 	<key>defineLink-linkDefined</key>
 	<string>Enlace definido:</string>
+	<key>editLinkOptions-invalidSelectionMessage</key>
+	<string>Select a layer already defined as a link to edit its connection style.</string>
 	<key>removeLink-invalidSelectionMessage</key>
 	<string>Selecciona una capa definida como Enlace para eliminar sus atributos.</string>
 	<key>removeLink-linkRemoved</key>

@@ -40,6 +40,8 @@
 	<string>یک لایه یا گروه انتخاب کنید تا به عنوان لینک تعریف شود، صفحه طرح مقصد را انتخاب کنید، سپس این دستور را دوباره اجرا کنید.</string>
 	<key>defineLink-linkDefined</key>
 	<string>لینک تعریف شده:</string>
+	<key>editLinkOptions-invalidSelectionMessage</key>
+	<string>Select a layer already defined as a link to edit its connection style.</string>
 	<key>removeLink-invalidSelectionMessage</key>
 	<string>لایه‌ای انتخاب کنید که به عنوان لینک تعریف شده، تا ویژگی‌های لینک را حذف کنید.</string>
 	<key>removeLink-linkRemoved</key>
