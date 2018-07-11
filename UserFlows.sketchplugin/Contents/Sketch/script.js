@@ -435,7 +435,6 @@ var confirmRelinkArtboards = function(context) {
 		var infoText = strings["relinkArtboards-relinkComplete"].stringByReplacingOccurrencesOfString_withString("%count%", relinkCount+"");
 		doc.showMessage(infoText);
 	}
-
 }
 
 var editArtboardDescription = function(context) {
