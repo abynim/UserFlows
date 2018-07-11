@@ -438,12 +438,15 @@ var editConditionsForArtboard = function(currentArtboard, context, forceNewCondi
 			conditionBorder.setPosition(2);
 			conditionBorder.setThickness(2);
 
-			listY += conditionBoxHeight + conditionSpacing;
-
 			conditionBoard.addLayers([conditionBox, conditionLabel]);
 			layersArray = MSLayerArray.arrayWithLayers([conditionBox, conditionLabel]);
 			conditionGroup = MSLayerGroup.groupFromLayers(layersArray);
 			conditionGroup.setName(strings["addCondition-conditionGroupName"] + " " + count);
+
+			conditionLabel.frame().setX(8);
+			conditionLabel.frame().setY(8);
+
+			listY += conditionBoxHeight + conditionSpacing;
 
 			context.command.setValue_forKey_onLayer_forPluginIdentifier(1, "isConditionGroup", conditionGroup, kPluginDomain);
 
@@ -751,6 +754,7 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 		exportedArtboardIDs = {},
 		outerPadding = 40*exportScale,
 		spacing = 50*exportScale,
+		dropPointOffset = (sketchVersion < 510) ? 10 : 4,
 		screenNumber = 1,
 		artboardsToExport = [initialArtboard],
 		screenShadowColor = MSImmutableColor.colorWithSVGString("#00000").newMutableCounterpart(),
@@ -805,7 +809,16 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 		exportURL = tempFolderURL.URLByAppendingPathComponent(artboard.objectID()).URLByAppendingPathExtension(exportFormat);
 		doc.saveArtboardOrSlice_toFile(exportRequest, exportURL.path());
 
-		screenLayer = MSBitmapLayer.bitmapLayerWithImageFromPath(exportURL);
+		if (sketchVersion < 510) {
+			screenLayer = MSBitmapLayer.bitmapLayerWithImageFromPath(exportURL);
+		}
+		else {
+			var screenLayerRect = CGRectMake(0,0,artboard.absoluteRect().width(),artboard.absoluteRect().height());
+			var screenImage = NSImage.alloc().initWithContentsOfURL(exportURL);
+			var screenImageData = MSImageData.alloc().initWithImage(screenImage);
+			screenLayer = MSBitmapLayer.alloc().initWithFrame_image(screenLayerRect, screenImageData);
+		}
+
 		sourcePage.addLayers([screenLayer]);
 		screenLayer.absoluteRect().setX(artboard.absoluteRect().x());
 		screenLayer.absoluteRect().setY(artboard.absoluteRect().y());
@@ -915,7 +928,7 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 							connection.artboardParentName = destinationArtboard.parentPage().name();
 
 						} else {
-							dropPointX = destinationArtboard.absoluteRect().x() - (10*exportScale);
+							dropPointX = destinationArtboard.absoluteRect().x() - (dropPointOffset*exportScale);
 							dropPointY = destinationArtboard.absoluteRect().y() + (destinationArtboard.absoluteRect().height()/2);
 
 							destinationRect = destinationArtboard.absoluteRect().rect();
@@ -1236,6 +1249,7 @@ var redrawConnections = function(context) {
 		linkLayers = doc.currentPage().children().filteredArrayUsingPredicate(linkLayersPredicate),
 		loop = linkLayers.objectEnumerator(),
 		connections = [],
+		dropPointOffset = (sketchVersion < 510) ? 10 : 4,
 		linkLayer, destinationArtboardID, destinationArtboard, isCondition, linkRect;
 
 	var parentArtboards = linkLayers.valueForKeyPath("@distinctUnionOfObjects.parentArtboard"),
@@ -1265,7 +1279,7 @@ var redrawConnections = function(context) {
 		  		linkIsCondition : isCondition,
 		  		destinationRect : destinationArtboard.absoluteRect().rect(),
 		  		dropPoint : {
-		  			x : destinationArtboard.absoluteRect().x() - 10,
+		  			x : destinationArtboard.absoluteRect().x() - dropPointOffset,
 		  			y : destinationArtboard.absoluteRect().y()
 		  		}
 		  	}
@@ -1302,7 +1316,10 @@ var drawConnections = function(connections, parent, exportScale, labelColor) {
 		hitAreaBorderColor = MSImmutableColor.colorWithSVGString(flowIndicatorColor).newMutableCounterpart(),
 		arrowRotation = 0,
 		arrowOffsetX = 0,
-		path, hitAreaLayer, linkRect, destinationRect, dropPoint, hitAreaBorder, startPoint, controlPoint1, controlPoint2, controlPoint1Offset, controlPoint2OffsetX, controlPoint2OffsetY, linePath, lineLayer, destinationArtboardIsConditional, originPoint, degrees, connectionPosition, controlPointOffset, minControlPointOffset, shouldUseMarkers;
+		shouldUseMarkers = sketchVersion >= 510,
+		destinationRectInset = shouldUseMarkers ? -4 : -12,
+		dropPointYOffset = shouldUseMarkers ? 20 : 30,
+		path, hitAreaLayer, linkRect, destinationRect, dropPoint, hitAreaBorder, startPoint, controlPoint1, controlPoint2, controlPoint1Offset, controlPoint2OffsetX, controlPoint2OffsetY, linePath, lineLayer, destinationArtboardIsConditional, originPoint, degrees, connectionPosition, controlPointOffset, minControlPointOffset;
 	hitAreaColor.setAlpha(0);
 	hitAreaBorderColor.setAlpha(flowIndicatorAlpha);
 
@@ -1335,9 +1352,8 @@ var drawConnections = function(connections, parent, exportScale, labelColor) {
 
 		if (destinationRect && (magnetsType == "nsew" || connection.isBackAction || connection.linkIsCrossPage)) {
 
-			destinationRect = CGRectInset(destinationRect, -12, -12);
-
-
+			destinationRect = CGRectInset(destinationRect, destinationRectInset, destinationRectInset);
+			
 			if (CGRectGetMinX(destinationRect) >= CGRectGetMaxX(linkRect)) {
 				connectionPosition = "right";
 			} else if(CGRectGetMaxX(destinationRect) <= CGRectGetMinX(linkRect)) {
@@ -1417,7 +1433,7 @@ var drawConnections = function(connections, parent, exportScale, labelColor) {
 
 			dropPoint = destinationArtboardIsConditional ? NSMakePoint(connection.dropPoint.x+(5*exportScale), connection.dropPoint.y + (10*exportScale)) : NSMakePoint(connection.dropPoint.x, connection.dropPoint.y);
 			if (dropPoint.x < CGRectGetMinX(linkRect)) {
-				dropPoint = NSMakePoint(dropPoint.x + 18, dropPoint.y - (30/exportScale) );
+				dropPoint = NSMakePoint(dropPoint.x + 18, dropPoint.y - (dropPointYOffset/exportScale) );
 				arrowRotation = 90;
 				arrowOffsetX = 2;
 				if (dropPoint.y < CGRectGetMinY(linkRect)) {
@@ -1444,8 +1460,6 @@ var drawConnections = function(connections, parent, exportScale, labelColor) {
 
 			controlPoint2 = NSMakePoint(dropPoint.x - controlPoint2OffsetX, dropPoint.y + controlPoint2OffsetY);
 		}
-
-		shouldUseMarkers = sketchVersion >= 510;
 
 		if(!shouldUseMarkers) {
 			linkRect = NSInsetRect(NSMakeRect(startPoint.x, startPoint.y, 0, 0), -5, -5);
@@ -1571,7 +1585,7 @@ var drawConnections = function(connections, parent, exportScale, labelColor) {
 
 		}
 		else {
-			// Draw arrow if before Sketch 50
+			// Draw arrow if before Sketch 51
 			if (!shouldUseMarkers) {
 				var arrowSize = Math.max(12, strokeWidth*3);
 				path = NSBezierPath.bezierPath();
