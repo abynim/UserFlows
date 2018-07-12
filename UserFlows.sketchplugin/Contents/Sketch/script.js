@@ -1527,7 +1527,7 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 		shouldUseMarkers = sketchVersion >= sketchVersion51,
 		destinationRectInset = shouldUseMarkers ? -4 : -12,
 		dropPointYOffset = shouldUseMarkers ? 20 : 30,
-		path, hitAreaLayer, linkRect, destinationRect, dropPoint, hitAreaBorder, startPoint, controlPoint1, controlPoint2, controlPoint1Offset, controlPoint2OffsetX, controlPoint2OffsetY, linePath, lineLayer, destinationArtboardIsConditional, originPoint, degrees, connectionPosition, controlPointOffset, minControlPointOffset, sharedBorderStyleID, sharedBorderStyle, linkLayerHasSharedStyleReference, straightConnection;
+		path, hitAreaLayer, linkRect, destinationRect, dropPoint, hitAreaBorder, startPoint, controlPoint1, controlPoint2, controlPoint1Offset, controlPoint2OffsetX, controlPoint2OffsetY, linePath, lineLayer, destinationArtboardIsConditional, originPoint, degrees, connectionPosition, controlPointOffset, minControlPointOffset, sharedBorderStyleID, sharedBorderStyle, linkLayerHasSharedStyleReference;
 	hitAreaColor.setAlpha(0);
 	hitAreaBorderColor.setAlpha(flowIndicatorAlpha);
 
@@ -1536,12 +1536,7 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 		linkRect = connection.linkRect;
 
 		sharedBorderStyleID = connection.sharedBorderStyleID;
-		if (shouldUseMarkers && sharedBorderStyleID) {
-			sharedBorderStyle = sharedBorderStyles[sharedBorderStyleID];
-		} else {
-			sharedBorderStyle = nil;
-		}
-		linkLayerHasSharedStyleReference = sharedBorderStyle != nil;
+		linkLayerHasSharedStyleReference = false;
 
 		if (showLinkRects == 1 && connection.linkIsCondition != 1) {
 
@@ -1554,18 +1549,11 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 
 			path = NSBezierPath.bezierPathWithRect(linkRect);
 			hitAreaLayer = sketchVersion < sketchVersion50 ? MSShapeGroup.shapeWithBezierPath(path) : MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
+			hitAreaLayer.style().addStylePartOfType(0).setColor(hitAreaColor);
 			hitAreaBorder = hitAreaLayer.style().addStylePartOfType(1);
 			hitAreaBorder.setColor(hitAreaBorderColor);
 			hitAreaBorder.setPosition(2);
 			hitAreaBorder.setThickness(2*exportScale);
-
-			if (linkLayerHasSharedStyleReference) {
-				hitAreaLayer.setStyle(sharedBorderStyle.newInstance());
-			}
-
-			hitAreaLayer.style().fills().removeAllObjects();
-			hitAreaLayer.style().addStylePartOfType(0).setColor(hitAreaColor);
-
 			parent.addLayers([hitAreaLayer]);
 			connectionLayers.push(hitAreaLayer);
 		}
@@ -1696,16 +1684,14 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 		
 		linePath = NSBezierPath.bezierPath();
 		linePath.moveToPoint(startPoint);
-		straightConnection = connectionType == "straight" || Math.abs(startPoint.x-dropPoint.x) < 20 || Math.abs(startPoint.y-dropPoint.y) < 20;
-		if (straightConnection) {
+		if (connectionType == "curved") {
+			linePath.curveToPoint_controlPoint1_controlPoint2(dropPoint, controlPoint1, controlPoint2);
+		} else if (connectionType == "straight") {
 			linePath.lineToPoint(dropPoint);
 			originPoint = CGPointMake(dropPoint.x - startPoint.x, dropPoint.y - startPoint.y);
     		degrees = Math.atan2(originPoint.y, originPoint.x) * (180.0 / Math.PI);
     		arrowRotation = (degrees > 0.0 ? degrees : (360.0 + degrees));
     		if (arrowRotation < 110 || arrowRotation > 255) { arrowOffsetX = 2 };
-		}
-		else if (connectionType == "curved") {
-			linePath.curveToPoint_controlPoint1_controlPoint2(dropPoint, controlPoint1, controlPoint2);
 		}
 		
 
@@ -1716,10 +1702,14 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 		hitAreaBorder.setThickness(strokeWidth*exportScale);
 		hitAreaBorder.setPosition(0);
 
-		if (linkLayerHasSharedStyleReference) {
-			lineLayer.setStyle(sharedBorderStyle.newInstance());
+		if (shouldUseMarkers && sharedBorderStyleID) {
+			sharedBorderStyle = sharedBorderStyles[sharedBorderStyleID];
+			if (sharedBorderStyle) {
+				linkLayerHasSharedStyleReference = true;
+				lineLayer.setStyle(sharedBorderStyle.style());
+			}
 		}
-		
+
 		parent.addLayers([lineLayer]);
 
 		if (shouldUseMarkers && !linkLayerHasSharedStyleReference && !connection.isBackAction && !connection.linkIsCrossPage) {
