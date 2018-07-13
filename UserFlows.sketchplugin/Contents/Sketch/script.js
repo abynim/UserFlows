@@ -149,6 +149,7 @@ var defineLink = function(context) {
 
 
 var stylesDropdownForContext_selectedStyleID_sharedObjectID = function(context, selectedStyleID, sharedObjectID) {
+	var selectedID = selectedStyleID ? ("" + selectedStyleID) : nil;
 	var stylesDropdown = NSPopUpButton.alloc().initWithFrame(NSMakeRect(0,0,300,25));
 	stylesDropdown.menu().setAutoenablesItems(0);
 	var predicate = NSPredicate.predicateWithFormat("style.hasEnabledFill == NO");
@@ -174,7 +175,7 @@ var stylesDropdownForContext_selectedStyleID_sharedObjectID = function(context, 
 		shareableObjectRef = MSShareableObjectReference.referenceForShareableObject(sharedStyle);
 		menuItem.setRepresentedObject(shareableObjectRef);
 		menuItem.setIndentationLevel(1);
-		if (selectedStyleID && sharedStyle.objectID() == selectedStyleID) {
+		if (selectedID && (""+sharedStyle.objectID()) == selectedID) {
 			selectedItem = menuItem;
 		}
 		stylesDropdown.menu().addItem(menuItem);
@@ -201,7 +202,7 @@ var stylesDropdownForContext_selectedStyleID_sharedObjectID = function(context, 
 				shareableObjectRef = MSShareableObjectReference.referenceForShareableObject_inLibrary(sharedStyle, lib);
 				menuItem.setRepresentedObject(shareableObjectRef);
 				menuItem.setIndentationLevel(1);
-				if (sharedObjectID && sharedStyle.objectID() == sharedObjectID) {
+				if (!selectedItem && sharedObjectID && sharedStyle.objectID() == sharedObjectID) {
 					selectedItem = menuItem;
 				}
 				stylesDropdown.menu().addItem(menuItem);
