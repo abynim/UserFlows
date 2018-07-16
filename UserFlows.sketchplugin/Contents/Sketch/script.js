@@ -24,6 +24,7 @@ var kMagnetsTypeKey = "com.abynim.userflows.artboardMagnetsType";
 var kRelinkWarningKey = "com.abynim.userflows.showsRelinkWarning";
 var kStartMarkerTypeKey = "com.abynim.userflows.startMarkerType";
 var kEndMarkerTypeKey = "com.abynim.userflows.endMarkerType";
+var kFirstLayerIDKey = "com.abynim.userflows.firstLayerID";
 
 var linkLayerPredicate;
 var iconImage;
@@ -148,6 +149,7 @@ var defineLink = function(context) {
 
 
 var stylesDropdownForContext_selectedStyleID_sharedObjectID = function(context, selectedStyleID, sharedObjectID) {
+	var selectedID = selectedStyleID ? ("" + selectedStyleID) : nil;
 	var stylesDropdown = NSPopUpButton.alloc().initWithFrame(NSMakeRect(0,0,300,25));
 	stylesDropdown.menu().setAutoenablesItems(0);
 	var predicate = NSPredicate.predicateWithFormat("style.hasEnabledFill == NO");
@@ -173,7 +175,7 @@ var stylesDropdownForContext_selectedStyleID_sharedObjectID = function(context, 
 		shareableObjectRef = MSShareableObjectReference.referenceForShareableObject(sharedStyle);
 		menuItem.setRepresentedObject(shareableObjectRef);
 		menuItem.setIndentationLevel(1);
-		if (selectedStyleID && sharedStyle.objectID() == selectedStyleID) {
+		if (selectedID && (""+sharedStyle.objectID()) == selectedID) {
 			selectedItem = menuItem;
 		}
 		stylesDropdown.menu().addItem(menuItem);
@@ -200,7 +202,7 @@ var stylesDropdownForContext_selectedStyleID_sharedObjectID = function(context, 
 				shareableObjectRef = MSShareableObjectReference.referenceForShareableObject_inLibrary(sharedStyle, lib);
 				menuItem.setRepresentedObject(shareableObjectRef);
 				menuItem.setIndentationLevel(1);
-				if (sharedObjectID && sharedStyle.objectID() == sharedObjectID) {
+				if (!selectedItem && sharedObjectID && sharedStyle.objectID() == sharedObjectID) {
 					selectedItem = menuItem;
 				}
 				stylesDropdown.menu().addItem(menuItem);
@@ -989,10 +991,9 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 			screenLayer = MSBitmapLayer.bitmapLayerWithImageFromPath(exportURL);
 		}
 		else {
-			var screenLayerRect = CGRectMake(0,0,artboard.absoluteRect().width(),artboard.absoluteRect().height());
 			var screenImage = NSImage.alloc().initWithContentsOfURL(exportURL);
 			var screenImageData = MSImageData.alloc().initWithImage(screenImage);
-			screenLayer = MSBitmapLayer.alloc().initWithFrame_image(screenLayerRect, screenImageData);
+			screenLayer = MSBitmapLayer.alloc().initWithFrame_image(NSZeroRect, screenImageData);
 		}
 
 		sourcePage.addLayers([screenLayer]);
@@ -1527,7 +1528,7 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 		shouldUseMarkers = sketchVersion >= sketchVersion51,
 		destinationRectInset = shouldUseMarkers ? -4 : -12,
 		dropPointYOffset = shouldUseMarkers ? 20 : 30,
-		path, hitAreaLayer, linkRect, destinationRect, dropPoint, hitAreaBorder, startPoint, controlPoint1, controlPoint2, controlPoint1Offset, controlPoint2OffsetX, controlPoint2OffsetY, linePath, lineLayer, destinationArtboardIsConditional, originPoint, degrees, connectionPosition, controlPointOffset, minControlPointOffset, sharedBorderStyleID, sharedBorderStyle, linkLayerHasSharedStyleReference;
+		path, hitAreaLayer, linkRect, destinationRect, dropPoint, hitAreaBorder, startPoint, controlPoint1, controlPoint2, controlPoint1Offset, controlPoint2OffsetX, controlPoint2OffsetY, linePath, lineLayer, destinationArtboardIsConditional, originPoint, degrees, connectionPosition, controlPointOffset, minControlPointOffset, sharedBorderStyleID, sharedBorderStyle, linkLayerHasSharedStyleReference, straightConnection;
 	hitAreaColor.setAlpha(0);
 	hitAreaBorderColor.setAlpha(flowIndicatorAlpha);
 
@@ -1536,7 +1537,12 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 		linkRect = connection.linkRect;
 
 		sharedBorderStyleID = connection.sharedBorderStyleID;
-		linkLayerHasSharedStyleReference = false;
+		if (shouldUseMarkers && sharedBorderStyleID) {
+			sharedBorderStyle = sharedBorderStyles[sharedBorderStyleID];
+		} else {
+			sharedBorderStyle = nil;
+		}
+		linkLayerHasSharedStyleReference = sharedBorderStyle != nil;
 
 		if (showLinkRects == 1 && connection.linkIsCondition != 1) {
 
@@ -1554,6 +1560,14 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 			hitAreaBorder.setColor(hitAreaBorderColor);
 			hitAreaBorder.setPosition(2);
 			hitAreaBorder.setThickness(2*exportScale);
+
+			if (linkLayerHasSharedStyleReference) {
+				hitAreaLayer.setStyle(sharedBorderStyle.newInstance());
+			}
+
+			hitAreaLayer.style().fills().removeAllObjects();
+			hitAreaLayer.style().addStylePartOfType(0).setColor(hitAreaColor);
+
 			parent.addLayers([hitAreaLayer]);
 			connectionLayers.push(hitAreaLayer);
 		}
@@ -1684,14 +1698,16 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 		
 		linePath = NSBezierPath.bezierPath();
 		linePath.moveToPoint(startPoint);
-		if (connectionType == "curved") {
-			linePath.curveToPoint_controlPoint1_controlPoint2(dropPoint, controlPoint1, controlPoint2);
-		} else if (connectionType == "straight") {
+		straightConnection = connectionType == "straight" || Math.abs(startPoint.x-dropPoint.x) < 20 || Math.abs(startPoint.y-dropPoint.y) < 20;
+		if (straightConnection) {
 			linePath.lineToPoint(dropPoint);
 			originPoint = CGPointMake(dropPoint.x - startPoint.x, dropPoint.y - startPoint.y);
     		degrees = Math.atan2(originPoint.y, originPoint.x) * (180.0 / Math.PI);
     		arrowRotation = (degrees > 0.0 ? degrees : (360.0 + degrees));
     		if (arrowRotation < 110 || arrowRotation > 255) { arrowOffsetX = 2 };
+		} 
+		else if (connectionType == "curved") {
+			linePath.curveToPoint_controlPoint1_controlPoint2(dropPoint, controlPoint1, controlPoint2);
 		}
 		
 
@@ -1702,14 +1718,10 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 		hitAreaBorder.setThickness(strokeWidth*exportScale);
 		hitAreaBorder.setPosition(0);
 
-		if (shouldUseMarkers && sharedBorderStyleID) {
-			sharedBorderStyle = sharedBorderStyles[sharedBorderStyleID];
-			if (sharedBorderStyle) {
-				linkLayerHasSharedStyleReference = true;
-				lineLayer.setStyle(sharedBorderStyle.style());
-			}
+		if (linkLayerHasSharedStyleReference) {
+			lineLayer.setStyle(sharedBorderStyle.newInstance());
 		}
-
+		
 		parent.addLayers([lineLayer]);
 
 		if (shouldUseMarkers && !linkLayerHasSharedStyleReference && !connection.isBackAction && !connection.linkIsCrossPage) {
@@ -2261,6 +2273,20 @@ var onLayersMoved = function(context) {
 
 	if (connectionsGroup) {
 		redrawConnections(context);
+	}
+}
+
+var onSelectionChanged = function(context) {
+	var oldSel = context.actionContext.oldSelection;
+	var newSel = context.actionContext.newSelection;
+
+	var ud = NSUserDefaults.standardUserDefaults();
+
+	if (oldSel.count() == 0 && newSel.count() == 1) {
+		ud.setObject_forKey(newSel.firstObject().objectID(), kFirstLayerIDKey);
+	} 
+	else if(newSel.count() == 0) {
+		ud.removeObjectForKey(kFirstLayerIDKey);
 	}
 }
 
