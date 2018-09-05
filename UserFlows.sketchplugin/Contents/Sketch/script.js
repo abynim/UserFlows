@@ -54,6 +54,7 @@ const sketchVersion48 = 480;
 const sketchVersion49 = 490;
 const sketchVersion50 = 500;
 const sketchVersion51 = 510;
+const sketchVersion52 = 520;
 
 var defineLink = function(context) {
 
@@ -618,7 +619,7 @@ var editConditionsForArtboard = function(currentArtboard, context, forceNewCondi
 
 			conditionBoard.addLayers([conditionBox, conditionLabel]);
 			layersArray = MSLayerArray.arrayWithLayers([conditionBox, conditionLabel]);
-			conditionGroup = MSLayerGroup.groupFromLayers(layersArray);
+			conditionGroup = sketchVersion < sketchVersion52 ? MSLayerGroup.groupFromLayers(layersArray) : MSLayerGroup.groupWithLayers(layersArray);
 			conditionGroup.setName(strings["addCondition-conditionGroupName"] + " " + count);
 
 			conditionLabel.frame().setX(8);
@@ -1144,7 +1145,7 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 
 	var sharedLayerStyles = sharedLayerStylesForContext(context);
 	var connectionLayers = MSLayerArray.arrayWithLayers(drawConnections(connections, sourcePage, exportScale, flowBackgroundColor, sharedLayerStyles));
-	var connectionsGroup = MSLayerGroup.groupFromLayers(connectionLayers);
+	var connectionsGroup = sketchVersion < sketchVersion52 ? MSLayerGroup.groupFromLayers(connectionLayers) : MSLayerGroup.groupWithLayers(connectionLayers);
 	connectionsGroup.setName(strings["generateFlow-connectionsGroupName"]);
 	artboardBitmapLayers.push(connectionsGroup);
 	connectionsGroup.setIsLocked(1);
@@ -1154,7 +1155,7 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 		groupBounds = CGRectUnion(groupBounds, artboardBitmapLayers[i].absoluteRect().rect());
 	}
 	var layers = MSLayerArray.arrayWithLayers(artboardBitmapLayers);
-	var newGroup = MSLayerGroup.groupFromLayers(layers);
+	var newGroup = sketchVersion < sketchVersion52 ? MSLayerGroup.groupFromLayers(layers) : MSLayerGroup.groupWithLayers(layers);
 	newGroup.setName(strings["generateFlow-flowGroupName"]);
 	newGroup.resizeToFitChildrenWithOption(1);
 
@@ -1497,7 +1498,7 @@ var redrawConnections = function(context) {
 
 	var sharedLayerStyles = sharedLayerStylesForContext(context);
 	var connectionLayers = MSLayerArray.arrayWithLayers(drawConnections(connections, doc.currentPage(), 1, nil, sharedLayerStyles));
-	connectionsGroup = MSLayerGroup.groupFromLayers(connectionLayers);
+	connectionsGroup = sketchVersion < sketchVersion52 ? MSLayerGroup.groupFromLayers(connectionLayers) : MSLayerGroup.groupWithLayers(connectionLayers);
 	connectionsGroup.setName("-Connections");
 	connectionsGroup.setIsLocked(1);
 	connectionsGroup.deselectLayerAndParent();
@@ -1554,7 +1555,14 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 			}
 
 			path = NSBezierPath.bezierPathWithRect(linkRect);
-			hitAreaLayer = sketchVersion < sketchVersion50 ? MSShapeGroup.shapeWithBezierPath(path) : MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
+			if (sketchVersion < sketchVersion50) {
+				hitAreaLayer = MSShapeGroup.shapeWithBezierPath(path);
+			} else if(sketchVersion < sketchVersion52) {
+				hitAreaLayer = MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
+			} else {
+				hitAreaLayer = MSShapeGroup.layerWithPath(MSPath.pathWithBezierPath(path));
+			}
+			
 			hitAreaLayer.style().addStylePartOfType(0).setColor(hitAreaColor);
 			hitAreaBorder = hitAreaLayer.style().addStylePartOfType(1);
 			hitAreaBorder.setColor(hitAreaBorderColor);
@@ -1689,7 +1697,15 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 		if(!shouldUseMarkers) {
 			linkRect = NSInsetRect(NSMakeRect(startPoint.x, startPoint.y, 0, 0), -5, -5);
 			path = NSBezierPath.bezierPathWithOvalInRect(linkRect);
-			hitAreaLayer = sketchVersion < sketchVersion50 ? MSShapeGroup.shapeWithBezierPath(path) : MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
+			
+			if (sketchVersion < sketchVersion50) {
+				hitAreaLayer = MSShapeGroup.shapeWithBezierPath(path);
+			} else if(sketchVersion < sketchVersion52) {
+				hitAreaLayer = MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
+			} else {
+				hitAreaLayer = MSShapeGroup.layerWithPath(MSPath.pathWithBezierPath(path));
+			}
+
 			hitAreaLayer.style().addStylePartOfType(0).setColor(hitAreaBorderColor);
 			parent.addLayers([hitAreaLayer]);
 			connectionLayers.push(hitAreaLayer);
@@ -1710,8 +1726,14 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 			linePath.curveToPoint_controlPoint1_controlPoint2(dropPoint, controlPoint1, controlPoint2);
 		}
 		
+		if (sketchVersion < sketchVersion50) {
+			lineLayer = MSShapeGroup.shapeWithBezierPath(linePath);
+		} else if(sketchVersion < sketchVersion52) {
+			lineLayer = MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(linePath));
+		} else {
+			lineLayer = MSShapeGroup.layerWithPath(MSPath.pathWithBezierPath(linePath));
+		}
 
-		lineLayer = sketchVersion < sketchVersion50 ? MSShapeGroup.shapeWithBezierPath(linePath) : MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(linePath));
 		lineLayer.setName("Flow arrow");
 		hitAreaBorder = lineLayer.style().addStylePartOfType(1);
 		hitAreaBorder.setColor(hitAreaBorderColor);
@@ -1826,7 +1848,14 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 				path.lineToPoint(NSMakePoint(dropPoint.x-(arrowSize*0.6), dropPoint.y));
 				path.lineToPoint(NSMakePoint(dropPoint.x-arrowSize, dropPoint.y-(arrowSize*0.6)));
 				path.closePath();
-				var arrow = sketchVersion < sketchVersion50 ? MSShapeGroup.shapeWithBezierPath(path) : MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
+				var arrow;
+				if (sketchVersion < sketchVersion50) {
+					arrow = MSShapeGroup.shapeWithBezierPath(path);
+				} else if(sketchVersion < sketchVersion52) {
+					arrow = MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
+				} else {
+					arrow = MSShapeGroup.layerWithPath(MSPath.pathWithBezierPath(path));
+				}
 				arrow.style().addStylePartOfType(0).setColor(hitAreaBorderColor);
 				arrow.setRotation(-arrowRotation);
 				arrow.absoluteRect().setX(arrow.absoluteRect().x() + arrowOffsetX);
