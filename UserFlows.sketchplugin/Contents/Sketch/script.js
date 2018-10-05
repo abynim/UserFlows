@@ -54,6 +54,7 @@ const sketchVersion48 = 480;
 const sketchVersion49 = 490;
 const sketchVersion50 = 500;
 const sketchVersion51 = 510;
+const sketchVersion52 = 520;
 
 var defineLink = function(context) {
 
@@ -109,13 +110,21 @@ var defineLink = function(context) {
 
 		if (settingsWindow.runModal() == "1000") {
 
+			var sharedStyleID = nil;
 			shareableObjectRef = stylesDropdown.selectedItem().representedObject();
-			var sharedStyleID = (shareableObjectRef === "default") ? nil : context.document.localObjectForObjectReference(shareableObjectRef).objectID();
+
+			if(shareableObjectRef) {
+				var localObject = doc.localObjectForObjectReference(shareableObjectRef);
+				if(!localObject && sketchVersion >= sketchVersion52) {
+					localObject = AppController.sharedInstance().librariesController().importShareableObjectReference_intoDocument(shareableObjectRef, doc.documentData());
+				}
+				sharedStyleID = localObject.objectID();
+			}
 
 			context.command.setValue_forKey_onDocument_forPluginIdentifier(sharedStyleID, "lastUsedBorderStyleID", doc.documentData(), kPluginDomain);
 			lastUsedBorderStyleID = sharedStyleID;
 
-			lastUsedForeignStyleID = shareableObjectRef.sourceLibrary() ? shareableObjectRef.sharedObjectID() : nil;
+			lastUsedForeignStyleID = shareableObjectRef && shareableObjectRef.sourceLibrary() ? shareableObjectRef.sharedObjectID() : nil;
 			context.command.setValue_forKey_onDocument_forPluginIdentifier(lastUsedForeignStyleID, "lastUsedForeignStyleID", doc.documentData(), kPluginDomain);
 
 			didModifySettings = true;
@@ -130,14 +139,9 @@ var defineLink = function(context) {
 		context.command.setValue_forKey_onLayer_forPluginIdentifier(artboardID, "artboardID", destArtboard, kPluginDomain);
 	}
 	context.command.setValue_forKey_onLayer_forPluginIdentifier(artboardID, "destinationArtboardID", linkLayer, kPluginDomain);
-
-	if (lastUsedBorderStyleID) {
-		context.command.setValue_forKey_onLayer_forPluginIdentifier(lastUsedBorderStyleID, "sharedBorderStyleID", linkLayer, kPluginDomain);
-	}
-	if(lastUsedForeignStyleID) {
-		context.command.setValue_forKey_onLayer_forPluginIdentifier(lastUsedForeignStyleID, "foreignBorderStyleID", linkLayer, kPluginDomain);
-	}
-
+	context.command.setValue_forKey_onLayer_forPluginIdentifier(lastUsedBorderStyleID, "sharedBorderStyleID", linkLayer, kPluginDomain);
+	context.command.setValue_forKey_onLayer_forPluginIdentifier(lastUsedForeignStyleID, "foreignBorderStyleID", linkLayer, kPluginDomain);
+	
 	var showingConnections = NSUserDefaults.standardUserDefaults().objectForKey(kShowConnectionsKey) || 1;
 
 	if (showingConnections == 1) {
@@ -157,7 +161,6 @@ var stylesDropdownForContext_selectedStyleID_sharedObjectID = function(context, 
 	var sharedStyle, menuItem, shareableObjectRef, selectedItem;
 
 	menuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent("Default", nil, "");
-	menuItem.setRepresentedObject(NSString.stringWithString("default"));
 	stylesDropdown.menu().addItem(menuItem);
 	stylesDropdown.menu().addItem(NSMenuItem.separatorItem());
 
@@ -252,25 +255,30 @@ var editConnectionStyle = function(context) {
 
 	if (settingsWindow.runModal() == "1000") {
 
-		var shareableObjectRef = stylesDropdown.selectedItem().representedObject();
-		var isDefault = (shareableObjectRef == "default");
+		var shareableObjectRef = stylesDropdown.selectedItem().representedObject(),
+			sharedStyleID = nil;
 		
 		if (shareableObjectRef) {
 			
-			var sharedStyleID = isDefault ? nil : context.document.localObjectForObjectReference(shareableObjectRef).objectID();
-			
-			var linkLayer;
-			var loop = linkLayers.objectEnumerator();
+			var doc = context.document,
+				localObject = doc.localObjectForObjectReference(shareableObjectRef);
 
-			while(linkLayer = loop.nextObject()) {
-				context.command.setValue_forKey_onLayer_forPluginIdentifier(sharedStyleID, "sharedBorderStyleID", linkLayer, kPluginDomain);
-				if(!isDefault) { 
-					context.command.setValue_forKey_onLayer_forPluginIdentifier(shareableObjectRef.sharedObjectID(), "foreignBorderStyleID", linkLayer, kPluginDomain);
-				}
+			if(!localObject && sketchVersion >= sketchVersion52) {
+				localObject = AppController.sharedInstance().librariesController().importShareableObjectReference_intoDocument(shareableObjectRef, doc.documentData());
 			}
+			sharedStyleID = localObject.objectID();
 
-			redrawConnections(context);
 		}
+		var linkLayer,
+			foreignStyleID = shareableObjectRef ? shareableObjectRef.sharedObjectID() : nil,
+			loop = linkLayers.objectEnumerator();
+
+		while(linkLayer = loop.nextObject()) {
+			context.command.setValue_forKey_onLayer_forPluginIdentifier(sharedStyleID, "sharedBorderStyleID", linkLayer, kPluginDomain);
+			context.command.setValue_forKey_onLayer_forPluginIdentifier(foreignStyleID, "foreignBorderStyleID", linkLayer, kPluginDomain);
+		}
+
+		redrawConnections(context);
 
 	}
 
@@ -618,7 +626,7 @@ var editConditionsForArtboard = function(currentArtboard, context, forceNewCondi
 
 			conditionBoard.addLayers([conditionBox, conditionLabel]);
 			layersArray = MSLayerArray.arrayWithLayers([conditionBox, conditionLabel]);
-			conditionGroup = MSLayerGroup.groupFromLayers(layersArray);
+			conditionGroup = sketchVersion < sketchVersion52 ? MSLayerGroup.groupFromLayers(layersArray) : MSLayerGroup.groupWithLayers(layersArray);
 			conditionGroup.setName(strings["addCondition-conditionGroupName"] + " " + count);
 
 			conditionLabel.frame().setX(8);
@@ -1144,7 +1152,7 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 
 	var sharedLayerStyles = sharedLayerStylesForContext(context);
 	var connectionLayers = MSLayerArray.arrayWithLayers(drawConnections(connections, sourcePage, exportScale, flowBackgroundColor, sharedLayerStyles));
-	var connectionsGroup = MSLayerGroup.groupFromLayers(connectionLayers);
+	var connectionsGroup = sketchVersion < sketchVersion52 ? MSLayerGroup.groupFromLayers(connectionLayers) : MSLayerGroup.groupWithLayers(connectionLayers);
 	connectionsGroup.setName(strings["generateFlow-connectionsGroupName"]);
 	artboardBitmapLayers.push(connectionsGroup);
 	connectionsGroup.setIsLocked(1);
@@ -1154,7 +1162,7 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 		groupBounds = CGRectUnion(groupBounds, artboardBitmapLayers[i].absoluteRect().rect());
 	}
 	var layers = MSLayerArray.arrayWithLayers(artboardBitmapLayers);
-	var newGroup = MSLayerGroup.groupFromLayers(layers);
+	var newGroup = sketchVersion < sketchVersion52 ? MSLayerGroup.groupFromLayers(layers) : MSLayerGroup.groupWithLayers(layers);
 	newGroup.setName(strings["generateFlow-flowGroupName"]);
 	newGroup.resizeToFitChildrenWithOption(1);
 
@@ -1497,7 +1505,7 @@ var redrawConnections = function(context) {
 
 	var sharedLayerStyles = sharedLayerStylesForContext(context);
 	var connectionLayers = MSLayerArray.arrayWithLayers(drawConnections(connections, doc.currentPage(), 1, nil, sharedLayerStyles));
-	connectionsGroup = MSLayerGroup.groupFromLayers(connectionLayers);
+	connectionsGroup = sketchVersion < sketchVersion52 ? MSLayerGroup.groupFromLayers(connectionLayers) : MSLayerGroup.groupWithLayers(connectionLayers);
 	connectionsGroup.setName("-Connections");
 	connectionsGroup.setIsLocked(1);
 	connectionsGroup.deselectLayerAndParent();
@@ -1554,7 +1562,14 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 			}
 
 			path = NSBezierPath.bezierPathWithRect(linkRect);
-			hitAreaLayer = sketchVersion < sketchVersion50 ? MSShapeGroup.shapeWithBezierPath(path) : MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
+			if (sketchVersion < sketchVersion50) {
+				hitAreaLayer = MSShapeGroup.shapeWithBezierPath(path);
+			} else if(sketchVersion < sketchVersion52) {
+				hitAreaLayer = MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
+			} else {
+				hitAreaLayer = MSShapeGroup.layerWithPath(MSPath.pathWithBezierPath(path));
+			}
+			
 			hitAreaLayer.style().addStylePartOfType(0).setColor(hitAreaColor);
 			hitAreaBorder = hitAreaLayer.style().addStylePartOfType(1);
 			hitAreaBorder.setColor(hitAreaBorderColor);
@@ -1562,7 +1577,12 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 			hitAreaBorder.setThickness(2*exportScale);
 
 			if (linkLayerHasSharedStyleReference) {
-				hitAreaLayer.setStyle(sharedBorderStyle.newInstance());
+				if(sketchVersion < sketchVersion52) {
+					hitAreaLayer.setStyle(sharedBorderStyle.newInstance());
+				}
+				else {
+					hitAreaLayer.setSharedStyle(sharedBorderStyle);
+				}
 			}
 
 			hitAreaLayer.style().fills().removeAllObjects();
@@ -1689,7 +1709,15 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 		if(!shouldUseMarkers) {
 			linkRect = NSInsetRect(NSMakeRect(startPoint.x, startPoint.y, 0, 0), -5, -5);
 			path = NSBezierPath.bezierPathWithOvalInRect(linkRect);
-			hitAreaLayer = sketchVersion < sketchVersion50 ? MSShapeGroup.shapeWithBezierPath(path) : MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
+			
+			if (sketchVersion < sketchVersion50) {
+				hitAreaLayer = MSShapeGroup.shapeWithBezierPath(path);
+			} else if(sketchVersion < sketchVersion52) {
+				hitAreaLayer = MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
+			} else {
+				hitAreaLayer = MSShapeGroup.layerWithPath(MSPath.pathWithBezierPath(path));
+			}
+
 			hitAreaLayer.style().addStylePartOfType(0).setColor(hitAreaBorderColor);
 			parent.addLayers([hitAreaLayer]);
 			connectionLayers.push(hitAreaLayer);
@@ -1710,8 +1738,14 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 			linePath.curveToPoint_controlPoint1_controlPoint2(dropPoint, controlPoint1, controlPoint2);
 		}
 		
+		if (sketchVersion < sketchVersion50) {
+			lineLayer = MSShapeGroup.shapeWithBezierPath(linePath);
+		} else if(sketchVersion < sketchVersion52) {
+			lineLayer = MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(linePath));
+		} else {
+			lineLayer = MSShapeGroup.layerWithPath(MSPath.pathWithBezierPath(linePath));
+		}
 
-		lineLayer = sketchVersion < sketchVersion50 ? MSShapeGroup.shapeWithBezierPath(linePath) : MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(linePath));
 		lineLayer.setName("Flow arrow");
 		hitAreaBorder = lineLayer.style().addStylePartOfType(1);
 		hitAreaBorder.setColor(hitAreaBorderColor);
@@ -1719,7 +1753,12 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 		hitAreaBorder.setPosition(0);
 
 		if (linkLayerHasSharedStyleReference) {
-			lineLayer.setStyle(sharedBorderStyle.newInstance());
+			if(sketchVersion < sketchVersion52) {
+				lineLayer.setStyle(sharedBorderStyle.newInstance());
+			}
+			else {
+				lineLayer.setSharedStyle(sharedBorderStyle);
+			}
 		}
 		
 		parent.addLayers([lineLayer]);
@@ -1826,7 +1865,14 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 				path.lineToPoint(NSMakePoint(dropPoint.x-(arrowSize*0.6), dropPoint.y));
 				path.lineToPoint(NSMakePoint(dropPoint.x-arrowSize, dropPoint.y-(arrowSize*0.6)));
 				path.closePath();
-				var arrow = sketchVersion < sketchVersion50 ? MSShapeGroup.shapeWithBezierPath(path) : MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
+				var arrow;
+				if (sketchVersion < sketchVersion50) {
+					arrow = MSShapeGroup.shapeWithBezierPath(path);
+				} else if(sketchVersion < sketchVersion52) {
+					arrow = MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
+				} else {
+					arrow = MSShapeGroup.layerWithPath(MSPath.pathWithBezierPath(path));
+				}
 				arrow.style().addStylePartOfType(0).setColor(hitAreaBorderColor);
 				arrow.setRotation(-arrowRotation);
 				arrow.absoluteRect().setX(arrow.absoluteRect().x() + arrowOffsetX);
