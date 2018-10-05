@@ -110,13 +110,21 @@ var defineLink = function(context) {
 
 		if (settingsWindow.runModal() == "1000") {
 
+			var sharedStyleID = nil;
 			shareableObjectRef = stylesDropdown.selectedItem().representedObject();
-			var sharedStyleID = (shareableObjectRef === "default") ? nil : context.document.localObjectForObjectReference(shareableObjectRef).objectID();
+
+			if(shareableObjectRef) {
+				var localObject = doc.localObjectForObjectReference(shareableObjectRef);
+				if(!localObject && sketchVersion >= sketchVersion52) {
+					localObject = AppController.sharedInstance().librariesController().importShareableObjectReference_intoDocument(shareableObjectRef, doc.documentData());
+				}
+				sharedStyleID = localObject.objectID();
+			}
 
 			context.command.setValue_forKey_onDocument_forPluginIdentifier(sharedStyleID, "lastUsedBorderStyleID", doc.documentData(), kPluginDomain);
 			lastUsedBorderStyleID = sharedStyleID;
 
-			lastUsedForeignStyleID = shareableObjectRef.sourceLibrary() ? shareableObjectRef.sharedObjectID() : nil;
+			lastUsedForeignStyleID = shareableObjectRef && shareableObjectRef.sourceLibrary() ? shareableObjectRef.sharedObjectID() : nil;
 			context.command.setValue_forKey_onDocument_forPluginIdentifier(lastUsedForeignStyleID, "lastUsedForeignStyleID", doc.documentData(), kPluginDomain);
 
 			didModifySettings = true;
@@ -131,14 +139,9 @@ var defineLink = function(context) {
 		context.command.setValue_forKey_onLayer_forPluginIdentifier(artboardID, "artboardID", destArtboard, kPluginDomain);
 	}
 	context.command.setValue_forKey_onLayer_forPluginIdentifier(artboardID, "destinationArtboardID", linkLayer, kPluginDomain);
-
-	if (lastUsedBorderStyleID) {
-		context.command.setValue_forKey_onLayer_forPluginIdentifier(lastUsedBorderStyleID, "sharedBorderStyleID", linkLayer, kPluginDomain);
-	}
-	if(lastUsedForeignStyleID) {
-		context.command.setValue_forKey_onLayer_forPluginIdentifier(lastUsedForeignStyleID, "foreignBorderStyleID", linkLayer, kPluginDomain);
-	}
-
+	context.command.setValue_forKey_onLayer_forPluginIdentifier(lastUsedBorderStyleID, "sharedBorderStyleID", linkLayer, kPluginDomain);
+	context.command.setValue_forKey_onLayer_forPluginIdentifier(lastUsedForeignStyleID, "foreignBorderStyleID", linkLayer, kPluginDomain);
+	
 	var showingConnections = NSUserDefaults.standardUserDefaults().objectForKey(kShowConnectionsKey) || 1;
 
 	if (showingConnections == 1) {
@@ -158,7 +161,6 @@ var stylesDropdownForContext_selectedStyleID_sharedObjectID = function(context, 
 	var sharedStyle, menuItem, shareableObjectRef, selectedItem;
 
 	menuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent("Default", nil, "");
-	menuItem.setRepresentedObject(NSString.stringWithString("default"));
 	stylesDropdown.menu().addItem(menuItem);
 	stylesDropdown.menu().addItem(NSMenuItem.separatorItem());
 
@@ -253,25 +255,30 @@ var editConnectionStyle = function(context) {
 
 	if (settingsWindow.runModal() == "1000") {
 
-		var shareableObjectRef = stylesDropdown.selectedItem().representedObject();
-		var isDefault = (shareableObjectRef == "default");
+		var shareableObjectRef = stylesDropdown.selectedItem().representedObject(),
+			sharedStyleID = nil;
 		
 		if (shareableObjectRef) {
 			
-			var sharedStyleID = isDefault ? nil : context.document.localObjectForObjectReference(shareableObjectRef).objectID();
-			
-			var linkLayer;
-			var loop = linkLayers.objectEnumerator();
+			var doc = context.document,
+				localObject = doc.localObjectForObjectReference(shareableObjectRef);
 
-			while(linkLayer = loop.nextObject()) {
-				context.command.setValue_forKey_onLayer_forPluginIdentifier(sharedStyleID, "sharedBorderStyleID", linkLayer, kPluginDomain);
-				if(!isDefault) { 
-					context.command.setValue_forKey_onLayer_forPluginIdentifier(shareableObjectRef.sharedObjectID(), "foreignBorderStyleID", linkLayer, kPluginDomain);
-				}
+			if(!localObject && sketchVersion >= sketchVersion52) {
+				localObject = AppController.sharedInstance().librariesController().importShareableObjectReference_intoDocument(shareableObjectRef, doc.documentData());
 			}
+			sharedStyleID = localObject.objectID();
 
-			redrawConnections(context);
 		}
+		var linkLayer,
+			foreignStyleID = shareableObjectRef ? shareableObjectRef.sharedObjectID() : nil,
+			loop = linkLayers.objectEnumerator();
+
+		while(linkLayer = loop.nextObject()) {
+			context.command.setValue_forKey_onLayer_forPluginIdentifier(sharedStyleID, "sharedBorderStyleID", linkLayer, kPluginDomain);
+			context.command.setValue_forKey_onLayer_forPluginIdentifier(foreignStyleID, "foreignBorderStyleID", linkLayer, kPluginDomain);
+		}
+
+		redrawConnections(context);
 
 	}
 
@@ -1570,7 +1577,12 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 			hitAreaBorder.setThickness(2*exportScale);
 
 			if (linkLayerHasSharedStyleReference) {
-				hitAreaLayer.setStyle(sharedBorderStyle.newInstance());
+				if(sketchVersion < sketchVersion52) {
+					hitAreaLayer.setStyle(sharedBorderStyle.newInstance());
+				}
+				else {
+					hitAreaLayer.setSharedStyle(sharedBorderStyle);
+				}
 			}
 
 			hitAreaLayer.style().fills().removeAllObjects();
@@ -1741,7 +1753,12 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 		hitAreaBorder.setPosition(0);
 
 		if (linkLayerHasSharedStyleReference) {
-			lineLayer.setStyle(sharedBorderStyle.newInstance());
+			if(sketchVersion < sketchVersion52) {
+				lineLayer.setStyle(sharedBorderStyle.newInstance());
+			}
+			else {
+				lineLayer.setSharedStyle(sharedBorderStyle);
+			}
 		}
 		
 		parent.addLayers([lineLayer]);
