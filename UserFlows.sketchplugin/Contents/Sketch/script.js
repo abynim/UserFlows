@@ -602,22 +602,29 @@ var editConditionsForArtboard = function(currentArtboard, context, forceNewCondi
 			count++;
 
 			conditionLabel = MSTextLayer.new();
-			conditionLabel.frame().setX(conditionSpacing + 8);
-			conditionLabel.frame().setY(listY + 8);
+			conditionLabel.frame().setX(8);
+			conditionLabel.frame().setY(8);
 			conditionLabel.frame().setWidth(conditionBoardWidth - ((conditionSpacing+8)*2));
 			conditionLabel.setTextBehaviour(1);
 			conditionLabel.setStringValue(conditionValue);
 			conditionLabel.addAttribute_value(NSFontAttributeName, NSFont.fontWithName_size("HelveticaNeue", conditionFontSize));
 			conditionLabel.setLineHeight(conditionFontSize*1.4);
 			conditionLabelColor = MSImmutableColor.colorWithSVGString("#121212");
-			if (sketchVersion < sketchVersion48) conditionLabelColor = conditionLabelColor.newMutableCounterpart();
+			if (sketchVersion < sketchVersion48) { 
+				conditionLabelColor = conditionLabelColor.newMutableCounterpart();
+			}
 			conditionLabel.setTextColor(conditionLabelColor);
 			conditionLabel.adjustFrameToFit();
 			context.command.setValue_forKey_onLayer_forPluginIdentifier(1, (isElse ? "isElse" : "isCondition"), conditionLabel, kPluginDomain);
 
 			conditionBoxHeight = Math.ceil(conditionLabel.frame().height()) + 16;
-			conditionBox = MSShapeGroup.shapeWithPath(MSRectangleShape.alloc().initWithFrame(NSMakeRect(conditionSpacing, listY, conditionBoardWidth-(conditionSpacing*2), conditionBoxHeight)));
-			conditionBox.firstLayer().setCornerRadiusFloat(5);
+			if(sketchVersion < sketchVersion52) {
+				conditionBox = MSShapeGroup.shapeWithPath(MSRectangleShape.alloc().initWithFrame(NSMakeRect(conditionSpacing, listY, conditionBoardWidth-(conditionSpacing*2), conditionBoxHeight)));
+				conditionBox.firstLayer().setCornerRadiusFloat(5);
+			} else {
+				conditionBox = MSRectangleShape.alloc().initWithFrame(NSMakeRect(0, 0, conditionBoardWidth-(conditionSpacing*2), conditionBoxHeight));
+				conditionBox.setCornerRadiusFloat(5);
+			}
 			conditionBox.style().addStylePartOfType(0).setColor(MSImmutableColor.colorWithSVGString("#f9f9f9").newMutableCounterpart());
 			conditionBorder = conditionBox.style().addStylePartOfType(1);
 			conditionBorder.setColor(conditionBorderColor);
@@ -627,13 +634,14 @@ var editConditionsForArtboard = function(currentArtboard, context, forceNewCondi
 			conditionBoard.addLayers([conditionBox, conditionLabel]);
 			layersArray = MSLayerArray.arrayWithLayers([conditionBox, conditionLabel]);
 			conditionGroup = sketchVersion < sketchVersion52 ? MSLayerGroup.groupFromLayers(layersArray) : MSLayerGroup.groupWithLayers(layersArray);
+			conditionGroup.resizeToFitChildrenWithOption(1);
 			conditionGroup.setName(strings["addCondition-conditionGroupName"] + " " + count);
 
-			conditionLabel.frame().setX(8);
-			conditionLabel.frame().setY(8);
-
+			conditionGroup.frame().setX(conditionSpacing);
+			conditionGroup.frame().setY(listY);
+			
 			listY += conditionBoxHeight + conditionSpacing;
-
+			
 			context.command.setValue_forKey_onLayer_forPluginIdentifier(1, "isConditionGroup", conditionGroup, kPluginDomain);
 
 			conditionLink = conditionLinks[i];
@@ -642,7 +650,7 @@ var editConditionsForArtboard = function(currentArtboard, context, forceNewCondi
 			}
 
 		}
-
+		
 		conditionBoard.frame().setHeight(listY);
 		if (artboardIsConditional != 1) {
 			var currentView = sketchVersion < sketchVersion48 ? context.document.currentView() : context.document.contentDrawView();
@@ -1567,7 +1575,7 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 			} else if(sketchVersion < sketchVersion52) {
 				hitAreaLayer = MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
 			} else {
-				hitAreaLayer = MSShapeGroup.layerWithPath(MSPath.pathWithBezierPath(path));
+				hitAreaLayer = MSRectangleShape.alloc().initWithFrame(linkRect);
 			}
 			
 			hitAreaLayer.style().addStylePartOfType(0).setColor(hitAreaColor);
@@ -1715,7 +1723,7 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 			} else if(sketchVersion < sketchVersion52) {
 				hitAreaLayer = MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
 			} else {
-				hitAreaLayer = MSShapeGroup.layerWithPath(MSPath.pathWithBezierPath(path));
+				hitAreaLayer = MSOvalShape.alloc().initWithFrame(linkRect);
 			}
 
 			hitAreaLayer.style().addStylePartOfType(0).setColor(hitAreaBorderColor);
@@ -1723,7 +1731,6 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 			connectionLayers.push(hitAreaLayer);
 		}
 
-		
 		linePath = NSBezierPath.bezierPath();
 		linePath.moveToPoint(startPoint);
 		straightConnection = connectionType == "straight" || Math.abs(startPoint.x-dropPoint.x) < 20 || Math.abs(startPoint.y-dropPoint.y) < 20;
@@ -1737,13 +1744,13 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 		else if (connectionType == "curved") {
 			linePath.curveToPoint_controlPoint1_controlPoint2(dropPoint, controlPoint1, controlPoint2);
 		}
-		
+
 		if (sketchVersion < sketchVersion50) {
 			lineLayer = MSShapeGroup.shapeWithBezierPath(linePath);
 		} else if(sketchVersion < sketchVersion52) {
 			lineLayer = MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(linePath));
 		} else {
-			lineLayer = MSShapeGroup.layerWithPath(MSPath.pathWithBezierPath(linePath));
+			lineLayer = MSShapePathLayer.layerWithPath(MSPath.pathWithBezierPath(linePath));
 		}
 
 		lineLayer.setName("Flow arrow");
@@ -1771,7 +1778,7 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 		}
 
 		connectionLayers.push(lineLayer);
-
+		
 		// draw backlink and crossPage layers
 		if (connection.isBackAction) {
 
@@ -1790,10 +1797,17 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 			var backBackgroundWidth = Math.ceil(backLabel.frame().width()) + padding;
 			var backBackgroundHeight = Math.ceil(backLabel.frame().height()) + padding;
 			
-			var backBG = MSShapeGroup.shapeWithPath(MSRectangleShape.alloc().initWithFrame(NSMakeRect(0, 0, backBackgroundWidth, backBackgroundHeight)));
-			backBG.firstLayer().setCornerRadiusFloat(5);
+			var backBG;
+			if (sketchVersion < sketchVersion52) {
+				backBG = MSShapeGroup.shapeWithPath(MSRectangleShape.alloc().initWithFrame(NSMakeRect(0, 0, backBackgroundWidth, backBackgroundHeight)));
+				backBG.firstLayer().setCornerRadiusFloat(5);
+			}
+			else {
+				backBG = MSRectangleShape.alloc().initWithFrame(NSMakeRect(0, 0, backBackgroundWidth, backBackgroundHeight));
+				backBG.setCornerRadiusFloat(5);
+			}
+			 
 			backBG.style().addStylePartOfType(0).setColor(hitAreaBorderColor);
-
 			backBG.absoluteRect().setX(dropPoint.x - backBackgroundWidth);
 			backBG.absoluteRect().setY(dropPoint.y - Math.ceil(backBackgroundHeight / 2));
 
@@ -1835,8 +1849,14 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 			var linkBackgroundWidth = Math.ceil(Math.max(pageNameLabel.frame().width(), artboardNameLabel.frame().width())) + padding;
 			var linkBackgroundHeight = Math.ceil(pageNameLabel.frame().height() + 3 + artboardNameLabel.frame().height()) + padding;
 			
-			var linkBG = MSShapeGroup.shapeWithPath(MSRectangleShape.alloc().initWithFrame(NSMakeRect(0, 0, linkBackgroundWidth, linkBackgroundHeight)));
-			linkBG.firstLayer().setCornerRadiusFloat(5);
+			var linkBG;
+			if(sketchVersion < sketchVersion52) {
+				linkBG = MSShapeGroup.shapeWithPath(MSRectangleShape.alloc().initWithFrame(NSMakeRect(0, 0, linkBackgroundWidth, linkBackgroundHeight)));
+				linkBG.firstLayer().setCornerRadiusFloat(5);
+			} else {
+				linkBG = MSRectangleShape.alloc().initWithFrame(NSMakeRect(0, 0, linkBackgroundWidth, linkBackgroundHeight));
+				linkBG.setCornerRadiusFloat(5);
+			}
 			linkBG.style().addStylePartOfType(0).setColor(hitAreaBorderColor);
 
 			linkBG.absoluteRect().setX(dropPoint.x);
@@ -1871,7 +1891,7 @@ var drawConnections = function(connections, parent, exportScale, labelColor, sha
 				} else if(sketchVersion < sketchVersion52) {
 					arrow = MSShapeGroup.shapeWithBezierPath(MSPath.pathWithBezierPath(path));
 				} else {
-					arrow = MSShapeGroup.layerWithPath(MSPath.pathWithBezierPath(path));
+					arrow = MSShapePathLayer.layerWithPath(MSPath.pathWithBezierPath(path));
 				}
 				arrow.style().addStylePartOfType(0).setColor(hitAreaBorderColor);
 				arrow.setRotation(-arrowRotation);
