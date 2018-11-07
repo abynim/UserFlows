@@ -6,6 +6,18 @@
     <description>Generate flow diagrams from Artboards in Sketch</description>
     <language>en</language>
     <item>
+      <title>UserFlows 2.3.2</title>
+      <description>
+        <![CDATA[
+          <ul>
+            <li>Fixed an issue where `Update Flow` would delete the old artboard and create a new artboard.</li>
+            <li>Updated missing items in localization files and added English backup localization errors.</li>
+          </ul>
+        ]]>
+      </description>
+      <enclosure url="https://github.com/abynim/UserFlows/archive/v2.zip" sparkle:version="2.3.2" />
+    </item>
+    <item>
       <title>UserFlows 2.3.1</title>
       <description>
         <![CDATA[
