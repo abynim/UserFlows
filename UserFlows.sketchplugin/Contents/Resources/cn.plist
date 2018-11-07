@@ -4,6 +4,10 @@
 <dict>
 	<key>menu-defineLink</key>
 	<string>创建连接</string>
+	<key>menu-defineLinkWithOptions</key>
+	<string>Create Link With Connection Style</string>
+	<key>menu-editLinkOptions</key>
+	<string>Edit Connection Style</string>
 	<key>menu-removeLink</key>
 	<string>移除连接</string>
 	<key>menu-removeAllLinks</key>

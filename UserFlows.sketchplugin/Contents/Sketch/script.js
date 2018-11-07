@@ -2323,6 +2323,11 @@ var editLanguage = function(context) {
 		newStrings = NSDictionary.dictionaryWithContentsOfFile(stringsFilePath),
 		command, commandNameKey;
 
+		if(!newStrings) {
+			stringsFilePath = context.plugin.urlForResourceNamed("en.plist").path();
+			newStrings = NSDictionary.dictionaryWithContentsOfFile(stringsFilePath);
+		}
+
 		for (var i = 0; i < commandsCount; i++) {
 			command = commands[i];
 			commandNameKey = "menu-" + command.identifier;
@@ -2388,6 +2393,11 @@ var parseContext = function(context) {
 		stringsFilePath = context.plugin.urlForResourceNamed(localeID + ".plist").path();
 
 	strings = NSDictionary.dictionaryWithContentsOfFile(stringsFilePath);
+	
+	if(!strings) {
+		stringsFilePath = context.plugin.urlForResourceNamed("en.plist").path();
+		strings = NSDictionary.dictionaryWithContentsOfFile(stringsFilePath);
+	}
 }
 
 var getAlertWindow = function() {
