@@ -923,7 +923,7 @@ var generateFlow = function(context) {
 	}
 }
 
-var generateFlowWithSettings = function(context, settings, initialArtboard, sourcePage) {
+var generateFlowWithSettings = function(context, settings, initialArtboard, sourcePage, reusedArtboard) {
 
 	var doc = context.document;
 	var connectionsOverlayPredicate = NSPredicate.predicateWithFormat("userInfo != nil && function(userInfo, 'valueForKeyPath:', %@).isConnectionsContainer == true", kPluginDomain),
@@ -1174,7 +1174,14 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 	newGroup.setName(strings["generateFlow-flowGroupName"]);
 	newGroup.resizeToFitChildrenWithOption(1);
 
-	var flowBoard = MSArtboardGroup.new();
+	var flowBoard;
+	if(reusedArtboard) {
+		reusedArtboard.removeAllLayers();
+		reusedArtboard.removeFromParent();
+		flowBoard = reusedArtboard;
+	} else {
+		flowBoard = MSArtboardGroup.new();
+	}
 	flowBoard.setName(flowName);
 	flowBoard.setHasBackgroundColor(1);
 	flowBoard.setBackgroundColor(flowBackgroundColor);
@@ -1406,11 +1413,9 @@ var updateFlow = function(context) {
 			includePrototypingConnections : includePrototypingConnections
 		};
 
-		currentArtboard.removeFromParent();
-
 		doc.setCurrentPage(sourcePage);
 
-		generateFlowWithSettings(context, settings, initialArtboard, sourcePage);
+		generateFlowWithSettings(context, settings, initialArtboard, sourcePage, currentArtboard);
 		doc.showMessage("✅ " + strings["updateFlow-completed"]);
 	}
 }
