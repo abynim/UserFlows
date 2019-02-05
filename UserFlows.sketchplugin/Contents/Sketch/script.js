@@ -1185,6 +1185,7 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 		flowBoard = reusedArtboard;
 	} else {
 		flowBoard = MSArtboardGroup.new();
+		flowBoard.exportOptions().addExportFormat();
 	}
 	flowBoard.setName(flowName);
 	flowBoard.setHasBackgroundColor(1);
@@ -1302,7 +1303,6 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 	flowBoard.setConstrainProportions(false);
 	if(sketchVersion < sketchVersion53) flowBoard.resizeToFitChildrenWithOption(1);
 	else flowBoard.fixGeometryWithOptions(1);
-	flowBoard.exportOptions().addExportFormat();
 
 	var shouldOrganize = settings.shouldOrganizeFlowPage;
 	if (shouldOrganize && flowPageName == "_Flows") {
