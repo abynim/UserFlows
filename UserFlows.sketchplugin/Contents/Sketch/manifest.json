@@ -238,10 +238,10 @@
       "checkForUpdates"
     ]
   },
-  "compatibleVersion" : "52" ,
+  "compatibleVersion" : "53" ,
   "disableCocoaScriptPreprocessor" : true,
   "identifier" : "com.abynim.sketchplugins.userflows",
-  "version" : "2.3.2",
+  "version" : "2.3.3",
   "description" : "Generate user-flow diagrams from artboards in Sketch.",
   "homepage" : "https:\/\/abynim.github.io\/UserFlows",
   "authorEmail" : "abynimbalkar@gmail.com",
