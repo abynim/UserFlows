@@ -55,6 +55,7 @@ const sketchVersion49 = 490;
 const sketchVersion50 = 500;
 const sketchVersion51 = 510;
 const sketchVersion52 = 520;
+const sketchVersion53 = 530;
 
 var defineLink = function(context) {
 
@@ -634,7 +635,8 @@ var editConditionsForArtboard = function(currentArtboard, context, forceNewCondi
 			conditionBoard.addLayers([conditionBox, conditionLabel]);
 			layersArray = MSLayerArray.arrayWithLayers([conditionBox, conditionLabel]);
 			conditionGroup = sketchVersion < sketchVersion52 ? MSLayerGroup.groupFromLayers(layersArray) : MSLayerGroup.groupWithLayers(layersArray);
-			conditionGroup.resizeToFitChildrenWithOption(1);
+			if(sketchVersion < sketchVersion53) conditionGroup.resizeToFitChildrenWithOption(1);
+			else conditionGroup.fixGeometryWithOptions(1);
 			conditionGroup.setName(strings["addCondition-conditionGroupName"] + " " + count);
 
 			conditionGroup.frame().setX(conditionSpacing);
@@ -770,7 +772,8 @@ var recursivelyDetachSymbolInstance = function(instance) {
 	// resize the group to match the original instance dimensions
 	group.absoluteRect().setWidth(instanceRect.width());
 	group.absoluteRect().setHeight(instanceRect.height());
-	group.resizeToFitChildrenWithOption(1);
+	if(sketchVersion < sketchVersion53) group.resizeToFitChildrenWithOption(1);
+	else group.fixGeometryWithOptions(1);
 	
 	var loop = group.children().objectEnumerator(), layer;
 	while (layer = loop.nextObject()) {
@@ -1172,7 +1175,8 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 	var layers = MSLayerArray.arrayWithLayers(artboardBitmapLayers);
 	var newGroup = sketchVersion < sketchVersion52 ? MSLayerGroup.groupFromLayers(layers) : MSLayerGroup.groupWithLayers(layers);
 	newGroup.setName(strings["generateFlow-flowGroupName"]);
-	newGroup.resizeToFitChildrenWithOption(1);
+	if(sketchVersion < sketchVersion53) newGroup.resizeToFitChildrenWithOption(1);
+	else newGroup.fixGeometryWithOptions(1);
 
 	var flowBoard;
 	if(reusedArtboard) {
@@ -1181,6 +1185,7 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 		flowBoard = reusedArtboard;
 	} else {
 		flowBoard = MSArtboardGroup.new();
+		flowBoard.exportOptions().addExportFormat();
 	}
 	flowBoard.setName(flowName);
 	flowBoard.setHasBackgroundColor(1);
@@ -1296,8 +1301,8 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 	}
 
 	flowBoard.setConstrainProportions(false);
-	flowBoard.resizeToFitChildrenWithOption(0);
-	flowBoard.exportOptions().addExportFormat();
+	if(sketchVersion < sketchVersion53) flowBoard.resizeToFitChildrenWithOption(1);
+	else flowBoard.fixGeometryWithOptions(1);
 
 	var shouldOrganize = settings.shouldOrganizeFlowPage;
 	if (shouldOrganize && flowPageName == "_Flows") {
