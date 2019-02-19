@@ -956,7 +956,7 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 		artboardsToExport = [initialArtboard],
 		screenShadowColor = MSImmutableColor.colorWithSVGString("#00000").newMutableCounterpart(),
 		tempFolderURL = NSFileManager.defaultManager().URLsForDirectory_inDomains(NSCachesDirectory, NSUserDomainMask).lastObject().URLByAppendingPathComponent(kPluginDomain),
-		artboard, detachedArtboard, artboardID, linkLayers, linkLayersCount, destinationArtboard, destinationArtboardID, linkLayer, screenLayer, exportRequest, exportURL, screenShadow, connection, artboardNameLabel, primaryTextColor, secondaryTextColor, flowBackgroundColor, artboardIsConditional, isCondition, destinationArtboardIsConditional, linkRect, destinationRect, sharedBorderStyleID;
+		artboard, detachedArtboard, artboardID, linkLayers, linkLayersCount, destinationArtboard, destinationArtboardID, linkLayer, screenLayer, exportRequest, exportBackgroundColor, exportURL, screenShadow, connection, artboardNameLabel, primaryTextColor, secondaryTextColor, flowBackgroundColor, artboardIsConditional, isCondition, destinationArtboardIsConditional, linkRect, destinationRect, sharedBorderStyleID;
 
 	
 	context.command.setValue_forKey_onLayer_forPluginIdentifier(initialArtboard.objectID(), "homeScreenID", sourcePage, kPluginDomain);
@@ -993,13 +993,18 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 		exportedArtboardIDs[artboardID] = 1;
 		
 		artboardIsConditional = context.command.valueForKey_onLayer_forPluginIdentifier(kConditionalArtboardKey, artboard, kPluginDomain) || 0;
+		exportBackgroundColor = artboard.hasBackgroundColor() ? artboard.backgroundColor() : MSImmutableColor.colorWithSVGString("#FFFFFF").newMutableCounterpart();
 
 		exportRequest = MSExportRequest.alloc().init();
 		exportRequest.setRect(artboard.absoluteRect().rect());
 		exportRequest.setScale(bitmapExportScale);
 		exportRequest.setShouldTrim(0);
 		exportRequest.setSaveForWeb(1);
-		exportRequest.setBackgroundColor(( artboard.hasBackgroundColor() ? artboard.backgroundColor() : MSImmutableColor.colorWithSVGString("#FFFFFF").newMutableCounterpart() ));
+		if(exportRequest.respondsToSelector("setExportBackgroundColor:")) {
+			exportRequest.setExportBackgroundColor(exportBackgroundColor);
+		} else {
+			exportRequest.setBackgroundColor(exportBackgroundColor);
+		}
 		exportRequest.setIncludeArtboardBackground(1);
 		exportRequest.setName(artboard.objectID());
 		exportRequest.setFormat(exportFormat);
