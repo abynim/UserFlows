@@ -1,3 +1,5 @@
+var sketch = require('sketch/dom');
+
 var kPluginDomain = "com.abynim.sketchplugins.userflows";
 var kKeepOrganizedKey = "com.abynim.userflows.keepOrganized";
 var kIncludePrototypingKey = "com.abynim.userflows.includePrototypingInExport";
@@ -766,7 +768,7 @@ var recursivelyDetachSymbolInstance = function(instance) {
 	if (instance.flow()) return;
 
 	var instanceRect = instance.absoluteRect();
-	var group = instance.detachByReplacingWithGroup();
+	var group = sketch.fromNative(instance).detach().sketchObject;
 	if (!group) return;
 
 	// resize the group to match the original instance dimensions
