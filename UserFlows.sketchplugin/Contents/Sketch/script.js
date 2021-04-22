@@ -3,6 +3,8 @@ var sketch = require("sketch/dom");
 var kPluginDomain = "com.abynim.sketchplugins.userflows";
 var kKeepOrganizedKey = "com.abynim.userflows.keepOrganized";
 var kIncludePrototypingKey = "com.abynim.userflows.includePrototypingInExport";
+var kShouldNumberScreensKey =
+  "com.abynim.userflows.shouldNumberScreensInExport";
 var kExportScaleKey = "com.abynim.userflows.exportScale";
 var kExportFormatKey = "com.abynim.userflows.exportFormat";
 var kShowModifiedDateKey = "com.abynim.userflows.showModifiedDate";
@@ -1446,6 +1448,16 @@ var generateFlow = function (context) {
   );
   settingsWindow.addAccessoryView(includePrototypingCheckbox);
 
+  var shouldNumberScreens =
+    NSUserDefaults.standardUserDefaults().objectForKey(
+      kShouldNumberScreensKey
+    ) || 1;
+  var shouldNumberScreensCheckbox = makeCheckboxWithTitle_state(
+    strings["generateFlow-shouldNumberScreens"],
+    shouldNumberScreens
+  );
+  settingsWindow.addAccessoryView(shouldNumberScreensCheckbox);
+
   settingsWindow.alert().window().setInitialFirstResponder(nameField);
   nameField.setNextKeyView(descriptionField);
   descriptionField.setNextKeyView(nameField);
@@ -1458,6 +1470,7 @@ var generateFlow = function (context) {
       shouldOrganizeFlowPage: keepOrganizedCheckbox.state(),
       flowPageName: pagesDropdown.titleOfSelectedItem(),
       includePrototypingConnections: includePrototypingCheckbox.state(),
+      shouldNumberScreens: shouldNumberScreensCheckbox.state(),
       newPageItemTitle: newPageItemTitle,
     };
 
@@ -1661,7 +1674,10 @@ var generateFlowWithSettings = function (
       artboardNameLabel.absoluteRect().setY(artboard.absoluteRect().y());
       artboardNameLabel.frame().setWidth(artboard.frame().width());
       artboardNameLabel.setTextBehaviour(0);
-      artboardNameLabel.setStringValue(screenNumber + ": " + artboard.name());
+      const screenName = settings.shouldNumberScreens
+        ? screenNumber + ": " + artboard.name()
+        : artboard.name();
+      artboardNameLabel.setStringValue(screenName);
       artboardNameLabel.addAttribute_value(
         NSFontAttributeName,
         NSFont.fontWithName_size("HelveticaNeue", 12 * exportScale)
@@ -2070,6 +2086,12 @@ var generateFlowWithSettings = function (
     flowBoard,
     kPluginDomain
   );
+  context.command.setValue_forKey_onLayer_forPluginIdentifier(
+    settings.shouldNumberScreens,
+    "shouldNumberScreens",
+    flowBoard,
+    kPluginDomain
+  );
 
   if (flowNameLabel) {
     context.command.setValue_forKey_onLayer_forPluginIdentifier(
@@ -2143,6 +2165,10 @@ var generateFlowWithSettings = function (
     settings.includePrototypingConnections,
     kIncludePrototypingKey
   );
+  NSUserDefaults.standardUserDefaults().setObject_forKey(
+    settings.shouldNumberScreens,
+    kShouldNumberScreensKey
+  );
 
   var eventID = settings.updatingFlow ? "updatedFlow" : "generatedFlow";
   logEvent(eventID, {
@@ -2212,6 +2238,11 @@ var updateFlow = function (context) {
     currentArtboard,
     kPluginDomain
   );
+  var shouldNumberScreens = context.command.valueForKey_onLayer_forPluginIdentifier(
+    "shouldNumberScreens",
+    currentArtboard,
+    kPluginDomain
+  );
 
   var flowName = "";
   if (titleLabelID) {
@@ -2261,6 +2292,7 @@ var updateFlow = function (context) {
       shouldOrganizeFlowPage: keepFlowPageOrganized,
       flowPageName: doc.currentPage().name(),
       includePrototypingConnections: includePrototypingConnections,
+      shouldNumberScreens: shouldNumberScreens,
     };
 
     doc.setCurrentPage(sourcePage);
