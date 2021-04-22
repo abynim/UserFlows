@@ -75,6 +75,8 @@ const sketchVersion52 = 520;
 const sketchVersion53 = 530;
 const sketchVersion72 = 720;
 
+const contentWidth = 360;
+
 var defineLink = function (context) {
   parseContext(context);
 
@@ -154,7 +156,7 @@ var defineLink = function (context) {
     );
     settingsWindow.addAccessoryView(stylesDropdown);
 
-    if (settingsWindow.runModal() == "1000") {
+    if (runModalForWindow(settingsWindow) == "1000") {
       var sharedStyleID = nil;
       shareableObjectRef = stylesDropdown.selectedItem().representedObject();
 
@@ -253,7 +255,7 @@ var stylesDropdownForContext_selectedStyleID_sharedObjectID = function (
 ) {
   var selectedID = selectedStyleID ? "" + selectedStyleID : nil;
   var stylesDropdown = NSPopUpButton.alloc().initWithFrame(
-    NSMakeRect(0, 0, 300, 25)
+    NSMakeRect(0, 0, contentWidth, 25)
   );
   stylesDropdown.menu().setAutoenablesItems(0);
   var predicate = NSPredicate.predicateWithFormat("style.hasEnabledFill == NO");
@@ -413,7 +415,7 @@ var editConnectionStyle = function (context) {
   );
   settingsWindow.addAccessoryView(stylesDropdown);
 
-  if (settingsWindow.runModal() == "1000") {
+  if (runModalForWindow(settingsWindow) == "1000") {
     var shareableObjectRef = stylesDropdown.selectedItem().representedObject(),
       sharedStyleID = nil;
 
@@ -515,13 +517,15 @@ var removeAllLinks = function (context) {
   };
 
   var artboardButton = NSButton.alloc().initWithFrame(
-    NSMakeRect(0, 0, 300, 22)
+    NSMakeRect(0, 0, contentWidth, 22)
   );
   artboardButton.setTitle(strings["removeLinks-scopeSelectedArtboards"]);
   artboardButton.setButtonType(NSRadioButton);
   artboardButton.setAction(fakeFunc);
 
-  var pageButton = NSButton.alloc().initWithFrame(NSMakeRect(0, 0, 300, 22));
+  var pageButton = NSButton.alloc().initWithFrame(
+    NSMakeRect(0, 0, contentWidth, 22)
+  );
   pageButton.setTitle(strings["removeLinks-scopeCurrentPage"]);
   pageButton.setButtonType(NSRadioButton);
   pageButton.setAction(fakeFunc);
@@ -539,7 +543,7 @@ var removeAllLinks = function (context) {
     pageButton.setState(NSOnState);
   }
 
-  var response = settingsWindow.runModal();
+  var response = runModalForWindow(settingsWindow);
 
   if (response == "1000") {
     var selectedOptionID = artboardButton.state() == NSOnState ? 1 : 2;
@@ -599,7 +603,7 @@ var relinkArtboardsAfterCopy = function (context) {
     settingsWindow.setInformativeText(strings["relinkArtboards-description"]);
 
     var showsWarningCheckbox = NSButton.alloc().initWithFrame(
-      NSMakeRect(0, 0, 300, 22)
+      NSMakeRect(0, 0, contentWidth, 22)
     );
     showsWarningCheckbox.setButtonType(NSSwitchButton);
     showsWarningCheckbox.setBezelStyle(0);
@@ -607,7 +611,7 @@ var relinkArtboardsAfterCopy = function (context) {
     showsWarningCheckbox.setState(NSOffState);
     settingsWindow.addAccessoryView(showsWarningCheckbox);
 
-    var response = settingsWindow.runModal();
+    var response = runModalForWindow(settingsWindow);
 
     if (response == "1000") {
       var warn = showsWarningCheckbox.state() == 0 ? 1 : 0;
@@ -718,15 +722,15 @@ var editArtboardDescription = function (context) {
 
   settingsWindow.setMessageText("Artboard: " + currentArtboard.name());
 
-  settingsWindow.addTextLabelWithValue(
-    strings["artboardDescription-description"]
+  settingsWindow.addAccessoryView(
+    makeTextLabelWithValue(strings["artboardDescription-description"])
   );
   var descriptionField = NSTextField.alloc().initWithFrame(
-    NSMakeRect(0, 0, 300, 100)
+    NSMakeRect(0, 0, contentWidth, 100)
   );
   settingsWindow.addAccessoryView(descriptionField);
 
-  if (settingsWindow.runModal() == "1000") {
+  if (runModalForWindow(settingsWindow) == "1000") {
     context.command.setValue_forKey_onLayer_forPluginIdentifier(
       descriptionField.stringValue(),
       "artboardDescription",
@@ -787,7 +791,9 @@ var editConditionsForArtboard = function (
       var loop = conditionLayers.objectEnumerator(),
         conditionLayer;
       while ((conditionLayer = loop.nextObject())) {
-        conditionView = NSView.alloc().initWithFrame(NSMakeRect(0, 0, 300, 30));
+        conditionView = NSView.alloc().initWithFrame(
+          NSMakeRect(0, 0, contentWidth, 30)
+        );
         checkbox = NSButton.alloc().initWithFrame(NSMakeRect(0, 0, 23, 23));
         checkbox.state = NSOnState;
         checkbox.setButtonType(NSSwitchButton);
@@ -832,7 +838,9 @@ var editConditionsForArtboard = function (
     }
   }
 
-  conditionView = NSView.alloc().initWithFrame(NSMakeRect(0, 0, 300, 30));
+  conditionView = NSView.alloc().initWithFrame(
+    NSMakeRect(0, 0, contentWidth, 30)
+  );
   checkbox = NSButton.alloc().initWithFrame(NSMakeRect(0, 0, 23, 23));
   checkbox.state = NSOnState;
   checkbox.setButtonType(NSSwitchButton);
@@ -850,7 +858,9 @@ var editConditionsForArtboard = function (
   conditionChecks.push(checkbox);
   conditionLinks.push(0);
 
-  elseCheckbox = NSButton.alloc().initWithFrame(NSMakeRect(0, 0, 300, 23));
+  elseCheckbox = NSButton.alloc().initWithFrame(
+    NSMakeRect(0, 0, contentWidth, 23)
+  );
   elseCheckbox.title = strings["addCondition-else"];
   elseCheckbox.state = hasElse;
   elseCheckbox.setButtonType(NSSwitchButton);
@@ -866,7 +876,7 @@ var editConditionsForArtboard = function (
   }
   settingsWindow.alert().window().setInitialFirstResponder(conditionField);
 
-  var response = settingsWindow.runModal();
+  var response = runModalForWindow(settingsWindow);
 
   if (response != "1001") {
     var conditionBoard;
@@ -1275,6 +1285,14 @@ var getArtboardsWithFlowConnectionsInPage = function (page, doc) {
   return NSArray.arrayWithArray(validArtboards);
 };
 
+const separatorBox = function () {
+  var separator = NSBox.alloc().initWithFrame(
+    NSMakeRect(0, 0, contentWidth, 10)
+  );
+  separator.setBoxType(2);
+  return separator;
+};
+
 var generateFlow = function (context) {
   parseContext(context);
 
@@ -1285,7 +1303,9 @@ var generateFlow = function (context) {
 
   settingsWindow.setMessageText(strings["generateFlow-message"]);
 
-  settingsWindow.addTextLabelWithValue(strings["generateFlow-startFrom"]);
+  settingsWindow.addAccessoryView(
+    makeTextLabelWithValue(strings["generateFlow-startFrom"])
+  );
 
   var currentPage = doc.currentPage();
   var pageContainsFlowConnections = currentPage
@@ -1322,7 +1342,7 @@ var generateFlow = function (context) {
   }
 
   var artboardsDropdown = NSPopUpButton.alloc().initWithFrame(
-    NSMakeRect(0, 0, 300, 25)
+    NSMakeRect(0, 0, contentWidth, 25)
   );
   var loop = artboardsWithLinks.objectEnumerator(),
     artboardWithLinks,
@@ -1359,8 +1379,12 @@ var generateFlow = function (context) {
     currentPage,
     kPluginDomain
   );
-  settingsWindow.addTextLabelWithValue(strings["generateFlow-flowName"]);
-  var nameField = NSTextField.alloc().initWithFrame(NSMakeRect(0, 0, 300, 23));
+  settingsWindow.addAccessoryView(
+    makeTextLabelWithValue(strings["generateFlow-flowName"])
+  );
+  var nameField = NSTextField.alloc().initWithFrame(
+    NSMakeRect(0, 0, contentWidth, 23)
+  );
   nameField.setStringValue(lastUsedFlowTitle || "");
   settingsWindow.addAccessoryView(nameField);
 
@@ -1369,18 +1393,20 @@ var generateFlow = function (context) {
     currentPage,
     kPluginDomain
   );
-  settingsWindow.addTextLabelWithValue(strings["generateFlow-description"]);
+  settingsWindow.addAccessoryView(
+    makeTextLabelWithValue(strings["generateFlow-description"])
+  );
   var descriptionField = NSTextField.alloc().initWithFrame(
-    NSMakeRect(0, 0, 300, 100)
+    NSMakeRect(0, 0, contentWidth, 100)
   );
   descriptionField.setStringValue(lastUsedFlowDescription || "");
   settingsWindow.addAccessoryView(descriptionField);
 
-  var separator = NSBox.alloc().initWithFrame(NSMakeRect(0, 0, 300, 10));
-  separator.setBoxType(2);
-  settingsWindow.addAccessoryView(separator);
+  settingsWindow.addAccessoryView(separatorBox());
 
-  settingsWindow.addTextLabelWithValue(strings["generateFlow-addToPage"]);
+  settingsWindow.addAccessoryView(
+    makeTextLabelWithValue(strings["generateFlow-addToPage"])
+  );
   var pageNames = doc.valueForKeyPath("pages.@unionOfObjects.name");
   if (!pageNames.containsObject("_Flows")) {
     pageNames = NSArray.arrayWithObject("_Flows").arrayByAddingObjectsFromArray(
@@ -1390,7 +1416,7 @@ var generateFlow = function (context) {
   var newPageItemTitle = "[" + strings["generateFlow-newPage"] + "]";
   pageNames = pageNames.arrayByAddingObject(newPageItemTitle);
   var pagesDropdown = NSPopUpButton.alloc().initWithFrame(
-    NSMakeRect(0, 0, 300, 25)
+    NSMakeRect(0, 0, contentWidth, 25)
   );
   pagesDropdown.addItemsWithTitles(pageNames);
   var lastUsedPageName = context.command.valueForKey_onDocument_forPluginIdentifier(
@@ -1406,7 +1432,7 @@ var generateFlow = function (context) {
   var keepOrganized =
     NSUserDefaults.standardUserDefaults().objectForKey(kKeepOrganizedKey) || 1;
   var keepOrganizedCheckbox = NSButton.alloc().initWithFrame(
-    NSMakeRect(0, 0, 300, 22)
+    NSMakeRect(0, 0, contentWidth, 22)
   );
   keepOrganizedCheckbox.setButtonType(NSSwitchButton);
   keepOrganizedCheckbox.setBezelStyle(0);
@@ -1414,16 +1440,14 @@ var generateFlow = function (context) {
   keepOrganizedCheckbox.setState(keepOrganized);
   settingsWindow.addAccessoryView(keepOrganizedCheckbox);
 
-  var separator = NSBox.alloc().initWithFrame(NSMakeRect(0, 0, 300, 10));
-  separator.setBoxType(2);
-  settingsWindow.addAccessoryView(separator);
+  settingsWindow.addAccessoryView(separatorBox());
 
   var includePrototypingConnections =
     NSUserDefaults.standardUserDefaults().objectForKey(
       kIncludePrototypingKey
     ) || 1;
   var includePrototypingCheckbox = NSButton.alloc().initWithFrame(
-    NSMakeRect(0, 0, 300, 22)
+    NSMakeRect(0, 0, contentWidth, 22)
   );
   includePrototypingCheckbox.setButtonType(NSSwitchButton);
   includePrototypingCheckbox.setBezelStyle(0);
@@ -1437,7 +1461,7 @@ var generateFlow = function (context) {
   nameField.setNextKeyView(descriptionField);
   descriptionField.setNextKeyView(nameField);
 
-  var response = settingsWindow.runModal();
+  var response = runModalForWindow(settingsWindow);
   if (response == "1000") {
     var settings = {
       flowName: nameField.stringValue(),
@@ -2206,8 +2230,12 @@ var updateFlow = function (context) {
     if (titleLabel) flowName = titleLabel.stringValue();
   }
 
-  settingsWindow.addTextLabelWithValue(strings["generateFlow-flowName"]);
-  var nameField = NSTextField.alloc().initWithFrame(NSMakeRect(0, 0, 300, 23));
+  settingsWindow.addAccessoryView(
+    makeTextLabelWithValue(strings["generateFlow-flowName"])
+  );
+  var nameField = NSTextField.alloc().initWithFrame(
+    NSMakeRect(0, 0, contentWidth, 23)
+  );
   nameField.setStringValue(flowName);
   settingsWindow.addAccessoryView(nameField);
 
@@ -2217,9 +2245,11 @@ var updateFlow = function (context) {
     if (descriptionLabel) flowDescription = descriptionLabel.stringValue();
   }
 
-  settingsWindow.addTextLabelWithValue(strings["generateFlow-description"]);
+  settingsWindow.addAccessoryView(
+    makeTextLabelWithValue(strings["generateFlow-description"])
+  );
   var descriptionField = NSTextField.alloc().initWithFrame(
-    NSMakeRect(0, 0, 300, 100)
+    NSMakeRect(0, 0, contentWidth, 100)
   );
   descriptionField.setStringValue(flowDescription);
   settingsWindow.addAccessoryView(descriptionField);
@@ -2228,7 +2258,7 @@ var updateFlow = function (context) {
   nameField.setNextKeyView(descriptionField);
   descriptionField.setNextKeyView(nameField);
 
-  var response = settingsWindow.runModal();
+  var response = runModalForWindow(settingsWindow);
   if (response == "1000") {
     linkLayerPredicate = NSPredicate.predicateWithFormat(
       "userInfo != nil && function(userInfo, 'valueForKeyPath:', %@).destinationArtboardID != nil",
@@ -3053,7 +3083,9 @@ var editSettings = function (context) {
     "v" + version + " | © Aby Nimbalkar | @abynim"
   );
 
-  settingsWindow.addTextLabelWithValue(strings["settings-exportOptions"]);
+  settingsWindow.addAccessoryView(
+    makeTextLabelWithValue(strings["settings-exportOptions"])
+  );
   var exportScale = 1;
   var formatOptions = NSArray.arrayWithArray(["PDF", "PNG", "JPG", "TIFF"]);
   var exportFormat =
@@ -3070,12 +3102,12 @@ var editSettings = function (context) {
   settingsWindow.addAccessoryView(formatDropdown);
 
   // ------------
-  var separator = NSBox.alloc().initWithFrame(NSMakeRect(0, 0, 300, 10));
-  separator.setBoxType(2);
-  settingsWindow.addAccessoryView(separator);
+  settingsWindow.addAccessoryView(separatorBox());
   // ------------
 
-  settingsWindow.addTextLabelWithValue(strings["settings-flowBackground"]);
+  settingsWindow.addAccessoryView(
+    makeTextLabelWithValue(strings["settings-flowBackground"])
+  );
   var bgOptionNames = NSArray.arrayWithArray([
     strings["settings-bgLight"],
     strings["settings-bgDark"],
@@ -3093,7 +3125,9 @@ var editSettings = function (context) {
   bgDropdown.selectItemAtIndex(selectedIndex);
   settingsWindow.addAccessoryView(bgDropdown);
 
-  settingsWindow.addTextLabelWithValue(strings["settings-flowIndicatorStroke"]);
+  settingsWindow.addAccessoryView(
+    makeTextLabelWithValue(strings["settings-flowIndicatorStroke"])
+  );
   var flowIndicatorColorWell = NSColorWell.alloc().initWithFrame(
     NSMakeRect(56, 0, 44, 23)
   );
@@ -3138,7 +3172,7 @@ var editSettings = function (context) {
   connectionTypeDropdown.selectItemAtIndex(selectedIndex);
 
   var flowIndicatorOptionsView = NSView.alloc().initWithFrame(
-    NSMakeRect(0, 0, 300, 23)
+    NSMakeRect(0, 0, contentWidth, 23)
   );
   flowIndicatorOptionsView.addSubview(flowIndicatorColorWell);
   flowIndicatorOptionsView.addSubview(strokeWidthField);
@@ -3226,14 +3260,16 @@ var editSettings = function (context) {
     endMarkerTypeDropdown.selectItemAtIndex(markerTypes.indexOf(endMarkerType));
 
     var markerOptionsView = NSView.alloc().initWithFrame(
-      NSMakeRect(0, 0, 300, 23)
+      NSMakeRect(0, 0, contentWidth, 23)
     );
     markerOptionsView.addSubview(startMarkerTypeDropdown);
     markerOptionsView.addSubview(endMarkerTypeDropdown);
     settingsWindow.addAccessoryView(markerOptionsView);
   }
 
-  settingsWindow.addTextLabelWithValue(strings["settings-minArea"]);
+  settingsWindow.addAccessoryView(
+    makeTextLabelWithValue(strings["settings-minArea"])
+  );
   var tapAreaField = NSTextField.alloc().initWithFrame(
     NSMakeRect(0, 0, 50, 23)
   );
@@ -3245,7 +3281,7 @@ var editSettings = function (context) {
   var showLinkRects =
     NSUserDefaults.standardUserDefaults().objectForKey(kShowsLinkRectsKey) || 1;
   var showLinksCheckbox = NSButton.alloc().initWithFrame(
-    NSMakeRect(0, 0, 300, 22)
+    NSMakeRect(0, 0, contentWidth, 22)
   );
   showLinksCheckbox.setButtonType(NSSwitchButton);
   showLinksCheckbox.setBezelStyle(0);
@@ -3254,12 +3290,12 @@ var editSettings = function (context) {
   settingsWindow.addAccessoryView(showLinksCheckbox);
 
   // ------------
-  var separator = NSBox.alloc().initWithFrame(NSMakeRect(0, 0, 300, 10));
-  separator.setBoxType(2);
-  settingsWindow.addAccessoryView(separator);
+  settingsWindow.addAccessoryView(separatorBox());
   // ------------
 
-  settingsWindow.addTextLabelWithValue(strings["settings-artboardMagnets"]);
+  settingsWindow.addAccessoryView(
+    makeTextLabelWithValue(strings["settings-artboardMagnets"])
+  );
   var currentMagnetsType =
     NSUserDefaults.standardUserDefaults().objectForKey(kMagnetsTypeKey) ||
     "nsew";
@@ -3298,12 +3334,12 @@ var editSettings = function (context) {
   settingsWindow.addAccessoryView(magnetsTypeDropdown);
 
   // ------------
-  var separator = NSBox.alloc().initWithFrame(NSMakeRect(0, 0, 300, 10));
-  separator.setBoxType(2);
-  settingsWindow.addAccessoryView(separator);
+  settingsWindow.addAccessoryView(separatorBox());
   // ------------
 
-  settingsWindow.addTextLabelWithValue(strings["settings-conditionFontSize"]);
+  settingsWindow.addAccessoryView(
+    makeTextLabelWithValue(strings["settings-conditionFontSize"])
+  );
   var conditionFontSizeField = NSTextField.alloc().initWithFrame(
     NSMakeRect(0, 0, 50, 23)
   );
@@ -3314,12 +3350,12 @@ var editSettings = function (context) {
   settingsWindow.addAccessoryView(conditionFontSizeField);
 
   // ------------
-  var separator = NSBox.alloc().initWithFrame(NSMakeRect(0, 0, 300, 10));
-  separator.setBoxType(2);
-  settingsWindow.addAccessoryView(separator);
+  settingsWindow.addAccessoryView(separatorBox());
   // ------------
 
-  settingsWindow.addTextLabelWithValue(strings["settings-yourName"]);
+  settingsWindow.addAccessoryView(
+    makeTextLabelWithValue(strings["settings-yourName"])
+  );
   var userName =
     NSUserDefaults.standardUserDefaults().objectForKey(kFullNameKey) || "";
   var userNameField = NSTextField.alloc().initWithFrame(
@@ -3332,7 +3368,7 @@ var editSettings = function (context) {
     NSUserDefaults.standardUserDefaults().objectForKey(kShowModifiedDateKey) ||
     0;
   var showNameCheckbox = NSButton.alloc().initWithFrame(
-    NSMakeRect(0, 0, 300, 22)
+    NSMakeRect(0, 0, contentWidth, 22)
   );
   showNameCheckbox.setButtonType(NSSwitchButton);
   showNameCheckbox.setBezelStyle(0);
@@ -3341,9 +3377,7 @@ var editSettings = function (context) {
   settingsWindow.addAccessoryView(showNameCheckbox);
 
   // ------------
-  var separator = NSBox.alloc().initWithFrame(NSMakeRect(0, 0, 300, 10));
-  separator.setBoxType(2);
-  settingsWindow.addAccessoryView(separator);
+  settingsWindow.addAccessoryView(separatorBox());
   // ------------
 
   var autoUpdateConnections =
@@ -3351,7 +3385,7 @@ var editSettings = function (context) {
       kAutoUpdateConnectionsKey
     ) || 1;
   var autoUpdateConnectionsCheckbox = NSButton.alloc().initWithFrame(
-    NSMakeRect(0, 0, 300, 22)
+    NSMakeRect(0, 0, contentWidth, 22)
   );
   autoUpdateConnectionsCheckbox.setButtonType(NSSwitchButton);
   autoUpdateConnectionsCheckbox.setBezelStyle(0);
@@ -3361,7 +3395,7 @@ var editSettings = function (context) {
   autoUpdateConnectionsCheckbox.setState(autoUpdateConnections);
   settingsWindow.addAccessoryView(autoUpdateConnectionsCheckbox);
 
-  var response = settingsWindow.runModal();
+  var response = runModalForWindow(settingsWindow);
 
   if (response == "1000") {
     var flowIndicatorMSColor = MSColor.colorWithNSColor(
@@ -3591,7 +3625,7 @@ var editShortcuts = function (context) {
       command.allowsShortcut == false
     )
       continue;
-    settingsWindow.addTextLabelWithValue(command.name);
+    settingsWindow.addAccessoryView(makeTextLabelWithValue(command.name));
     shortcutField = NSTextField.alloc().initWithFrame(
       NSMakeRect(0, 0, 160, 23)
     );
@@ -3602,7 +3636,7 @@ var editShortcuts = function (context) {
     shortcutFields[command.identifier] = shortcutField;
   }
 
-  var response = settingsWindow.runModal();
+  var response = runModalForWindow(settingsWindow);
 
   if (response == "1000") {
     for (var i = 0; i < commandsCount; i++) {
@@ -3675,7 +3709,7 @@ var checkForUpdates = function (context) {
     updateAlert.addButtonWithTitle(strings["alerts-done"]);
   }
 
-  var response = updateAlert.runModal();
+  var response = runModalForWindow(updateAlert);
   if (updateAvailable && response == "1000") {
     var websiteURL = NSURL.URLWithString(json.valueForKey("websiteURL"));
     NSWorkspace.sharedWorkspace().openURL(websiteURL);
@@ -3693,7 +3727,7 @@ var editLanguage = function (context) {
   settingsWindow.setInformativeText(strings["language-message"]);
 
   var languagesDropdown = NSPopUpButton.alloc().initWithFrame(
-      NSMakeRect(0, 0, 300, 25)
+      NSMakeRect(0, 0, contentWidth, 25)
     ),
     currentLanguage =
       NSUserDefaults.standardUserDefaults().objectForKey(kLanguageCodeKey) ||
@@ -3708,7 +3742,7 @@ var editLanguage = function (context) {
   }
   settingsWindow.addAccessoryView(languagesDropdown);
 
-  var response = settingsWindow.runModal();
+  var response = runModalForWindow(settingsWindow);
 
   if (response == "1000") {
     var localeID = supportedLanguages[languagesDropdown.indexOfSelectedItem()];
@@ -3807,7 +3841,7 @@ var showAlert = function (
   if (typeof secondaryButtonText !== "undefined") {
     alert.addButtonWithTitle(secondaryButtonText);
   }
-  alert.runModal();
+  runModalForWindow(alert);
 };
 
 var getConnectionsGroupInPage = function (page) {
@@ -3845,6 +3879,28 @@ var parseContext = function (context) {
     stringsFilePath = context.plugin.urlForResourceNamed("en.plist").path();
     strings = NSDictionary.dictionaryWithContentsOfFile(stringsFilePath);
   }
+};
+
+const makeTextLabelWithValue = function (value) {
+  const tf = NSTextField.alloc().initWithFrame(
+    NSMakeRect(0, 0, contentWidth, 17)
+  );
+  tf.setDrawsBackground(false);
+  tf.setEditable(false);
+  tf.setBezeled(false);
+  tf.setSelectable(true);
+
+  if (value) tf.setStringValue(value);
+  return tf;
+};
+
+const runModalForWindow = function (cosAlertWindow) {
+  cosAlertWindow.layout();
+  const accessoryView = cosAlertWindow.accessoryView();
+  var frame = accessoryView.frame();
+  frame.size.width = contentWidth + 10;
+  accessoryView.setFrame(frame);
+  return cosAlertWindow.alert().runModal();
 };
 
 var getAlertWindow = function () {
