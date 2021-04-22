@@ -602,13 +602,10 @@ var relinkArtboardsAfterCopy = function (context) {
     settingsWindow.setMessageText(strings["relinkArtboards-title"]);
     settingsWindow.setInformativeText(strings["relinkArtboards-description"]);
 
-    var showsWarningCheckbox = NSButton.alloc().initWithFrame(
-      NSMakeRect(0, 0, contentWidth, 22)
+    var showsWarningCheckbox = makeCheckboxWithTitle_state(
+      strings["relinkArtboards-dontShowAgain"],
+      NSOffState
     );
-    showsWarningCheckbox.setButtonType(NSSwitchButton);
-    showsWarningCheckbox.setBezelStyle(0);
-    showsWarningCheckbox.setTitle(strings["relinkArtboards-dontShowAgain"]);
-    showsWarningCheckbox.setState(NSOffState);
     settingsWindow.addAccessoryView(showsWarningCheckbox);
 
     var response = runModalForWindow(settingsWindow);
@@ -1431,13 +1428,10 @@ var generateFlow = function (context) {
 
   var keepOrganized =
     NSUserDefaults.standardUserDefaults().objectForKey(kKeepOrganizedKey) || 1;
-  var keepOrganizedCheckbox = NSButton.alloc().initWithFrame(
-    NSMakeRect(0, 0, contentWidth, 22)
+  var keepOrganizedCheckbox = makeCheckboxWithTitle_state(
+    strings["generateFlow-keepOrganized"],
+    keepOrganized
   );
-  keepOrganizedCheckbox.setButtonType(NSSwitchButton);
-  keepOrganizedCheckbox.setBezelStyle(0);
-  keepOrganizedCheckbox.setTitle(strings["generateFlow-keepOrganized"]);
-  keepOrganizedCheckbox.setState(keepOrganized);
   settingsWindow.addAccessoryView(keepOrganizedCheckbox);
 
   settingsWindow.addAccessoryView(separatorBox());
@@ -1446,15 +1440,10 @@ var generateFlow = function (context) {
     NSUserDefaults.standardUserDefaults().objectForKey(
       kIncludePrototypingKey
     ) || 1;
-  var includePrototypingCheckbox = NSButton.alloc().initWithFrame(
-    NSMakeRect(0, 0, contentWidth, 22)
+  var includePrototypingCheckbox = makeCheckboxWithTitle_state(
+    strings["generateFlow-includePrototypingConnections"],
+    includePrototypingConnections
   );
-  includePrototypingCheckbox.setButtonType(NSSwitchButton);
-  includePrototypingCheckbox.setBezelStyle(0);
-  includePrototypingCheckbox.setTitle(
-    strings["generateFlow-includePrototypingConnections"]
-  );
-  includePrototypingCheckbox.setState(includePrototypingConnections);
   settingsWindow.addAccessoryView(includePrototypingCheckbox);
 
   settingsWindow.alert().window().setInitialFirstResponder(nameField);
@@ -3280,13 +3269,10 @@ var editSettings = function (context) {
 
   var showLinkRects =
     NSUserDefaults.standardUserDefaults().objectForKey(kShowsLinkRectsKey) || 1;
-  var showLinksCheckbox = NSButton.alloc().initWithFrame(
-    NSMakeRect(0, 0, contentWidth, 22)
+  var showLinksCheckbox = makeCheckboxWithTitle_state(
+    strings["settings-drawBorders"],
+    showLinkRects
   );
-  showLinksCheckbox.setButtonType(NSSwitchButton);
-  showLinksCheckbox.setBezelStyle(0);
-  showLinksCheckbox.setTitle(strings["settings-drawBorders"]);
-  showLinksCheckbox.setState(showLinkRects);
   settingsWindow.addAccessoryView(showLinksCheckbox);
 
   // ------------
@@ -3367,13 +3353,10 @@ var editSettings = function (context) {
   var showName =
     NSUserDefaults.standardUserDefaults().objectForKey(kShowModifiedDateKey) ||
     0;
-  var showNameCheckbox = NSButton.alloc().initWithFrame(
-    NSMakeRect(0, 0, contentWidth, 22)
+  var showNameCheckbox = makeCheckboxWithTitle_state(
+    strings["settings-showDate"],
+    showName
   );
-  showNameCheckbox.setButtonType(NSSwitchButton);
-  showNameCheckbox.setBezelStyle(0);
-  showNameCheckbox.setTitle(strings["settings-showDate"]);
-  showNameCheckbox.setState(showName);
   settingsWindow.addAccessoryView(showNameCheckbox);
 
   // ------------
@@ -3384,15 +3367,10 @@ var editSettings = function (context) {
     NSUserDefaults.standardUserDefaults().objectForKey(
       kAutoUpdateConnectionsKey
     ) || 1;
-  var autoUpdateConnectionsCheckbox = NSButton.alloc().initWithFrame(
-    NSMakeRect(0, 0, contentWidth, 22)
+  var autoUpdateConnectionsCheckbox = makeCheckboxWithTitle_state(
+    strings["settings-autoUpdateConnections"],
+    autoUpdateConnections
   );
-  autoUpdateConnectionsCheckbox.setButtonType(NSSwitchButton);
-  autoUpdateConnectionsCheckbox.setBezelStyle(0);
-  autoUpdateConnectionsCheckbox.setTitle(
-    strings["settings-autoUpdateConnections"]
-  );
-  autoUpdateConnectionsCheckbox.setState(autoUpdateConnections);
   settingsWindow.addAccessoryView(autoUpdateConnectionsCheckbox);
 
   var response = runModalForWindow(settingsWindow);
@@ -3879,6 +3857,15 @@ var parseContext = function (context) {
     stringsFilePath = context.plugin.urlForResourceNamed("en.plist").path();
     strings = NSDictionary.dictionaryWithContentsOfFile(stringsFilePath);
   }
+};
+
+const makeCheckboxWithTitle_state = function (title, state) {
+  var cb = NSButton.alloc().initWithFrame(NSMakeRect(0, 0, contentWidth, 22));
+  cb.setButtonType(NSSwitchButton);
+  cb.setBezelStyle(0);
+  cb.setTitle(title);
+  cb.setState(state);
+  return cb;
 };
 
 const makeTextLabelWithValue = function (value) {
