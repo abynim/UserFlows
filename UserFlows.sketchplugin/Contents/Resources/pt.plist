@@ -100,6 +100,8 @@
 	<string>Manter P&aacute;gina do _Fluxo Organizada</string>
 	<key>generateFlow-includePrototypingConnections</key>
 	<string>Incluir Conex&otilde;es a Prot&oacute;tipos</string>
+	<key>generateFlow-shouldNumberScreens</key>
+	<string>Add numbers to artboard names</string>
 	<key>generateFlow-flowGroupName</key>
 	<string>Grupo de Fluxos</string>
 	<key>generateFlow-connectionsGroupName</key>

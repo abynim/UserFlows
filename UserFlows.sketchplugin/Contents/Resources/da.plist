@@ -104,6 +104,8 @@
 	<string>Sørg for at organisere _Flows siden</string>
 	<key>generateFlow-includePrototypingConnections</key>
 	<string>Include Prototyping Connections</string>
+	<key>generateFlow-shouldNumberScreens</key>
+	<string>Add numbers to artboard names</string>
 	<key>generateFlow-flowGroupName</key>
 	<string>Flow Gruppe</string>
 	<key>generateFlow-connectionsGroupName</key>

@@ -104,6 +104,8 @@
 	<string>Keep _Flows Page Organized</string>
 	<key>generateFlow-includePrototypingConnections</key>
 	<string>Include Prototyping Connections</string>
+	<key>generateFlow-shouldNumberScreens</key>
+	<string>Add numbers to artboard names</string>
 	<key>generateFlow-flowGroupName</key>
 	<string>Flow Group</string>
 	<key>generateFlow-connectionsGroupName</key>

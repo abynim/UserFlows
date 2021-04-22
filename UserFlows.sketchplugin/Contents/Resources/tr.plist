@@ -104,6 +104,8 @@
 	<string>_Flows Sayfasını Düzenli Tutun.</string>
 	<key>generateFlow-includePrototypingConnections</key>
 	<string>Include Prototyping Connections</string>
+	<key>generateFlow-shouldNumberScreens</key>
+	<string>Add numbers to artboard names</string>
 	<key>generateFlow-flowGroupName</key>
 	<string>Akış Grubu</string>
 	<key>generateFlow-connectionsGroupName</key>
