@@ -73,6 +73,7 @@ const sketchVersion50 = 500;
 const sketchVersion51 = 510;
 const sketchVersion52 = 520;
 const sketchVersion53 = 530;
+const sketchVersion72 = 720;
 
 var defineLink = function (context) {
   parseContext(context);
@@ -888,7 +889,9 @@ var editConditionsForArtboard = function (
       );
       context.document.currentPage().addLayers([conditionBoard]);
     }
-    conditionBoard.setConstrainProportions(false);
+    sketchVersion < sketchVersion72
+      ? conditionBoard.setConstrainProportions(false)
+      : conditionBoard.setShouldConstrainProportions(false);
     context.command.setValue_forKey_onLayer_forPluginIdentifier(
       elseCheckbox.state(),
       "hasElse",
@@ -1894,6 +1897,9 @@ var generateFlowWithSettings = function (
   flowBoard.setName(flowName);
   flowBoard.setHasBackgroundColor(1);
   flowBoard.setBackgroundColor(flowBackgroundColor);
+  sketchVersion < sketchVersion72
+    ? flowBoard.setConstrainProportions(false)
+    : flowBoard.setShouldConstrainProportions(false);
 
   var flowNameLabel = MSTextLayer.new();
   flowNameLabel.setName(flowName);
@@ -2019,6 +2025,8 @@ var generateFlowWithSettings = function (
 
   flowPage.addLayers([flowBoard]);
 
+  var shouldOrganize = settings.shouldOrganizeFlowPage;
+
   context.command.setValue_forKey_onDocument_forPluginIdentifier(
     flowPageName,
     "lastUsedFlowPage",
@@ -2067,12 +2075,10 @@ var generateFlowWithSettings = function (
     );
   }
 
-  flowBoard.setConstrainProportions(false);
   if (sketchVersion < sketchVersion53)
     flowBoard.resizeToFitChildrenWithOption(1);
   else flowBoard.fixGeometryWithOptions(1);
 
-  var shouldOrganize = settings.shouldOrganizeFlowPage;
   if (shouldOrganize && flowPageName == "_Flows") {
     var loop = flowPage.artboards().objectEnumerator(),
       i = 0,

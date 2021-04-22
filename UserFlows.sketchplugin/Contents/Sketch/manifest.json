@@ -1,217 +1,225 @@
 {
-  "author" : "Aby Nimbalkar",
-  "commands" : [
+  "description": "Generate user-flow diagrams from artboards in Sketch.",
+  "disableCocoaScriptPreprocessor": true,
+  "version": "2.3.7",
+  "author": "Aby Nimbalkar",
+  "commands": [
     {
-      "script" : "script.js",
-      "shortcut" : "cmd shift m",
-      "handlers" : {
-        "run" : "defineLink"
+      "script": "script.js",
+      "shortcut": "cmd shift m",
+      "handlers": {
+        "run": "defineLink"
       },
-      "identifier" : "defineLink",
-      "description" : "Select a layer\/group, select an artboard, then create a link between the two.",
-      "icon" : "icons/addLink.png",
-      "name" : "Create Link"
+      "identifier": "defineLink",
+      "description": "Select a layer/group, select an artboard, then create a link between the two.",
+      "name": "Create Link",
+      "icon": "icons/addLink.png"
     },
     {
-      "script" : "script.js",
-      "shortcut" : "cmd control shift m",
-      "handlers" : {
-        "run" : "defineLink"
+      "script": "script.js",
+      "shortcut": "cmd control shift m",
+      "handlers": {
+        "run": "defineLink"
       },
-      "identifier" : "defineLinkWithOptions",
-      "description" : "Select a layer\/group, select an artboard, then create a link between the two by selecting a connection style.",
-      "icon" : "icons/addLink.png",
-      "name" : "Create Link With Connection Style"
+      "identifier": "defineLinkWithOptions",
+      "description": "Select a layer/group, select an artboard, then create a link between the two by selecting a connection style.",
+      "name": "Create Link With Connection Style",
+      "icon": "icons/addLink.png"
     },
     {
-      "script" : "script.js",
-      "shortcut" : "cmd option shift m",
-      "handlers" : {
-        "run" : "editConnectionStyle"
+      "script": "script.js",
+      "shortcut": "cmd option shift m",
+      "handlers": {
+        "run": "editConnectionStyle"
       },
-      "identifier" : "editLinkOptions",
-      "description" : "Edit the style preset of a link layer's connection.",
-      "icon" : "icons/addLink.png",
-      "name" : "Edit Connection Style"
+      "identifier": "editLinkOptions",
+      "description": "Edit the style preset of a link layer's connection.",
+      "name": "Edit Connection Style",
+      "icon": "icons/addLink.png"
     },
     {
-      "script" : "script.js",
-      "shortcut" : "cmd shift u",
-      "handlers" : {
-        "run" : "removeLink"
+      "script": "script.js",
+      "shortcut": "cmd shift u",
+      "handlers": {
+        "run": "removeLink"
       },
-      "identifier" : "removeLink",
-      "description" : "Remove a Link.",
-      "icon" : "icons/removeLink.png",
-      "name" : "Remove Link"
+      "identifier": "removeLink",
+      "description": "Remove a Link.",
+      "name": "Remove Link",
+      "icon": "icons/removeLink.png"
     },
     {
-      "script" : "script.js",
-      "shortcut" : "cmd option shift u",
-      "handlers" : {
-        "run" : "removeAllLinks"
+      "script": "script.js",
+      "shortcut": "cmd option shift u",
+      "handlers": {
+        "run": "removeAllLinks"
       },
-      "identifier" : "removeAllLinks",
-      "description" : "Remove all Links from an Artboard or Page.",
-      "icon" : "icons/removeLink.png",
-      "name" : "Remove All Links"
+      "identifier": "removeAllLinks",
+      "description": "Remove all Links from an Artboard or Page.",
+      "name": "Remove All Links",
+      "icon": "icons/removeLink.png"
     },
     {
-      "script" : "script.js",
-      "shortcut" : "",
-      "name" : "Relink Duplicated Artboards",
-      "identifier" : "relinkArtboardsAfterCopy",
-      "description" : "Relink artboards that were copied or moved to another page.",
-      "icon" : "icons\/relinkArtboards.png",
-      "handlers" : {
-        "run" : "relinkArtboardsAfterCopy"
+      "script": "script.js",
+      "shortcut": "",
+      "icon": "icons/relinkArtboards.png",
+      "identifier": "relinkArtboardsAfterCopy",
+      "description": "Relink artboards that were copied or moved to another page.",
+      "name": "Relink Duplicated Artboards",
+      "handlers": {
+        "run": "relinkArtboardsAfterCopy"
       }
     },
     {
-      "script" : "script.js",
-      "shortcut" : "cmd shift d",
-      "handlers" : {
-        "run" : "addCondition"
+      "script": "script.js",
+      "shortcut": "cmd shift d",
+      "handlers": {
+        "run": "addCondition"
       },
-      "identifier" : "addCondition",
-      "description" : "Add or Edit a condition in the current flow.",
-      "icon" : "icons/editConditions.png",
-      "name" : "Add\/Edit Conditions"
+      "identifier": "addCondition",
+      "description": "Add or Edit a condition in the current flow.",
+      "name": "Add/Edit Conditions",
+      "icon": "icons/editConditions.png"
     },
     {
-      "script" : "script.js",
-      "shortcut" : "cmd shift f",
-      "handlers" : {
-        "run" : "generateFlow"
+      "script": "script.js",
+      "shortcut": "cmd shift f",
+      "handlers": {
+        "run": "generateFlow"
       },
-      "identifier" : "generateFlow",
-      "description" : "Generate a flow diagram starting from a specific artboard.",
-      "icon" : "icons/generateDiagram.png",
-      "name" : "Generate Flow Diagram"
+      "identifier": "generateFlow",
+      "description": "Generate a flow diagram starting from a specific artboard.",
+      "name": "Generate Flow Diagram",
+      "icon": "icons/generateDiagram.png"
     },
     {
-      "script" : "script.js",
-      "shortcut" : "ctrl shift f",
-      "icon" : "icons/generateDiagram.png",
-      "identifier" : "updateFlow",
-      "description" : "Update the selected User Flow artboard.",
-      "name" : "Update Flow Diagram",
-      "handlers" : {
-        "run" : "updateFlow"
+      "script": "script.js",
+      "shortcut": "ctrl shift f",
+      "name": "Update Flow Diagram",
+      "identifier": "updateFlow",
+      "description": "Update the selected User Flow artboard.",
+      "icon": "icons/generateDiagram.png",
+      "handlers": {
+        "run": "updateFlow"
       }
     },
     {
-      "script" : "script.js",
-      "shortcut" : "cmd shift 9",
-      "handlers" : {
-        "run" : "showConnections"
+      "script": "script.js",
+      "shortcut": "cmd shift 9",
+      "handlers": {
+        "run": "showConnections"
       },
-      "identifier" : "showConnections",
-      "description" : "Show or redraw connections between link layers and destination artboards.",
-      "icon" : "icons/redrawConnections.png",
-      "name" : "Show or Redraw Connections"
+      "identifier": "showConnections",
+      "description": "Show or redraw connections between link layers and destination artboards.",
+      "name": "Show or Redraw Connections",
+      "icon": "icons/redrawConnections.png"
     },
     {
-      "script" : "script.js",
-      "shortcut" : "cmd shift 0",
-      "handlers" : {
-        "run" : "hideConnections"
+      "script": "script.js",
+      "shortcut": "cmd shift 0",
+      "handlers": {
+        "run": "hideConnections"
       },
-      "identifier" : "hideConnections",
-      "description" : "Hide connections between link layers and destination artboards.",
-      "icon" : "icons/hideConnections.png",
-      "name" : "Hide Connections"
+      "identifier": "hideConnections",
+      "description": "Hide connections between link layers and destination artboards.",
+      "name": "Hide Connections",
+      "icon": "icons/hideConnections.png"
     },
     {
-      "script" : "script.js",
-      "shortcut" : "cmd shift .",
-      "handlers" : {
-        "run" : "gotoDestinationArtboard"
+      "script": "script.js",
+      "shortcut": "cmd shift .",
+      "handlers": {
+        "run": "gotoDestinationArtboard"
       },
-      "identifier" : "gotoDestinationArtboard",
-      "description" : "Go to the artboard linked to this layer.",
-      "icon" : "icons/gotoArtboard.png",
-      "name" : "Go to Linked Artboard"
+      "identifier": "gotoDestinationArtboard",
+      "description": "Go to the artboard linked to this layer.",
+      "name": "Go to Linked Artboard",
+      "icon": "icons/gotoArtboard.png"
     },
     {
-      "script" : "script.js",
-      "shortcut" : "cmd shift ,",
-      "handlers" : {
-        "run" : "goBackToLink"
+      "script": "script.js",
+      "shortcut": "cmd shift ,",
+      "handlers": {
+        "run": "goBackToLink"
       },
-      "identifier" : "goBackToLink",
-      "description" : "Navigate back to the link layer.",
-      "icon" : "icons/gotoLinkLayer.png",
-      "name" : "Go Back to Link Layer"
+      "identifier": "goBackToLink",
+      "description": "Navigate back to the link layer.",
+      "name": "Go Back to Link Layer",
+      "icon": "icons/gotoLinkLayer.png"
     },
     {
-      "script" : "script.js",
-      "shortcut" : "cmd shift b",
-      "icon" : "icon.png",
-      "identifier" : "editArtboardDescription",
-      "description" : "Edit the description of the selected Artboard.",
-      "handlers" : {
-        "run" : "editArtboardDescription"
+      "script": "script.js",
+      "shortcut": "cmd shift b",
+      "icon": "icon.png",
+      "identifier": "editArtboardDescription",
+      "description": "Edit the description of the selected Artboard.",
+      "handlers": {
+        "run": "editArtboardDescription"
       }
     },
     {
-      "script" : "script.js",
-      "shortcut" : "",
-      "name" : "Settings...",
-      "identifier" : "editSettings",
-      "description" : "Edit settings for User Flows.",
-      "icon" : "icon.png",
-      "handlers" : {
-        "run" : "editSettings"
+      "script": "script.js",
+      "shortcut": "",
+      "icon": "icon.png",
+      "identifier": "editSettings",
+      "description": "Edit settings for User Flows.",
+      "name": "Settings...",
+      "handlers": {
+        "run": "editSettings"
       }
     },
     {
-      "script" : "script.js",
-      "shortcut" : "",
-      "allowsShortcut" : false,
-      "name" : "Keyboard Shortcuts...",
-      "identifier" : "editShortcuts",
-      "description" : "Edit keyboard shortcuts for User Flows.",
-      "icon" : "icon.png",
-      "handlers" : {
-        "run" : "editShortcuts"
+      "script": "script.js",
+      "shortcut": "",
+      "allowsShortcut": false,
+      "icon": "icon.png",
+      "identifier": "editShortcuts",
+      "description": "Edit keyboard shortcuts for User Flows.",
+      "name": "Keyboard Shortcuts...",
+      "handlers": {
+        "run": "editShortcuts"
       }
     },
     {
-      "script" : "script.js",
-      "shortcut" : "",
-      "allowsShortcut" : false,
-      "name" : "Language...",
-      "identifier" : "editLanguage",
-      "description" : "Language setting for User Flows.",
-      "icon" : "icon.png",
-      "handlers" : {
-        "run" : "editLanguage"
+      "script": "script.js",
+      "shortcut": "",
+      "allowsShortcut": false,
+      "icon": "icon.png",
+      "identifier": "editLanguage",
+      "description": "Language setting for User Flows.",
+      "name": "Language...",
+      "handlers": {
+        "run": "editLanguage"
       }
     },
     {
-      "script" : "script.js",
-      "shortcut" : "",
-      "allowsShortcut" : false,
-      "handlers" : {
-        "run" : "checkForUpdates"
+      "script": "script.js",
+      "shortcut": "",
+      "allowsShortcut": false,
+      "handlers": {
+        "run": "checkForUpdates"
       },
-      "identifier" : "checkForUpdates",
-      "name" : "Check for Updates...",
-      "icon" : "icon.png"
+      "identifier": "checkForUpdates",
+      "icon": "icon.png",
+      "name": "Check for Updates..."
     },
     {
-      "script" : "script.js",
-      "handlers" : {
-        "actions" : {
-          "LayersMoved.finish" : "onLayersMoved"
+      "script": "script.js",
+      "handlers": {
+        "actions": {
+          "LayersMoved.finish": "onLayersMoved"
         }
       },
-      "identifier" : "actionHandler"
+      "identifier": "actionHandler"
     }
   ],
-  "menu" : {
-    "items" : [
+  "appcast": "https://raw.githubusercontent.com/abynim/UserFlows/v2/appcast.xml",
+  "homepage": "https://abynim.github.io/UserFlows",
+  "identifier": "com.abynim.sketchplugins.userflows",
+  "icon": "icon.png",
+  "authorEmail": "abynimbalkar@gmail.com",
+  "menu": {
+    "items": [
       "defineLink",
       "defineLinkWithOptions",
       "editLinkOptions",
@@ -238,14 +246,6 @@
       "checkForUpdates"
     ]
   },
-  "compatibleVersion" : "53" ,
-  "disableCocoaScriptPreprocessor" : true,
-  "identifier" : "com.abynim.sketchplugins.userflows",
-  "version" : "2.3.6",
-  "description" : "Generate user-flow diagrams from artboards in Sketch.",
-  "homepage" : "https:\/\/abynim.github.io\/UserFlows",
-  "authorEmail" : "abynimbalkar@gmail.com",
-  "name" : "User Flows",
-  "icon" : "icon.png",
-  "appcast" : "https://raw.githubusercontent.com/abynim/UserFlows/v2/appcast.xml"
+  "name": "User Flows",
+  "compatibleVersion": "53"
 }
