@@ -625,7 +625,7 @@ var editConditionsForArtboard = function(currentArtboard, context, forceNewCondi
 			conditionBorder.setThickness(2);
 
 			conditionBoard.addLayers([conditionBox, conditionLabel]);
-			layersArray = MSLayerArray.arrayWithLayers([conditionBox, conditionLabel]);
+			layersArray = [conditionBox, conditionLabel];
 			conditionGroup = sketchVersion < sketchVersion52 ? MSLayerGroup.groupFromLayers(layersArray) : MSLayerGroup.groupWithLayers(layersArray);
 			conditionGroup.setName(strings["addCondition-conditionGroupName"] + " " + count);
 
@@ -1151,7 +1151,7 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 	}
 
 	var sharedLayerStyles = sharedLayerStylesForContext(context);
-	var connectionLayers = MSLayerArray.arrayWithLayers(drawConnections(connections, sourcePage, exportScale, flowBackgroundColor, sharedLayerStyles));
+	var connectionLayers = drawConnections(connections, sourcePage, exportScale, flowBackgroundColor, sharedLayerStyles);
 	var connectionsGroup = sketchVersion < sketchVersion52 ? MSLayerGroup.groupFromLayers(connectionLayers) : MSLayerGroup.groupWithLayers(connectionLayers);
 	connectionsGroup.setName(strings["generateFlow-connectionsGroupName"]);
 	artboardBitmapLayers.push(connectionsGroup);
@@ -1161,7 +1161,7 @@ var generateFlowWithSettings = function(context, settings, initialArtboard, sour
 	for (var i = 0; i < artboardBitmapLayers.length; i++) {
 		groupBounds = CGRectUnion(groupBounds, artboardBitmapLayers[i].absoluteRect().rect());
 	}
-	var layers = MSLayerArray.arrayWithLayers(artboardBitmapLayers);
+	var layers = artboardBitmapLayers;
 	var newGroup = sketchVersion < sketchVersion52 ? MSLayerGroup.groupFromLayers(layers) : MSLayerGroup.groupWithLayers(layers);
 	newGroup.setName(strings["generateFlow-flowGroupName"]);
 	newGroup.resizeToFitChildrenWithOption(1);
@@ -1450,7 +1450,7 @@ var sharedLayerStylesForContext = function(context) {
 
 var redrawConnections = function(context) {
 	var doc = context.document || context.actionContext.document;
-	var selectedLayers = doc.selectedLayers().layers();
+	var selectedLayers = doc.selectedLayers();
 
 	sketchVersion = getVersionNumberFromString(NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString"));
 
@@ -1504,12 +1504,11 @@ var redrawConnections = function(context) {
 	}
 
 	var sharedLayerStyles = sharedLayerStylesForContext(context);
-	var connectionLayers = MSLayerArray.arrayWithLayers(drawConnections(connections, doc.currentPage(), 1, nil, sharedLayerStyles));
+	var connectionLayers = drawConnections(connections, doc.currentPage(), 1, nil, sharedLayerStyles);
 	connectionsGroup = sketchVersion < sketchVersion52 ? MSLayerGroup.groupFromLayers(connectionLayers) : MSLayerGroup.groupWithLayers(connectionLayers);
 	connectionsGroup.setName("-Connections");
 	connectionsGroup.setIsLocked(1);
-	connectionsGroup.deselectLayerAndParent();
-	context.command.setValue_forKey_onLayer_forPluginIdentifier(true, "isConnectionsContainer", connectionsGroup, kPluginDomain);
+  context.command.setValue_forKey_onLayer(true,"isConnectionsContainer",connectionsGroup);
 
 	var loop = selectedLayers.objectEnumerator(), selectedLayer;
 	while (selectedLayer = loop.nextObject()) {
