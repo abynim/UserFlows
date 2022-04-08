@@ -76,6 +76,7 @@ const sketchVersion51 = 510;
 const sketchVersion52 = 520;
 const sketchVersion53 = 530;
 const sketchVersion72 = 720;
+const sketchVersion81 = 810;
 
 const contentWidth = 360;
 
@@ -123,16 +124,18 @@ var defineLink = function (context) {
   }
 
   var didModifySettings = true;
-  var lastUsedBorderStyleID = context.command.valueForKey_onDocument_forPluginIdentifier(
-    "lastUsedBorderStyleID",
-    doc.documentData(),
-    kPluginDomain
-  );
-  var lastUsedForeignStyleID = context.command.valueForKey_onDocument_forPluginIdentifier(
-    "lastUsedForeignStyleID",
-    doc.documentData(),
-    kPluginDomain
-  );
+  var lastUsedBorderStyleID =
+    context.command.valueForKey_onDocument_forPluginIdentifier(
+      "lastUsedBorderStyleID",
+      doc.documentData(),
+      kPluginDomain
+    );
+  var lastUsedForeignStyleID =
+    context.command.valueForKey_onDocument_forPluginIdentifier(
+      "lastUsedForeignStyleID",
+      doc.documentData(),
+      kPluginDomain
+    );
 
   if (context.command.identifier() == "defineLinkWithOptions") {
     if (sketchVersion < sketchVersion51) {
@@ -151,11 +154,12 @@ var defineLink = function (context) {
 
     settingsWindow.setMessageText("Select connection style");
 
-    var stylesDropdown = stylesDropdownForContext_selectedStyleID_sharedObjectID(
-      context,
-      lastUsedBorderStyleID,
-      lastUsedForeignStyleID
-    );
+    var stylesDropdown =
+      stylesDropdownForContext_selectedStyleID_sharedObjectID(
+        context,
+        lastUsedBorderStyleID,
+        lastUsedForeignStyleID
+      );
     settingsWindow.addAccessoryView(stylesDropdown);
 
     if (runModalForWindow(settingsWindow) == "1000") {
@@ -296,9 +300,8 @@ var stylesDropdownForContext_selectedStyleID_sharedObjectID = function (
       ""
     );
     //menuItem.setImage(generatePreviewImageForSharedBorderStyle(sharedStyle));
-    shareableObjectRef = MSShareableObjectReference.referenceForShareableObject(
-      sharedStyle
-    );
+    shareableObjectRef =
+      MSShareableObjectReference.referenceForShareableObject(sharedStyle);
     menuItem.setRepresentedObject(shareableObjectRef);
     menuItem.setIndentationLevel(1);
     if (selectedID && "" + sharedStyle.objectID() == selectedID) {
@@ -338,10 +341,11 @@ var stylesDropdownForContext_selectedStyleID_sharedObjectID = function (
           ""
         );
         //menuItem.setImage(generatePreviewImageForSharedBorderStyle(sharedStyle));
-        shareableObjectRef = MSShareableObjectReference.referenceForShareableObject_inLibrary(
-          sharedStyle,
-          lib
-        );
+        shareableObjectRef =
+          MSShareableObjectReference.referenceForShareableObject_inLibrary(
+            sharedStyle,
+            lib
+          );
         menuItem.setRepresentedObject(shareableObjectRef);
         menuItem.setIndentationLevel(1);
         if (
@@ -376,9 +380,8 @@ var editConnectionStyle = function (context) {
     "userInfo != nil && function(userInfo, 'valueForKeyPath:', %@).destinationArtboardID != nil",
     kPluginDomain
   );
-  var linkLayers = context.selection.filteredArrayUsingPredicate(
-    linkLayerPredicate
-  );
+  var linkLayers =
+    context.selection.filteredArrayUsingPredicate(linkLayerPredicate);
   var numLayers = linkLayers.count();
 
   if (numLayers == 0) {
@@ -399,16 +402,18 @@ var editConnectionStyle = function (context) {
   var currentForeignBorderStyleID = nil;
   if (numLayers == 1) {
     var linkLayer = linkLayers.firstObject();
-    currentBorderStyleID = context.command.valueForKey_onLayer_forPluginIdentifier(
-      "sharedBorderStyleID",
-      linkLayer,
-      kPluginDomain
-    );
-    currentForeignBorderStyleID = context.command.valueForKey_onLayer_forPluginIdentifier(
-      "foreignBorderStyleID",
-      linkLayer,
-      kPluginDomain
-    );
+    currentBorderStyleID =
+      context.command.valueForKey_onLayer_forPluginIdentifier(
+        "sharedBorderStyleID",
+        linkLayer,
+        kPluginDomain
+      );
+    currentForeignBorderStyleID =
+      context.command.valueForKey_onLayer_forPluginIdentifier(
+        "foreignBorderStyleID",
+        linkLayer,
+        kPluginDomain
+      );
   }
   var stylesDropdown = stylesDropdownForContext_selectedStyleID_sharedObjectID(
     context,
@@ -474,11 +479,12 @@ var removeLink = function (context) {
     linkLayer,
     destinationArtboardID;
   while ((linkLayer = loop.nextObject())) {
-    destinationArtboardID = context.command.valueForKey_onLayer_forPluginIdentifier(
-      "destinationArtboardID",
-      linkLayer,
-      kPluginDomain
-    );
+    destinationArtboardID =
+      context.command.valueForKey_onLayer_forPluginIdentifier(
+        "destinationArtboardID",
+        linkLayer,
+        kPluginDomain
+      );
     if (!destinationArtboardID) {
       continue;
     }
@@ -564,9 +570,8 @@ var removeAllLinks = function (context) {
         "userInfo != nil && function(userInfo, 'valueForKeyPath:', %@).destinationArtboardID != nil",
         kPluginDomain
       ),
-      linkLayers = layersInScope.filteredArrayUsingPredicate(
-        linkLayersPredicate
-      ),
+      linkLayers =
+        layersInScope.filteredArrayUsingPredicate(linkLayersPredicate),
       loop = linkLayers.objectEnumerator(),
       linkLayer;
 
@@ -919,9 +924,10 @@ var editConditionsForArtboard = function (
         NSUserDefaults.standardUserDefaults().objectForKey(
           kConditionFontSizeKey
         ) || 16,
-      conditionBorderColor = MSImmutableColor.colorWithSVGString(
-        flowIndicatorColor
-      ).newMutableCounterpart(),
+      conditionBorderColor =
+        MSImmutableColor.colorWithSVGString(
+          flowIndicatorColor
+        ).newMutableCounterpart(),
       conditionBoardWidth = conditionBoard.frame().width(),
       count = 0,
       conditionLabel,
@@ -1012,10 +1018,10 @@ var editConditionsForArtboard = function (
       conditionBorder.setThickness(2);
 
       conditionBoard.addLayers([conditionBox, conditionLabel]);
-      layersArray = MSLayerArray.arrayWithLayers([
-        conditionBox,
-        conditionLabel,
-      ]);
+      layersArray = [conditionBox, conditionLabel];
+      if (sketchVersion < sketchVersion81) {
+        layersArray = MSLayerArray.arrayWithLayers(layersArray);
+      }
       conditionGroup =
         sketchVersion < sketchVersion52
           ? MSLayerGroup.groupFromLayers(layersArray)
@@ -1105,11 +1111,12 @@ var gotoDestinationArtboard = function (context) {
   if (!linkLayer) {
     validSelection = false;
   } else {
-    destinationArtboardID = context.command.valueForKey_onLayer_forPluginIdentifier(
-      "destinationArtboardID",
-      linkLayer,
-      kPluginDomain
-    );
+    destinationArtboardID =
+      context.command.valueForKey_onLayer_forPluginIdentifier(
+        "destinationArtboardID",
+        linkLayer,
+        kPluginDomain
+      );
     if (!destinationArtboardID) {
       validSelection = false;
     }
@@ -1373,11 +1380,12 @@ var generateFlow = function (context) {
   }
   settingsWindow.addAccessoryView(artboardsDropdown);
 
-  var lastUsedFlowTitle = context.command.valueForKey_onLayer_forPluginIdentifier(
-    "lastUsedFlowTitle",
-    currentPage,
-    kPluginDomain
-  );
+  var lastUsedFlowTitle =
+    context.command.valueForKey_onLayer_forPluginIdentifier(
+      "lastUsedFlowTitle",
+      currentPage,
+      kPluginDomain
+    );
   settingsWindow.addAccessoryView(
     makeTextLabelWithValue(strings["generateFlow-flowName"])
   );
@@ -1387,11 +1395,12 @@ var generateFlow = function (context) {
   nameField.setStringValue(lastUsedFlowTitle || "");
   settingsWindow.addAccessoryView(nameField);
 
-  var lastUsedFlowDescription = context.command.valueForKey_onLayer_forPluginIdentifier(
-    "lastUsedFlowDescription",
-    currentPage,
-    kPluginDomain
-  );
+  var lastUsedFlowDescription =
+    context.command.valueForKey_onLayer_forPluginIdentifier(
+      "lastUsedFlowDescription",
+      currentPage,
+      kPluginDomain
+    );
   settingsWindow.addAccessoryView(
     makeTextLabelWithValue(strings["generateFlow-description"])
   );
@@ -1408,9 +1417,10 @@ var generateFlow = function (context) {
   );
   var pageNames = doc.valueForKeyPath("pages.@unionOfObjects.name");
   if (!pageNames.containsObject("_Flows")) {
-    pageNames = NSArray.arrayWithObject("_Flows").arrayByAddingObjectsFromArray(
-      pageNames
-    );
+    pageNames =
+      NSArray.arrayWithObject("_Flows").arrayByAddingObjectsFromArray(
+        pageNames
+      );
   }
   var newPageItemTitle = "[" + strings["generateFlow-newPage"] + "]";
   pageNames = pageNames.arrayByAddingObject(newPageItemTitle);
@@ -1418,11 +1428,12 @@ var generateFlow = function (context) {
     NSMakeRect(0, 0, contentWidth, 25)
   );
   pagesDropdown.addItemsWithTitles(pageNames);
-  var lastUsedPageName = context.command.valueForKey_onDocument_forPluginIdentifier(
-    "lastUsedFlowPage",
-    doc.documentData(),
-    kPluginDomain
-  );
+  var lastUsedPageName =
+    context.command.valueForKey_onDocument_forPluginIdentifier(
+      "lastUsedFlowPage",
+      doc.documentData(),
+      kPluginDomain
+    );
   if (lastUsedPageName && pageNames.containsObject(lastUsedPageName)) {
     pagesDropdown.selectItemWithTitle(lastUsedPageName);
   }
@@ -1509,9 +1520,8 @@ var generateFlowWithSettings = function (
     exportFormat =
       NSUserDefaults.standardUserDefaults().objectForKey(kExportFormatKey) ||
       "pdf",
-    modifiedBy = NSUserDefaults.standardUserDefaults().objectForKey(
-      kFullNameKey
-    ),
+    modifiedBy =
+      NSUserDefaults.standardUserDefaults().objectForKey(kFullNameKey),
     showModifiedDate =
       NSUserDefaults.standardUserDefaults().objectForKey(
         kShowModifiedDateKey
@@ -1529,9 +1539,8 @@ var generateFlowWithSettings = function (
     dropPointOffset = sketchVersion < sketchVersion51 ? 10 : 4,
     screenNumber = 1,
     artboardsToExport = [initialArtboard],
-    screenShadowColor = MSImmutableColor.colorWithSVGString(
-      "#00000"
-    ).newMutableCounterpart(),
+    screenShadowColor =
+      MSImmutableColor.colorWithSVGString("#00000").newMutableCounterpart(),
     tempFolderURL = NSFileManager.defaultManager()
       .URLsForDirectory_inDomains(NSCachesDirectory, NSUserDomainMask)
       .lastObject()
@@ -1587,15 +1596,13 @@ var generateFlowWithSettings = function (
   }
 
   if (flowBackground == "Dark") {
-    flowBackgroundColor = MSImmutableColor.colorWithSVGString(
-      "#1E1D1C"
-    ).newMutableCounterpart();
+    flowBackgroundColor =
+      MSImmutableColor.colorWithSVGString("#1E1D1C").newMutableCounterpart();
     primaryTextColor = MSImmutableColor.colorWithSVGString("#FFFFFF");
     secondaryTextColor = MSImmutableColor.colorWithSVGString("#9B9B9B");
   } else {
-    flowBackgroundColor = MSImmutableColor.colorWithSVGString(
-      "#FFFFFF"
-    ).newMutableCounterpart();
+    flowBackgroundColor =
+      MSImmutableColor.colorWithSVGString("#FFFFFF").newMutableCounterpart();
     primaryTextColor = MSImmutableColor.colorWithSVGString("#121212");
     secondaryTextColor = MSImmutableColor.colorWithSVGString("#999999");
   }
@@ -1620,8 +1627,8 @@ var generateFlowWithSettings = function (
         kPluginDomain
       ) || 0;
     exportBackgroundColor = artboard.hasBackgroundColor()
-      ? artboard.backgroundColor()
-      : MSImmutableColor.colorWithSVGString("#FFFFFF").newMutableCounterpart();
+      ? artboard.backgroundColor().immutableModelObject()
+      : MSImmutableColor.colorWithSVGString("#FFFFFF");
 
     exportRequest = MSExportRequest.alloc().init();
     exportRequest.setRect(artboard.absoluteRect().rect());
@@ -1629,7 +1636,9 @@ var generateFlowWithSettings = function (
     exportRequest.setShouldTrim(0);
     exportRequest.setSaveForWeb(1);
     if (exportRequest.respondsToSelector("setExportBackgroundColor:")) {
-      exportRequest.setExportBackgroundColor(exportBackgroundColor);
+      exportRequest.setExportBackgroundColor(
+        exportBackgroundColor.newMutableCounterpart()
+      );
     } else {
       exportRequest.setBackgroundColor(exportBackgroundColor);
     }
@@ -1710,16 +1719,18 @@ var generateFlowWithSettings = function (
 
     for (var i = 0; i < linkLayersCount; i++) {
       linkLayer = linkLayers.objectAtIndex(i);
-      destinationArtboardID = context.command.valueForKey_onLayer_forPluginIdentifier(
-        "destinationArtboardID",
-        linkLayer,
-        kPluginDomain
-      );
-      sharedBorderStyleID = context.command.valueForKey_onLayer_forPluginIdentifier(
-        "sharedBorderStyleID",
-        linkLayer,
-        kPluginDomain
-      );
+      destinationArtboardID =
+        context.command.valueForKey_onLayer_forPluginIdentifier(
+          "destinationArtboardID",
+          linkLayer,
+          kPluginDomain
+        );
+      sharedBorderStyleID =
+        context.command.valueForKey_onLayer_forPluginIdentifier(
+          "sharedBorderStyleID",
+          linkLayer,
+          kPluginDomain
+        );
 
       destinationArtboard = sourcePage
         .artboards()
@@ -1801,11 +1812,12 @@ var generateFlowWithSettings = function (
             linkLayer.parentArtboard().absoluteRect().rect()
           );
 
-          sharedBorderStyleID = context.command.valueForKey_onLayer_forPluginIdentifier(
-            "sharedBorderStyleID",
-            linkLayer,
-            kPluginDomain
-          );
+          sharedBorderStyleID =
+            context.command.valueForKey_onLayer_forPluginIdentifier(
+              "sharedBorderStyleID",
+              linkLayer,
+              kPluginDomain
+            );
 
           connection = {
             linkRect: linkRect,
@@ -1880,15 +1892,16 @@ var generateFlowWithSettings = function (
   }
 
   var sharedLayerStyles = sharedLayerStylesForContext(context);
-  var connectionLayers = MSLayerArray.arrayWithLayers(
-    drawConnections(
-      connections,
-      sourcePage,
-      exportScale,
-      flowBackgroundColor,
-      sharedLayerStyles
-    )
+  var connectionLayers = drawConnections(
+    connections,
+    sourcePage,
+    exportScale,
+    flowBackgroundColor,
+    sharedLayerStyles
   );
+  if (sketchVersion < sketchVersion81) {
+    connectionLayers = MSLayerArray.arrayWithLayers(connectionLayers);
+  }
   var connectionsGroup =
     sketchVersion < sketchVersion52
       ? MSLayerGroup.groupFromLayers(connectionLayers)
@@ -1904,7 +1917,10 @@ var generateFlowWithSettings = function (
       artboardBitmapLayers[i].absoluteRect().rect()
     );
   }
-  var layers = MSLayerArray.arrayWithLayers(artboardBitmapLayers);
+  var layers = artboardBitmapLayers;
+  if (sketchVersion < sketchVersion81) {
+    layers = MSLayerArray.arrayWithLayers(layers);
+  }
   var newGroup =
     sketchVersion < sketchVersion52
       ? MSLayerGroup.groupFromLayers(layers)
@@ -2223,26 +2239,30 @@ var updateFlow = function (context) {
     currentArtboard,
     kPluginDomain
   );
-  var descriptionLabelID = context.command.valueForKey_onLayer_forPluginIdentifier(
-    "descriptionLayerID",
-    currentArtboard,
-    kPluginDomain
-  );
-  var keepFlowPageOrganized = context.command.valueForKey_onLayer_forPluginIdentifier(
-    "keepFlowPageOrganized",
-    currentArtboard,
-    kPluginDomain
-  );
-  var includePrototypingConnections = context.command.valueForKey_onLayer_forPluginIdentifier(
-    "includePrototypingConnections",
-    currentArtboard,
-    kPluginDomain
-  );
-  var shouldNumberScreens = context.command.valueForKey_onLayer_forPluginIdentifier(
-    "shouldNumberScreens",
-    currentArtboard,
-    kPluginDomain
-  );
+  var descriptionLabelID =
+    context.command.valueForKey_onLayer_forPluginIdentifier(
+      "descriptionLayerID",
+      currentArtboard,
+      kPluginDomain
+    );
+  var keepFlowPageOrganized =
+    context.command.valueForKey_onLayer_forPluginIdentifier(
+      "keepFlowPageOrganized",
+      currentArtboard,
+      kPluginDomain
+    );
+  var includePrototypingConnections =
+    context.command.valueForKey_onLayer_forPluginIdentifier(
+      "includePrototypingConnections",
+      currentArtboard,
+      kPluginDomain
+    );
+  var shouldNumberScreens =
+    context.command.valueForKey_onLayer_forPluginIdentifier(
+      "shouldNumberScreens",
+      currentArtboard,
+      kPluginDomain
+    );
 
   var flowName = "";
   if (titleLabelID) {
@@ -2358,7 +2378,10 @@ var sharedLayerStylesForContext = function (context) {
 
 var redrawConnections = function (context) {
   var doc = context.document || context.actionContext.document;
-  var selectedLayers = doc.selectedLayers().layers();
+  var selectedLayers =
+    sketchVersion < sketchVersion81
+      ? doc.selectedLayers().layers()
+      : doc.selectedLayers();
 
   sketchVersion = getVersionNumberFromString(
     NSBundle.mainBundle().objectForInfoDictionaryKey(
@@ -2399,16 +2422,18 @@ var redrawConnections = function (context) {
   }
 
   while ((linkLayer = loop.nextObject())) {
-    destinationArtboardID = context.command.valueForKey_onLayer_forPluginIdentifier(
-      "destinationArtboardID",
-      linkLayer,
-      kPluginDomain
-    );
-    sharedBorderStyleID = context.command.valueForKey_onLayer_forPluginIdentifier(
-      "sharedBorderStyleID",
-      linkLayer,
-      kPluginDomain
-    );
+    destinationArtboardID =
+      context.command.valueForKey_onLayer_forPluginIdentifier(
+        "destinationArtboardID",
+        linkLayer,
+        kPluginDomain
+      );
+    sharedBorderStyleID =
+      context.command.valueForKey_onLayer_forPluginIdentifier(
+        "sharedBorderStyleID",
+        linkLayer,
+        kPluginDomain
+      );
 
     destinationArtboard = doc
       .currentPage()
@@ -2453,16 +2478,23 @@ var redrawConnections = function (context) {
   }
 
   var sharedLayerStyles = sharedLayerStylesForContext(context);
-  var connectionLayers = MSLayerArray.arrayWithLayers(
-    drawConnections(connections, doc.currentPage(), 1, nil, sharedLayerStyles)
+  var connectionLayers = drawConnections(
+    connections,
+    doc.currentPage(),
+    1,
+    nil,
+    sharedLayerStyles
   );
+  if (sketchVersion < sketchVersion81) {
+    connectionLayers = MSLayerArray.arrayWithLayers(connectionLayers);
+  }
   connectionsGroup =
     sketchVersion < sketchVersion52
       ? MSLayerGroup.groupFromLayers(connectionLayers)
       : MSLayerGroup.groupWithLayers(connectionLayers);
   connectionsGroup.setName("-Connections");
   connectionsGroup.setIsLocked(1);
-  connectionsGroup.deselectLayerAndParent();
+  connectionsGroup.select_byExtendingSelection(false, false);
   context.command.setValue_forKey_onLayer_forPluginIdentifier(
     true,
     "isConnectionsContainer",
@@ -2509,12 +2541,12 @@ var drawConnections = function (
       NSUserDefaults.standardUserDefaults().objectForKey(kMagnetsTypeKey) ||
       "nsew",
     connectionLayers = [],
-    hitAreaColor = MSImmutableColor.colorWithSVGString(
-      "#000000"
-    ).newMutableCounterpart(),
-    hitAreaBorderColor = MSImmutableColor.colorWithSVGString(
-      flowIndicatorColor
-    ).newMutableCounterpart(),
+    hitAreaColor =
+      MSImmutableColor.colorWithSVGString("#000000").newMutableCounterpart(),
+    hitAreaBorderColor =
+      MSImmutableColor.colorWithSVGString(
+        flowIndicatorColor
+      ).newMutableCounterpart(),
     arrowRotation = 0,
     arrowOffsetX = 0,
     shouldUseMarkers = sketchVersion >= sketchVersion51,
@@ -3093,441 +3125,456 @@ var drawConnections = function (
 };
 
 var editSettings = function (context) {
-  parseContext(context);
-  var settingsWindow = getAlertWindow();
-  settingsWindow.addButtonWithTitle(strings["alerts-save"]);
-  settingsWindow.addButtonWithTitle(strings["alerts-cancel"]);
-  settingsWindow.addButtonWithTitle(strings["settings-restoreDefaults"]);
+  try {
+    parseContext(context);
+    var settingsWindow = getAlertWindow();
+    settingsWindow.addButtonWithTitle(strings["alerts-save"]);
+    settingsWindow.addButtonWithTitle(strings["alerts-cancel"]);
+    settingsWindow.addButtonWithTitle(strings["settings-restoreDefaults"]);
 
-  settingsWindow.setMessageText(strings["settings-title"]);
-  settingsWindow.setInformativeText(
-    "v" + version + " | © Aby Nimbalkar | @abynim"
-  );
+    settingsWindow.setMessageText(strings["settings-title"]);
+    settingsWindow.setInformativeText(
+      "v" + version + " | © Aby Nimbalkar | @abynim"
+    );
 
-  settingsWindow.addAccessoryView(
-    makeTextLabelWithValue(strings["settings-exportOptions"])
-  );
-  var exportScale = 1;
-  var formatOptions = NSArray.arrayWithArray(["PDF", "PNG", "JPG", "TIFF"]);
-  var exportFormat =
-    NSUserDefaults.standardUserDefaults().objectForKey(kExportFormatKey) ||
-    "PNG";
-  var selectedIndex = formatOptions.indexOfObject(exportFormat);
-  var formatDropdown = NSPopUpButton.alloc().initWithFrame_pullsDown(
-    NSMakeRect(100, 1, 70, 22),
-    false
-  );
-  formatDropdown.addItemsWithTitles(formatOptions);
-  formatDropdown.selectItemAtIndex(selectedIndex);
-
-  settingsWindow.addAccessoryView(formatDropdown);
-
-  // ------------
-  settingsWindow.addAccessoryView(separatorBox());
-  // ------------
-
-  settingsWindow.addAccessoryView(
-    makeTextLabelWithValue(strings["settings-flowBackground"])
-  );
-  var bgOptionNames = NSArray.arrayWithArray([
-    strings["settings-bgLight"],
-    strings["settings-bgDark"],
-  ]);
-  var bgOptions = NSArray.arrayWithArray(["Light", "Dark"]);
-  var bgMode =
-    NSUserDefaults.standardUserDefaults().objectForKey(kFlowBackgroundKey) ||
-    "Light";
-  var bgDropdown = NSPopUpButton.alloc().initWithFrame_pullsDown(
-    NSMakeRect(0, 0, 70, 22),
-    false
-  );
-  selectedIndex = bgOptions.indexOfObject(bgMode);
-  bgDropdown.addItemsWithTitles(bgOptionNames);
-  bgDropdown.selectItemAtIndex(selectedIndex);
-  settingsWindow.addAccessoryView(bgDropdown);
-
-  settingsWindow.addAccessoryView(
-    makeTextLabelWithValue(strings["settings-flowIndicatorStroke"])
-  );
-  var flowIndicatorColorWell = NSColorWell.alloc().initWithFrame(
-    NSMakeRect(56, 0, 44, 23)
-  );
-  var flowIndicatorColorHex =
-    NSUserDefaults.standardUserDefaults().objectForKey(
-      kFlowIndicatorColorKey
-    ) || "#F5A623";
-  var flowIndicatorColorAlpha =
-    NSUserDefaults.standardUserDefaults().objectForKey(
-      kFlowIndicatorAlphaKey
-    ) || 1;
-  var flowIndicatorMSColor = MSImmutableColor.colorWithSVGString(
-    flowIndicatorColorHex
-  );
-  flowIndicatorMSColor.setAlpha(flowIndicatorColorAlpha);
-  var flowIndicatorColor = flowIndicatorMSColor.NSColorWithColorSpace(
-    NSColorSpace.deviceRGBColorSpace()
-  );
-  flowIndicatorColorWell.setColor(flowIndicatorColor);
-
-  var strokeWidth =
-    NSUserDefaults.standardUserDefaults().objectForKey(kStrokeWidthKey) || 3;
-  var strokeWidthField = NSTextField.alloc().initWithFrame(
-    NSMakeRect(0, 0, 50, 23)
-  );
-  strokeWidthField.setStringValue(strokeWidth + "px");
-
-  var connectionTypeNames = NSArray.arrayWithArray([
-    strings["settings-connectionCurved"],
-    strings["settings-connectionStraight"],
-  ]);
-  var connectionTypes = NSArray.arrayWithArray(["curved", "straight"]);
-  var currentConnectionType =
-    NSUserDefaults.standardUserDefaults().objectForKey(kConnectionTypeKey) ||
-    "curved";
-  var connectionTypeDropdown = NSPopUpButton.alloc().initWithFrame_pullsDown(
-    NSMakeRect(106, 0, 90, 22),
-    false
-  );
-  selectedIndex = connectionTypes.indexOfObject(currentConnectionType);
-  connectionTypeDropdown.addItemsWithTitles(connectionTypeNames);
-  connectionTypeDropdown.selectItemAtIndex(selectedIndex);
-
-  var flowIndicatorOptionsView = NSView.alloc().initWithFrame(
-    NSMakeRect(0, 0, contentWidth, 23)
-  );
-  flowIndicatorOptionsView.addSubview(flowIndicatorColorWell);
-  flowIndicatorOptionsView.addSubview(strokeWidthField);
-  flowIndicatorOptionsView.addSubview(connectionTypeDropdown);
-  settingsWindow.addAccessoryView(flowIndicatorOptionsView);
-
-  if (sketchVersion >= sketchVersion51) {
-    var markerTypes = ["0", "4", "5", "6", "7", "1", "2", "3"];
-    var markerTypeNames = [
-      "None",
-      "Open Arrow",
-      "Filled Arrow",
-      "Line",
-      "Open Circle",
-      "Filled Circle",
-      "Open Square",
-      "Filled Square",
-    ];
-    var startMarkerType =
-      NSUserDefaults.standardUserDefaults().objectForKey(kStartMarkerTypeKey) ||
-      "4";
-    startMarkerType = "" + startMarkerType;
-    var endMarkerType =
-      NSUserDefaults.standardUserDefaults().objectForKey(kEndMarkerTypeKey) ||
-      "2";
-    endMarkerType = "" + endMarkerType;
-
-    var startMarkerTypeDropdown = NSPopUpButton.alloc().initWithFrame_pullsDown(
-      NSMakeRect(0, 0, 80, 22),
+    settingsWindow.addAccessoryView(
+      makeTextLabelWithValue(strings["settings-exportOptions"])
+    );
+    var exportScale = 1;
+    var formatOptions = NSArray.arrayWithArray(["PDF", "PNG", "JPG", "TIFF"]);
+    var exportFormat =
+      NSUserDefaults.standardUserDefaults().objectForKey(kExportFormatKey) ||
+      "PNG";
+    var selectedIndex = formatOptions.indexOfObject(exportFormat);
+    var formatDropdown = NSPopUpButton.alloc().initWithFrame_pullsDown(
+      NSMakeRect(100, 1, 70, 22),
       false
     );
-    var endMarkerTypeDropdown = NSPopUpButton.alloc().initWithFrame_pullsDown(
-      NSMakeRect(84, 0, 80, 22),
+    formatDropdown.addItemsWithTitles(formatOptions);
+    formatDropdown.selectItemAtIndex(selectedIndex);
+
+    settingsWindow.addAccessoryView(formatDropdown);
+
+    // ------------
+    settingsWindow.addAccessoryView(separatorBox());
+    // ------------
+
+    settingsWindow.addAccessoryView(
+      makeTextLabelWithValue(strings["settings-flowBackground"])
+    );
+    var bgOptionNames = NSArray.arrayWithArray([
+      strings["settings-bgLight"],
+      strings["settings-bgDark"],
+    ]);
+    var bgOptions = NSArray.arrayWithArray(["Light", "Dark"]);
+    var bgMode =
+      NSUserDefaults.standardUserDefaults().objectForKey(kFlowBackgroundKey) ||
+      "Light";
+    var bgDropdown = NSPopUpButton.alloc().initWithFrame_pullsDown(
+      NSMakeRect(0, 0, 70, 22),
       false
     );
+    selectedIndex = bgOptions.indexOfObject(bgMode);
+    bgDropdown.addItemsWithTitles(bgOptionNames);
+    bgDropdown.selectItemAtIndex(selectedIndex);
+    settingsWindow.addAccessoryView(bgDropdown);
 
-    startMarkerTypeDropdown.setImagePosition(NSImageOnly);
-    endMarkerTypeDropdown.setImagePosition(NSImageOnly);
-
-    var markerType,
-      markerTypeInt,
-      menuItem,
-      markerImage,
-      markerName,
-      markerImageName;
-    for (var i = 0; i < markerTypes.length; i++) {
-      markerType = markerTypes[i];
-      markerTypeInt = parseInt(markerType);
-      markerName = markerTypeNames[markerTypeInt];
-
-      markerImageName = "startMarker-" + markerType;
-      menuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent(
-        markerName,
-        nil,
-        ""
-      );
-      markerImage = NSImage.alloc().initByReferencingURL(
-        context.plugin.urlForResourceNamed(
-          "images/" + markerImageName + ".tiff"
-        )
-      );
-      menuItem.setImage(markerImage);
-      menuItem.setRepresentedObject(markerType);
-      startMarkerTypeDropdown.menu().addItem(menuItem);
-
-      markerImageName = "endMarker-" + markerType;
-      menuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent(
-        markerName,
-        nil,
-        ""
-      );
-      markerImage = NSImage.alloc().initByReferencingURL(
-        context.plugin.urlForResourceNamed(
-          "images/" + markerImageName + ".tiff"
-        )
-      );
-      menuItem.setImage(markerImage);
-      menuItem.setRepresentedObject(markerType);
-      endMarkerTypeDropdown.menu().addItem(menuItem);
-    }
-
-    startMarkerTypeDropdown.selectItemAtIndex(
-      markerTypes.indexOf(startMarkerType)
+    settingsWindow.addAccessoryView(
+      makeTextLabelWithValue(strings["settings-flowIndicatorStroke"])
     );
-    endMarkerTypeDropdown.selectItemAtIndex(markerTypes.indexOf(endMarkerType));
+    var flowIndicatorColorWell = NSColorWell.alloc().initWithFrame(
+      NSMakeRect(56, 0, 44, 23)
+    );
+    var flowIndicatorColorHex =
+      NSUserDefaults.standardUserDefaults().objectForKey(
+        kFlowIndicatorColorKey
+      ) || "#F5A623";
+    var flowIndicatorColorAlpha =
+      NSUserDefaults.standardUserDefaults().objectForKey(
+        kFlowIndicatorAlphaKey
+      ) || 1;
+    var flowIndicatorMSColor = MSImmutableColor.colorWithSVGString(
+      flowIndicatorColorHex
+    ).newMutableCounterpart();
+    flowIndicatorMSColor.setAlpha(flowIndicatorColorAlpha);
 
-    var markerOptionsView = NSView.alloc().initWithFrame(
+    var flowIndicatorColor = flowIndicatorMSColor.NSColorWithColorSpace(nil);
+
+    flowIndicatorColorWell.setColor(flowIndicatorColor);
+
+    var strokeWidth =
+      NSUserDefaults.standardUserDefaults().objectForKey(kStrokeWidthKey) || 3;
+    var strokeWidthField = NSTextField.alloc().initWithFrame(
+      NSMakeRect(0, 0, 50, 23)
+    );
+    strokeWidthField.setStringValue(strokeWidth + "px");
+
+    var connectionTypeNames = NSArray.arrayWithArray([
+      strings["settings-connectionCurved"],
+      strings["settings-connectionStraight"],
+    ]);
+    var connectionTypes = NSArray.arrayWithArray(["curved", "straight"]);
+    var currentConnectionType =
+      NSUserDefaults.standardUserDefaults().objectForKey(kConnectionTypeKey) ||
+      "curved";
+    var connectionTypeDropdown = NSPopUpButton.alloc().initWithFrame_pullsDown(
+      NSMakeRect(106, 0, 90, 22),
+      false
+    );
+    selectedIndex = connectionTypes.indexOfObject(currentConnectionType);
+    connectionTypeDropdown.addItemsWithTitles(connectionTypeNames);
+    connectionTypeDropdown.selectItemAtIndex(selectedIndex);
+
+    var flowIndicatorOptionsView = NSView.alloc().initWithFrame(
       NSMakeRect(0, 0, contentWidth, 23)
     );
-    markerOptionsView.addSubview(startMarkerTypeDropdown);
-    markerOptionsView.addSubview(endMarkerTypeDropdown);
-    settingsWindow.addAccessoryView(markerOptionsView);
-  }
+    flowIndicatorOptionsView.addSubview(flowIndicatorColorWell);
+    flowIndicatorOptionsView.addSubview(strokeWidthField);
+    flowIndicatorOptionsView.addSubview(connectionTypeDropdown);
+    settingsWindow.addAccessoryView(flowIndicatorOptionsView);
 
-  settingsWindow.addAccessoryView(
-    makeTextLabelWithValue(strings["settings-minArea"])
-  );
-  var tapAreaField = NSTextField.alloc().initWithFrame(
-    NSMakeRect(0, 0, 50, 23)
-  );
-  var minimumTapArea =
-    NSUserDefaults.standardUserDefaults().objectForKey(kMinTapAreaKey) || 44;
-  tapAreaField.setStringValue(minimumTapArea + "pt");
-  settingsWindow.addAccessoryView(tapAreaField);
+    if (sketchVersion >= sketchVersion51) {
+      var markerTypes = ["0", "4", "5", "6", "7", "1", "2", "3"];
+      var markerTypeNames = [
+        "None",
+        "Open Arrow",
+        "Filled Arrow",
+        "Line",
+        "Open Circle",
+        "Filled Circle",
+        "Open Square",
+        "Filled Square",
+      ];
+      var startMarkerType =
+        NSUserDefaults.standardUserDefaults().objectForKey(
+          kStartMarkerTypeKey
+        ) || "4";
+      startMarkerType = "" + startMarkerType;
+      var endMarkerType =
+        NSUserDefaults.standardUserDefaults().objectForKey(kEndMarkerTypeKey) ||
+        "2";
+      endMarkerType = "" + endMarkerType;
 
-  var showLinkRects =
-    NSUserDefaults.standardUserDefaults().objectForKey(kShowsLinkRectsKey) || 1;
-  var showLinksCheckbox = makeCheckboxWithTitle_state(
-    strings["settings-drawBorders"],
-    showLinkRects
-  );
-  settingsWindow.addAccessoryView(showLinksCheckbox);
+      var startMarkerTypeDropdown =
+        NSPopUpButton.alloc().initWithFrame_pullsDown(
+          NSMakeRect(0, 0, 80, 22),
+          false
+        );
+      var endMarkerTypeDropdown = NSPopUpButton.alloc().initWithFrame_pullsDown(
+        NSMakeRect(84, 0, 80, 22),
+        false
+      );
 
-  // ------------
-  settingsWindow.addAccessoryView(separatorBox());
-  // ------------
+      startMarkerTypeDropdown.setImagePosition(NSImageOnly);
+      endMarkerTypeDropdown.setImagePosition(NSImageOnly);
 
-  settingsWindow.addAccessoryView(
-    makeTextLabelWithValue(strings["settings-artboardMagnets"])
-  );
-  var currentMagnetsType =
-    NSUserDefaults.standardUserDefaults().objectForKey(kMagnetsTypeKey) ||
-    "nsew";
-  var magnetsTypeDropdown = NSPopUpButton.alloc().initWithFrame_pullsDown(
-    NSMakeRect(0, 0, 120, 22),
-    false
-  );
+      var markerType,
+        markerTypeInt,
+        menuItem,
+        markerImage,
+        markerName,
+        markerImageName;
+      for (var i = 0; i < markerTypes.length; i++) {
+        markerType = markerTypes[i];
+        markerTypeInt = parseInt(markerType);
+        markerName = markerTypeNames[markerTypeInt];
 
-  var topLeftItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent(
-    "Top Left",
-    nil,
-    ""
-  );
-  var topLeftImage = NSImage.alloc().initByReferencingURL(
-    context.plugin.urlForResourceNamed("images/magnets--topleft.tiff")
-  );
-  topLeftItem.setRepresentedObject("topleft");
-  topLeftItem.setImage(topLeftImage);
-  magnetsTypeDropdown.menu().addItem(topLeftItem);
-  if (currentMagnetsType == "topleft")
-    magnetsTypeDropdown.selectItem(topLeftItem);
+        markerImageName = "startMarker-" + markerType;
+        menuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent(
+          markerName,
+          nil,
+          ""
+        );
+        markerImage = NSImage.alloc().initByReferencingURL(
+          context.plugin.urlForResourceNamed(
+            "images/" + markerImageName + ".tiff"
+          )
+        );
+        menuItem.setImage(markerImage);
+        menuItem.setRepresentedObject(markerType);
+        startMarkerTypeDropdown.menu().addItem(menuItem);
 
-  var nsewItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent(
-    "N,S,E,W",
-    nil,
-    ""
-  );
-  var nsewImage = NSImage.alloc().initByReferencingURL(
-    context.plugin.urlForResourceNamed("images/magnets--nsew.tiff")
-  );
-  nsewItem.setRepresentedObject("nsew");
-  nsewItem.setImage(nsewImage);
-  magnetsTypeDropdown.menu().addItem(nsewItem);
-  if (currentMagnetsType == "nsew") magnetsTypeDropdown.selectItem(nsewItem);
+        markerImageName = "endMarker-" + markerType;
+        menuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent(
+          markerName,
+          nil,
+          ""
+        );
+        markerImage = NSImage.alloc().initByReferencingURL(
+          context.plugin.urlForResourceNamed(
+            "images/" + markerImageName + ".tiff"
+          )
+        );
+        menuItem.setImage(markerImage);
+        menuItem.setRepresentedObject(markerType);
+        endMarkerTypeDropdown.menu().addItem(menuItem);
+      }
 
-  settingsWindow.addAccessoryView(magnetsTypeDropdown);
+      startMarkerTypeDropdown.selectItemAtIndex(
+        markerTypes.indexOf(startMarkerType)
+      );
+      endMarkerTypeDropdown.selectItemAtIndex(
+        markerTypes.indexOf(endMarkerType)
+      );
 
-  // ------------
-  settingsWindow.addAccessoryView(separatorBox());
-  // ------------
+      var markerOptionsView = NSView.alloc().initWithFrame(
+        NSMakeRect(0, 0, contentWidth, 23)
+      );
+      markerOptionsView.addSubview(startMarkerTypeDropdown);
+      markerOptionsView.addSubview(endMarkerTypeDropdown);
+      settingsWindow.addAccessoryView(markerOptionsView);
+    }
 
-  settingsWindow.addAccessoryView(
-    makeTextLabelWithValue(strings["settings-conditionFontSize"])
-  );
-  var conditionFontSizeField = NSTextField.alloc().initWithFrame(
-    NSMakeRect(0, 0, 50, 23)
-  );
-  var conditionFontSize =
-    NSUserDefaults.standardUserDefaults().objectForKey(kConditionFontSizeKey) ||
-    16;
-  conditionFontSizeField.setStringValue(conditionFontSize + "pt");
-  settingsWindow.addAccessoryView(conditionFontSizeField);
-
-  // ------------
-  settingsWindow.addAccessoryView(separatorBox());
-  // ------------
-
-  settingsWindow.addAccessoryView(
-    makeTextLabelWithValue(strings["settings-yourName"])
-  );
-  var userName =
-    NSUserDefaults.standardUserDefaults().objectForKey(kFullNameKey) || "";
-  var userNameField = NSTextField.alloc().initWithFrame(
-    NSMakeRect(0, 0, 200, 23)
-  );
-  userNameField.setStringValue(userName);
-  settingsWindow.addAccessoryView(userNameField);
-
-  var showName =
-    NSUserDefaults.standardUserDefaults().objectForKey(kShowModifiedDateKey) ||
-    0;
-  var showNameCheckbox = makeCheckboxWithTitle_state(
-    strings["settings-showDate"],
-    showName
-  );
-  settingsWindow.addAccessoryView(showNameCheckbox);
-
-  // ------------
-  settingsWindow.addAccessoryView(separatorBox());
-  // ------------
-
-  var autoUpdateConnections =
-    NSUserDefaults.standardUserDefaults().objectForKey(
-      kAutoUpdateConnectionsKey
-    ) || 1;
-  var autoUpdateConnectionsCheckbox = makeCheckboxWithTitle_state(
-    strings["settings-autoUpdateConnections"],
-    autoUpdateConnections
-  );
-  settingsWindow.addAccessoryView(autoUpdateConnectionsCheckbox);
-
-  var response = runModalForWindow(settingsWindow);
-
-  if (response == "1000") {
-    var flowIndicatorMSColor = MSColor.colorWithNSColor(
-      flowIndicatorColorWell.color()
-    ).immutableModelObject();
-    var flowIndicatorColor = flowIndicatorMSColor.svgRepresentation();
-    var flowIndicatorAlpha = flowIndicatorMSColor.alpha();
-    NSUserDefaults.standardUserDefaults().setObject_forKey(
-      formatDropdown.titleOfSelectedItem(),
-      kExportFormatKey
+    settingsWindow.addAccessoryView(
+      makeTextLabelWithValue(strings["settings-minArea"])
     );
-    NSUserDefaults.standardUserDefaults().setObject_forKey(
-      bgOptions.objectAtIndex(bgDropdown.indexOfSelectedItem()),
-      kFlowBackgroundKey
+    var tapAreaField = NSTextField.alloc().initWithFrame(
+      NSMakeRect(0, 0, 50, 23)
     );
-    NSUserDefaults.standardUserDefaults().setObject_forKey(
-      flowIndicatorColor,
-      kFlowIndicatorColorKey
+    var minimumTapArea =
+      NSUserDefaults.standardUserDefaults().objectForKey(kMinTapAreaKey) || 44;
+    tapAreaField.setStringValue(minimumTapArea + "pt");
+    settingsWindow.addAccessoryView(tapAreaField);
+
+    var showLinkRects =
+      NSUserDefaults.standardUserDefaults().objectForKey(kShowsLinkRectsKey) ||
+      1;
+    var showLinksCheckbox = makeCheckboxWithTitle_state(
+      strings["settings-drawBorders"],
+      showLinkRects
     );
-    NSUserDefaults.standardUserDefaults().setObject_forKey(
-      flowIndicatorAlpha,
-      kFlowIndicatorAlphaKey
+    settingsWindow.addAccessoryView(showLinksCheckbox);
+
+    // ------------
+    settingsWindow.addAccessoryView(separatorBox());
+    // ------------
+
+    settingsWindow.addAccessoryView(
+      makeTextLabelWithValue(strings["settings-artboardMagnets"])
     );
-    NSUserDefaults.standardUserDefaults().setObject_forKey(
-      connectionTypes.objectAtIndex(
-        connectionTypeDropdown.indexOfSelectedItem()
-      ),
-      kConnectionTypeKey
-    );
-    NSUserDefaults.standardUserDefaults().setObject_forKey(
-      magnetsTypeDropdown.selectedItem().representedObject(),
-      kMagnetsTypeKey
-    );
-    NSUserDefaults.standardUserDefaults().setObject_forKey(
-      parseInt(strokeWidthField.stringValue()),
-      kStrokeWidthKey
-    );
-    NSUserDefaults.standardUserDefaults().setObject_forKey(
-      parseInt(tapAreaField.stringValue()),
-      kMinTapAreaKey
-    );
-    NSUserDefaults.standardUserDefaults().setObject_forKey(
-      parseInt(conditionFontSizeField.stringValue()),
-      kConditionFontSizeKey
-    );
-    NSUserDefaults.standardUserDefaults().setObject_forKey(
-      showLinksCheckbox.state(),
-      kShowsLinkRectsKey
-    );
-    NSUserDefaults.standardUserDefaults().setObject_forKey(
-      userNameField.stringValue(),
-      kFullNameKey
-    );
-    NSUserDefaults.standardUserDefaults().setObject_forKey(
-      showNameCheckbox.state(),
-      kShowModifiedDateKey
-    );
-    NSUserDefaults.standardUserDefaults().setObject_forKey(
-      autoUpdateConnectionsCheckbox.state(),
-      kAutoUpdateConnectionsKey
+    var currentMagnetsType =
+      NSUserDefaults.standardUserDefaults().objectForKey(kMagnetsTypeKey) ||
+      "nsew";
+    var magnetsTypeDropdown = NSPopUpButton.alloc().initWithFrame_pullsDown(
+      NSMakeRect(0, 0, 120, 22),
+      false
     );
 
-    NSUserDefaults.standardUserDefaults().setObject_forKey(
-      startMarkerTypeDropdown.selectedItem().representedObject(),
-      kStartMarkerTypeKey
+    var topLeftItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent(
+      "Top Left",
+      nil,
+      ""
     );
-    NSUserDefaults.standardUserDefaults().setObject_forKey(
-      endMarkerTypeDropdown.selectedItem().representedObject(),
-      kEndMarkerTypeKey
+    var topLeftImage = NSImage.alloc().initByReferencingURL(
+      context.plugin.urlForResourceNamed("images/magnets--topleft.tiff")
     );
+    topLeftItem.setRepresentedObject("topleft");
+    topLeftItem.setImage(topLeftImage);
+    magnetsTypeDropdown.menu().addItem(topLeftItem);
+    if (currentMagnetsType == "topleft")
+      magnetsTypeDropdown.selectItem(topLeftItem);
 
-    updateManifestForSettingsChange(
-      context,
-      autoUpdateConnectionsCheckbox.state()
+    var nsewItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent(
+      "N,S,E,W",
+      nil,
+      ""
     );
-    applySettings(context);
-    logEvent("settingsChanged", {
-      exportScale: exportScale,
-      format: formatDropdown.titleOfSelectedItem(),
-      backgroundMode: bgDropdown.titleOfSelectedItem(),
-      showsName: showNameCheckbox.state(),
-      flowIndicatorColor: flowIndicatorColor,
-      artboardMagnets: magnetsTypeDropdown.selectedItem().representedObject(),
-    });
-  } else if (response == "1002") {
-    NSUserDefaults.standardUserDefaults().removeObjectForKey(kExportFormatKey);
-    NSUserDefaults.standardUserDefaults().removeObjectForKey(
-      kFlowBackgroundKey
+    var nsewImage = NSImage.alloc().initByReferencingURL(
+      context.plugin.urlForResourceNamed("images/magnets--nsew.tiff")
     );
-    NSUserDefaults.standardUserDefaults().removeObjectForKey(
-      kFlowIndicatorColorKey
-    );
-    NSUserDefaults.standardUserDefaults().removeObjectForKey(
-      kFlowIndicatorAlphaKey
-    );
-    NSUserDefaults.standardUserDefaults().removeObjectForKey(
-      kConnectionTypeKey
-    );
-    NSUserDefaults.standardUserDefaults().removeObjectForKey(kMagnetsTypeKey);
-    NSUserDefaults.standardUserDefaults().removeObjectForKey(kStrokeWidthKey);
-    NSUserDefaults.standardUserDefaults().removeObjectForKey(kMinTapAreaKey);
-    NSUserDefaults.standardUserDefaults().removeObjectForKey(
-      kShowsLinkRectsKey
-    );
-    NSUserDefaults.standardUserDefaults().removeObjectForKey(kFullNameKey);
-    NSUserDefaults.standardUserDefaults().removeObjectForKey(
-      kShowModifiedDateKey
-    );
-    NSUserDefaults.standardUserDefaults().removeObjectForKey(
-      kConditionFontSizeKey
-    );
-    NSUserDefaults.standardUserDefaults().removeObjectForKey(
-      kAutoUpdateConnectionsKey
-    );
-    NSUserDefaults.standardUserDefaults().removeObjectForKey(
-      kStartMarkerTypeKey
-    );
-    NSUserDefaults.standardUserDefaults().removeObjectForKey(kEndMarkerTypeKey);
+    nsewItem.setRepresentedObject("nsew");
+    nsewItem.setImage(nsewImage);
+    magnetsTypeDropdown.menu().addItem(nsewItem);
+    if (currentMagnetsType == "nsew") magnetsTypeDropdown.selectItem(nsewItem);
 
-    updateManifestForSettingsChange(context, 0);
-    applySettings(context);
-    logEvent("settingsReset", nil);
+    settingsWindow.addAccessoryView(magnetsTypeDropdown);
+
+    // ------------
+    settingsWindow.addAccessoryView(separatorBox());
+    // ------------
+
+    settingsWindow.addAccessoryView(
+      makeTextLabelWithValue(strings["settings-conditionFontSize"])
+    );
+    var conditionFontSizeField = NSTextField.alloc().initWithFrame(
+      NSMakeRect(0, 0, 50, 23)
+    );
+    var conditionFontSize =
+      NSUserDefaults.standardUserDefaults().objectForKey(
+        kConditionFontSizeKey
+      ) || 16;
+    conditionFontSizeField.setStringValue(conditionFontSize + "pt");
+    settingsWindow.addAccessoryView(conditionFontSizeField);
+
+    // ------------
+    settingsWindow.addAccessoryView(separatorBox());
+    // ------------
+
+    settingsWindow.addAccessoryView(
+      makeTextLabelWithValue(strings["settings-yourName"])
+    );
+    var userName =
+      NSUserDefaults.standardUserDefaults().objectForKey(kFullNameKey) || "";
+    var userNameField = NSTextField.alloc().initWithFrame(
+      NSMakeRect(0, 0, 200, 23)
+    );
+    userNameField.setStringValue(userName);
+    settingsWindow.addAccessoryView(userNameField);
+
+    var showName =
+      NSUserDefaults.standardUserDefaults().objectForKey(
+        kShowModifiedDateKey
+      ) || 0;
+    var showNameCheckbox = makeCheckboxWithTitle_state(
+      strings["settings-showDate"],
+      showName
+    );
+    settingsWindow.addAccessoryView(showNameCheckbox);
+
+    // ------------
+    settingsWindow.addAccessoryView(separatorBox());
+    // ------------
+
+    var autoUpdateConnections =
+      NSUserDefaults.standardUserDefaults().objectForKey(
+        kAutoUpdateConnectionsKey
+      ) || 1;
+    var autoUpdateConnectionsCheckbox = makeCheckboxWithTitle_state(
+      strings["settings-autoUpdateConnections"],
+      autoUpdateConnections
+    );
+    settingsWindow.addAccessoryView(autoUpdateConnectionsCheckbox);
+
+    var response = runModalForWindow(settingsWindow);
+
+    if (response == "1000") {
+      var flowIndicatorMSColor = MSColor.colorWithNSColor(
+        flowIndicatorColorWell.color()
+      ).immutableModelObject();
+      var flowIndicatorColor = flowIndicatorMSColor.svgRepresentation();
+      var flowIndicatorAlpha = flowIndicatorMSColor.alpha();
+      NSUserDefaults.standardUserDefaults().setObject_forKey(
+        formatDropdown.titleOfSelectedItem(),
+        kExportFormatKey
+      );
+      NSUserDefaults.standardUserDefaults().setObject_forKey(
+        bgOptions.objectAtIndex(bgDropdown.indexOfSelectedItem()),
+        kFlowBackgroundKey
+      );
+      NSUserDefaults.standardUserDefaults().setObject_forKey(
+        flowIndicatorColor,
+        kFlowIndicatorColorKey
+      );
+      NSUserDefaults.standardUserDefaults().setObject_forKey(
+        flowIndicatorAlpha,
+        kFlowIndicatorAlphaKey
+      );
+      NSUserDefaults.standardUserDefaults().setObject_forKey(
+        connectionTypes.objectAtIndex(
+          connectionTypeDropdown.indexOfSelectedItem()
+        ),
+        kConnectionTypeKey
+      );
+      NSUserDefaults.standardUserDefaults().setObject_forKey(
+        magnetsTypeDropdown.selectedItem().representedObject(),
+        kMagnetsTypeKey
+      );
+      NSUserDefaults.standardUserDefaults().setObject_forKey(
+        parseInt(strokeWidthField.stringValue()),
+        kStrokeWidthKey
+      );
+      NSUserDefaults.standardUserDefaults().setObject_forKey(
+        parseInt(tapAreaField.stringValue()),
+        kMinTapAreaKey
+      );
+      NSUserDefaults.standardUserDefaults().setObject_forKey(
+        parseInt(conditionFontSizeField.stringValue()),
+        kConditionFontSizeKey
+      );
+      NSUserDefaults.standardUserDefaults().setObject_forKey(
+        showLinksCheckbox.state(),
+        kShowsLinkRectsKey
+      );
+      NSUserDefaults.standardUserDefaults().setObject_forKey(
+        userNameField.stringValue(),
+        kFullNameKey
+      );
+      NSUserDefaults.standardUserDefaults().setObject_forKey(
+        showNameCheckbox.state(),
+        kShowModifiedDateKey
+      );
+      NSUserDefaults.standardUserDefaults().setObject_forKey(
+        autoUpdateConnectionsCheckbox.state(),
+        kAutoUpdateConnectionsKey
+      );
+
+      NSUserDefaults.standardUserDefaults().setObject_forKey(
+        startMarkerTypeDropdown.selectedItem().representedObject(),
+        kStartMarkerTypeKey
+      );
+      NSUserDefaults.standardUserDefaults().setObject_forKey(
+        endMarkerTypeDropdown.selectedItem().representedObject(),
+        kEndMarkerTypeKey
+      );
+
+      updateManifestForSettingsChange(
+        context,
+        autoUpdateConnectionsCheckbox.state()
+      );
+      applySettings(context);
+      logEvent("settingsChanged", {
+        exportScale: exportScale,
+        format: formatDropdown.titleOfSelectedItem(),
+        backgroundMode: bgDropdown.titleOfSelectedItem(),
+        showsName: showNameCheckbox.state(),
+        flowIndicatorColor: flowIndicatorColor,
+        artboardMagnets: magnetsTypeDropdown.selectedItem().representedObject(),
+      });
+    } else if (response == "1002") {
+      NSUserDefaults.standardUserDefaults().removeObjectForKey(
+        kExportFormatKey
+      );
+      NSUserDefaults.standardUserDefaults().removeObjectForKey(
+        kFlowBackgroundKey
+      );
+      NSUserDefaults.standardUserDefaults().removeObjectForKey(
+        kFlowIndicatorColorKey
+      );
+      NSUserDefaults.standardUserDefaults().removeObjectForKey(
+        kFlowIndicatorAlphaKey
+      );
+      NSUserDefaults.standardUserDefaults().removeObjectForKey(
+        kConnectionTypeKey
+      );
+      NSUserDefaults.standardUserDefaults().removeObjectForKey(kMagnetsTypeKey);
+      NSUserDefaults.standardUserDefaults().removeObjectForKey(kStrokeWidthKey);
+      NSUserDefaults.standardUserDefaults().removeObjectForKey(kMinTapAreaKey);
+      NSUserDefaults.standardUserDefaults().removeObjectForKey(
+        kShowsLinkRectsKey
+      );
+      NSUserDefaults.standardUserDefaults().removeObjectForKey(kFullNameKey);
+      NSUserDefaults.standardUserDefaults().removeObjectForKey(
+        kShowModifiedDateKey
+      );
+      NSUserDefaults.standardUserDefaults().removeObjectForKey(
+        kConditionFontSizeKey
+      );
+      NSUserDefaults.standardUserDefaults().removeObjectForKey(
+        kAutoUpdateConnectionsKey
+      );
+      NSUserDefaults.standardUserDefaults().removeObjectForKey(
+        kStartMarkerTypeKey
+      );
+      NSUserDefaults.standardUserDefaults().removeObjectForKey(
+        kEndMarkerTypeKey
+      );
+
+      updateManifestForSettingsChange(context, 0);
+      applySettings(context);
+      logEvent("settingsReset", nil);
+    }
+  } catch (error) {
+    log("[UserFlows] Error:" + error);
   }
 };
 
@@ -3996,4 +4043,8 @@ var logEvent = function (event, props) {
     );
 
   if (url) NSURLSession.sharedSession().dataTaskWithURL(url).resume();
+};
+
+const uLog = function (str) {
+  log("[UserFlows] " + str);
 };

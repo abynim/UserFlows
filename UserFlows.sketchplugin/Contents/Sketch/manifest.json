@@ -1,7 +1,7 @@
 {
   "description": "Generate user-flow diagrams from artboards in Sketch.",
   "disableCocoaScriptPreprocessor": true,
-  "version": "2.3.7",
+  "version": "2.3.8",
   "author": "Aby Nimbalkar",
   "commands": [
     {
@@ -12,8 +12,8 @@
       },
       "identifier": "defineLink",
       "description": "Select a layer/group, select an artboard, then create a link between the two.",
-      "name": "Create Link",
-      "icon": "icons/addLink.png"
+      "icon": "icons/addLink.png",
+      "name": "Create Link"
     },
     {
       "script": "script.js",
@@ -23,8 +23,8 @@
       },
       "identifier": "defineLinkWithOptions",
       "description": "Select a layer/group, select an artboard, then create a link between the two by selecting a connection style.",
-      "name": "Create Link With Connection Style",
-      "icon": "icons/addLink.png"
+      "icon": "icons/addLink.png",
+      "name": "Create Link With Connection Style"
     },
     {
       "script": "script.js",
@@ -34,8 +34,8 @@
       },
       "identifier": "editLinkOptions",
       "description": "Edit the style preset of a link layer's connection.",
-      "name": "Edit Connection Style",
-      "icon": "icons/addLink.png"
+      "icon": "icons/addLink.png",
+      "name": "Edit Connection Style"
     },
     {
       "script": "script.js",
@@ -45,8 +45,8 @@
       },
       "identifier": "removeLink",
       "description": "Remove a Link.",
-      "name": "Remove Link",
-      "icon": "icons/removeLink.png"
+      "icon": "icons/removeLink.png",
+      "name": "Remove Link"
     },
     {
       "script": "script.js",
@@ -56,16 +56,16 @@
       },
       "identifier": "removeAllLinks",
       "description": "Remove all Links from an Artboard or Page.",
-      "name": "Remove All Links",
-      "icon": "icons/removeLink.png"
+      "icon": "icons/removeLink.png",
+      "name": "Remove All Links"
     },
     {
       "script": "script.js",
       "shortcut": "",
-      "icon": "icons/relinkArtboards.png",
+      "name": "Relink Duplicated Artboards",
       "identifier": "relinkArtboardsAfterCopy",
       "description": "Relink artboards that were copied or moved to another page.",
-      "name": "Relink Duplicated Artboards",
+      "icon": "icons/relinkArtboards.png",
       "handlers": {
         "run": "relinkArtboardsAfterCopy"
       }
@@ -78,8 +78,8 @@
       },
       "identifier": "addCondition",
       "description": "Add or Edit a condition in the current flow.",
-      "name": "Add/Edit Conditions",
-      "icon": "icons/editConditions.png"
+      "icon": "icons/editConditions.png",
+      "name": "Add/Edit Conditions"
     },
     {
       "script": "script.js",
@@ -89,16 +89,16 @@
       },
       "identifier": "generateFlow",
       "description": "Generate a flow diagram starting from a specific artboard.",
-      "name": "Generate Flow Diagram",
-      "icon": "icons/generateDiagram.png"
+      "icon": "icons/generateDiagram.png",
+      "name": "Generate Flow Diagram"
     },
     {
       "script": "script.js",
       "shortcut": "ctrl shift f",
-      "name": "Update Flow Diagram",
+      "icon": "icons/generateDiagram.png",
       "identifier": "updateFlow",
       "description": "Update the selected User Flow artboard.",
-      "icon": "icons/generateDiagram.png",
+      "name": "Update Flow Diagram",
       "handlers": {
         "run": "updateFlow"
       }
@@ -111,8 +111,8 @@
       },
       "identifier": "showConnections",
       "description": "Show or redraw connections between link layers and destination artboards.",
-      "name": "Show or Redraw Connections",
-      "icon": "icons/redrawConnections.png"
+      "icon": "icons/redrawConnections.png",
+      "name": "Show or Redraw Connections"
     },
     {
       "script": "script.js",
@@ -122,8 +122,8 @@
       },
       "identifier": "hideConnections",
       "description": "Hide connections between link layers and destination artboards.",
-      "name": "Hide Connections",
-      "icon": "icons/hideConnections.png"
+      "icon": "icons/hideConnections.png",
+      "name": "Hide Connections"
     },
     {
       "script": "script.js",
@@ -133,8 +133,8 @@
       },
       "identifier": "gotoDestinationArtboard",
       "description": "Go to the artboard linked to this layer.",
-      "name": "Go to Linked Artboard",
-      "icon": "icons/gotoArtboard.png"
+      "icon": "icons/gotoArtboard.png",
+      "name": "Go to Linked Artboard"
     },
     {
       "script": "script.js",
@@ -144,8 +144,8 @@
       },
       "identifier": "goBackToLink",
       "description": "Navigate back to the link layer.",
-      "name": "Go Back to Link Layer",
-      "icon": "icons/gotoLinkLayer.png"
+      "icon": "icons/gotoLinkLayer.png",
+      "name": "Go Back to Link Layer"
     },
     {
       "script": "script.js",
@@ -160,10 +160,10 @@
     {
       "script": "script.js",
       "shortcut": "",
-      "icon": "icon.png",
+      "name": "Settings...",
       "identifier": "editSettings",
       "description": "Edit settings for User Flows.",
-      "name": "Settings...",
+      "icon": "icon.png",
       "handlers": {
         "run": "editSettings"
       }
@@ -172,10 +172,10 @@
       "script": "script.js",
       "shortcut": "",
       "allowsShortcut": false,
-      "icon": "icon.png",
+      "name": "Keyboard Shortcuts...",
       "identifier": "editShortcuts",
       "description": "Edit keyboard shortcuts for User Flows.",
-      "name": "Keyboard Shortcuts...",
+      "icon": "icon.png",
       "handlers": {
         "run": "editShortcuts"
       }
@@ -184,10 +184,10 @@
       "script": "script.js",
       "shortcut": "",
       "allowsShortcut": false,
-      "icon": "icon.png",
+      "name": "Language...",
       "identifier": "editLanguage",
       "description": "Language setting for User Flows.",
-      "name": "Language...",
+      "icon": "icon.png",
       "handlers": {
         "run": "editLanguage"
       }
@@ -200,8 +200,8 @@
         "run": "checkForUpdates"
       },
       "identifier": "checkForUpdates",
-      "icon": "icon.png",
-      "name": "Check for Updates..."
+      "name": "Check for Updates...",
+      "icon": "icon.png"
     },
     {
       "script": "script.js",
@@ -242,8 +242,7 @@
       "-",
       "editSettings",
       "editShortcuts",
-      "editLanguage",
-      "checkForUpdates"
+      "editLanguage"
     ]
   },
   "name": "User Flows",
