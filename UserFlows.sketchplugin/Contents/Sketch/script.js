@@ -1627,8 +1627,8 @@ var generateFlowWithSettings = function (
         kPluginDomain
       ) || 0;
     exportBackgroundColor = artboard.hasBackgroundColor()
-      ? artboard.backgroundColor()
-      : MSImmutableColor.colorWithSVGString("#FFFFFF").newMutableCounterpart();
+      ? artboard.backgroundColor().immutableModelObject()
+      : MSImmutableColor.colorWithSVGString("#FFFFFF");
 
     exportRequest = MSExportRequest.alloc().init();
     exportRequest.setRect(artboard.absoluteRect().rect());
@@ -1636,7 +1636,9 @@ var generateFlowWithSettings = function (
     exportRequest.setShouldTrim(0);
     exportRequest.setSaveForWeb(1);
     if (exportRequest.respondsToSelector("setExportBackgroundColor:")) {
-      exportRequest.setExportBackgroundColor(exportBackgroundColor);
+      exportRequest.setExportBackgroundColor(
+        exportBackgroundColor.newMutableCounterpart()
+      );
     } else {
       exportRequest.setBackgroundColor(exportBackgroundColor);
     }
