@@ -1683,9 +1683,10 @@ var generateFlowWithSettings = function (
       artboardNameLabel.absoluteRect().setY(artboard.absoluteRect().y());
       artboardNameLabel.frame().setWidth(artboard.frame().width());
       artboardNameLabel.setTextBehaviour(0);
-      const screenName = settings.shouldNumberScreens
-        ? screenNumber + ": " + artboard.name()
-        : artboard.name();
+      const screenName =
+        settings.shouldNumberScreens == 0 || settings.shouldNumberScreens == "0"
+          ? artboard.name()
+          : screenNumber + ": " + artboard.name();
       artboardNameLabel.setStringValue(screenName);
       artboardNameLabel.addAttribute_value(
         NSFontAttributeName,

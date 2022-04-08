@@ -6,7 +6,7 @@
     <description>Generate flow diagrams from Artboards in Sketch</description>
     <language>en</language>
     <item>
-      <title>UserFlows 2.3.8</title>
+      <title>UserFlows 2.3.9</title>
       <description>
         <![CDATA[
           <ul>
@@ -14,7 +14,7 @@
           </ul>
         ]]>
       </description>
-      <enclosure url="https://github.com/abynim/UserFlows/archive/v2.zip" sparkle:version="2.3.8" />
+      <enclosure url="https://github.com/abynim/UserFlows/archive/v2.zip" sparkle:version="2.3.9" />
     </item>
     <item>
       <title>UserFlows 2.3.7</title>
