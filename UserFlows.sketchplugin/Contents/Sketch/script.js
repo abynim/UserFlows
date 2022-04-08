@@ -76,6 +76,7 @@ const sketchVersion51 = 510;
 const sketchVersion52 = 520;
 const sketchVersion53 = 530;
 const sketchVersion72 = 720;
+const sketchVersion81 = 810;
 
 const contentWidth = 360;
 
@@ -123,16 +124,18 @@ var defineLink = function (context) {
   }
 
   var didModifySettings = true;
-  var lastUsedBorderStyleID = context.command.valueForKey_onDocument_forPluginIdentifier(
-    "lastUsedBorderStyleID",
-    doc.documentData(),
-    kPluginDomain
-  );
-  var lastUsedForeignStyleID = context.command.valueForKey_onDocument_forPluginIdentifier(
-    "lastUsedForeignStyleID",
-    doc.documentData(),
-    kPluginDomain
-  );
+  var lastUsedBorderStyleID =
+    context.command.valueForKey_onDocument_forPluginIdentifier(
+      "lastUsedBorderStyleID",
+      doc.documentData(),
+      kPluginDomain
+    );
+  var lastUsedForeignStyleID =
+    context.command.valueForKey_onDocument_forPluginIdentifier(
+      "lastUsedForeignStyleID",
+      doc.documentData(),
+      kPluginDomain
+    );
 
   if (context.command.identifier() == "defineLinkWithOptions") {
     if (sketchVersion < sketchVersion51) {
@@ -151,11 +154,12 @@ var defineLink = function (context) {
 
     settingsWindow.setMessageText("Select connection style");
 
-    var stylesDropdown = stylesDropdownForContext_selectedStyleID_sharedObjectID(
-      context,
-      lastUsedBorderStyleID,
-      lastUsedForeignStyleID
-    );
+    var stylesDropdown =
+      stylesDropdownForContext_selectedStyleID_sharedObjectID(
+        context,
+        lastUsedBorderStyleID,
+        lastUsedForeignStyleID
+      );
     settingsWindow.addAccessoryView(stylesDropdown);
 
     if (runModalForWindow(settingsWindow) == "1000") {
@@ -296,9 +300,8 @@ var stylesDropdownForContext_selectedStyleID_sharedObjectID = function (
       ""
     );
     //menuItem.setImage(generatePreviewImageForSharedBorderStyle(sharedStyle));
-    shareableObjectRef = MSShareableObjectReference.referenceForShareableObject(
-      sharedStyle
-    );
+    shareableObjectRef =
+      MSShareableObjectReference.referenceForShareableObject(sharedStyle);
     menuItem.setRepresentedObject(shareableObjectRef);
     menuItem.setIndentationLevel(1);
     if (selectedID && "" + sharedStyle.objectID() == selectedID) {
@@ -338,10 +341,11 @@ var stylesDropdownForContext_selectedStyleID_sharedObjectID = function (
           ""
         );
         //menuItem.setImage(generatePreviewImageForSharedBorderStyle(sharedStyle));
-        shareableObjectRef = MSShareableObjectReference.referenceForShareableObject_inLibrary(
-          sharedStyle,
-          lib
-        );
+        shareableObjectRef =
+          MSShareableObjectReference.referenceForShareableObject_inLibrary(
+            sharedStyle,
+            lib
+          );
         menuItem.setRepresentedObject(shareableObjectRef);
         menuItem.setIndentationLevel(1);
         if (
@@ -376,9 +380,8 @@ var editConnectionStyle = function (context) {
     "userInfo != nil && function(userInfo, 'valueForKeyPath:', %@).destinationArtboardID != nil",
     kPluginDomain
   );
-  var linkLayers = context.selection.filteredArrayUsingPredicate(
-    linkLayerPredicate
-  );
+  var linkLayers =
+    context.selection.filteredArrayUsingPredicate(linkLayerPredicate);
   var numLayers = linkLayers.count();
 
   if (numLayers == 0) {
@@ -399,16 +402,18 @@ var editConnectionStyle = function (context) {
   var currentForeignBorderStyleID = nil;
   if (numLayers == 1) {
     var linkLayer = linkLayers.firstObject();
-    currentBorderStyleID = context.command.valueForKey_onLayer_forPluginIdentifier(
-      "sharedBorderStyleID",
-      linkLayer,
-      kPluginDomain
-    );
-    currentForeignBorderStyleID = context.command.valueForKey_onLayer_forPluginIdentifier(
-      "foreignBorderStyleID",
-      linkLayer,
-      kPluginDomain
-    );
+    currentBorderStyleID =
+      context.command.valueForKey_onLayer_forPluginIdentifier(
+        "sharedBorderStyleID",
+        linkLayer,
+        kPluginDomain
+      );
+    currentForeignBorderStyleID =
+      context.command.valueForKey_onLayer_forPluginIdentifier(
+        "foreignBorderStyleID",
+        linkLayer,
+        kPluginDomain
+      );
   }
   var stylesDropdown = stylesDropdownForContext_selectedStyleID_sharedObjectID(
     context,
@@ -474,11 +479,12 @@ var removeLink = function (context) {
     linkLayer,
     destinationArtboardID;
   while ((linkLayer = loop.nextObject())) {
-    destinationArtboardID = context.command.valueForKey_onLayer_forPluginIdentifier(
-      "destinationArtboardID",
-      linkLayer,
-      kPluginDomain
-    );
+    destinationArtboardID =
+      context.command.valueForKey_onLayer_forPluginIdentifier(
+        "destinationArtboardID",
+        linkLayer,
+        kPluginDomain
+      );
     if (!destinationArtboardID) {
       continue;
     }
@@ -564,9 +570,8 @@ var removeAllLinks = function (context) {
         "userInfo != nil && function(userInfo, 'valueForKeyPath:', %@).destinationArtboardID != nil",
         kPluginDomain
       ),
-      linkLayers = layersInScope.filteredArrayUsingPredicate(
-        linkLayersPredicate
-      ),
+      linkLayers =
+        layersInScope.filteredArrayUsingPredicate(linkLayersPredicate),
       loop = linkLayers.objectEnumerator(),
       linkLayer;
 
@@ -919,9 +924,10 @@ var editConditionsForArtboard = function (
         NSUserDefaults.standardUserDefaults().objectForKey(
           kConditionFontSizeKey
         ) || 16,
-      conditionBorderColor = MSImmutableColor.colorWithSVGString(
-        flowIndicatorColor
-      ).newMutableCounterpart(),
+      conditionBorderColor =
+        MSImmutableColor.colorWithSVGString(
+          flowIndicatorColor
+        ).newMutableCounterpart(),
       conditionBoardWidth = conditionBoard.frame().width(),
       count = 0,
       conditionLabel,
@@ -1105,11 +1111,12 @@ var gotoDestinationArtboard = function (context) {
   if (!linkLayer) {
     validSelection = false;
   } else {
-    destinationArtboardID = context.command.valueForKey_onLayer_forPluginIdentifier(
-      "destinationArtboardID",
-      linkLayer,
-      kPluginDomain
-    );
+    destinationArtboardID =
+      context.command.valueForKey_onLayer_forPluginIdentifier(
+        "destinationArtboardID",
+        linkLayer,
+        kPluginDomain
+      );
     if (!destinationArtboardID) {
       validSelection = false;
     }
@@ -1373,11 +1380,12 @@ var generateFlow = function (context) {
   }
   settingsWindow.addAccessoryView(artboardsDropdown);
 
-  var lastUsedFlowTitle = context.command.valueForKey_onLayer_forPluginIdentifier(
-    "lastUsedFlowTitle",
-    currentPage,
-    kPluginDomain
-  );
+  var lastUsedFlowTitle =
+    context.command.valueForKey_onLayer_forPluginIdentifier(
+      "lastUsedFlowTitle",
+      currentPage,
+      kPluginDomain
+    );
   settingsWindow.addAccessoryView(
     makeTextLabelWithValue(strings["generateFlow-flowName"])
   );
@@ -1387,11 +1395,12 @@ var generateFlow = function (context) {
   nameField.setStringValue(lastUsedFlowTitle || "");
   settingsWindow.addAccessoryView(nameField);
 
-  var lastUsedFlowDescription = context.command.valueForKey_onLayer_forPluginIdentifier(
-    "lastUsedFlowDescription",
-    currentPage,
-    kPluginDomain
-  );
+  var lastUsedFlowDescription =
+    context.command.valueForKey_onLayer_forPluginIdentifier(
+      "lastUsedFlowDescription",
+      currentPage,
+      kPluginDomain
+    );
   settingsWindow.addAccessoryView(
     makeTextLabelWithValue(strings["generateFlow-description"])
   );
@@ -1408,9 +1417,10 @@ var generateFlow = function (context) {
   );
   var pageNames = doc.valueForKeyPath("pages.@unionOfObjects.name");
   if (!pageNames.containsObject("_Flows")) {
-    pageNames = NSArray.arrayWithObject("_Flows").arrayByAddingObjectsFromArray(
-      pageNames
-    );
+    pageNames =
+      NSArray.arrayWithObject("_Flows").arrayByAddingObjectsFromArray(
+        pageNames
+      );
   }
   var newPageItemTitle = "[" + strings["generateFlow-newPage"] + "]";
   pageNames = pageNames.arrayByAddingObject(newPageItemTitle);
@@ -1418,11 +1428,12 @@ var generateFlow = function (context) {
     NSMakeRect(0, 0, contentWidth, 25)
   );
   pagesDropdown.addItemsWithTitles(pageNames);
-  var lastUsedPageName = context.command.valueForKey_onDocument_forPluginIdentifier(
-    "lastUsedFlowPage",
-    doc.documentData(),
-    kPluginDomain
-  );
+  var lastUsedPageName =
+    context.command.valueForKey_onDocument_forPluginIdentifier(
+      "lastUsedFlowPage",
+      doc.documentData(),
+      kPluginDomain
+    );
   if (lastUsedPageName && pageNames.containsObject(lastUsedPageName)) {
     pagesDropdown.selectItemWithTitle(lastUsedPageName);
   }
@@ -1509,9 +1520,8 @@ var generateFlowWithSettings = function (
     exportFormat =
       NSUserDefaults.standardUserDefaults().objectForKey(kExportFormatKey) ||
       "pdf",
-    modifiedBy = NSUserDefaults.standardUserDefaults().objectForKey(
-      kFullNameKey
-    ),
+    modifiedBy =
+      NSUserDefaults.standardUserDefaults().objectForKey(kFullNameKey),
     showModifiedDate =
       NSUserDefaults.standardUserDefaults().objectForKey(
         kShowModifiedDateKey
@@ -1529,9 +1539,8 @@ var generateFlowWithSettings = function (
     dropPointOffset = sketchVersion < sketchVersion51 ? 10 : 4,
     screenNumber = 1,
     artboardsToExport = [initialArtboard],
-    screenShadowColor = MSImmutableColor.colorWithSVGString(
-      "#00000"
-    ).newMutableCounterpart(),
+    screenShadowColor =
+      MSImmutableColor.colorWithSVGString("#00000").newMutableCounterpart(),
     tempFolderURL = NSFileManager.defaultManager()
       .URLsForDirectory_inDomains(NSCachesDirectory, NSUserDomainMask)
       .lastObject()
@@ -1587,15 +1596,13 @@ var generateFlowWithSettings = function (
   }
 
   if (flowBackground == "Dark") {
-    flowBackgroundColor = MSImmutableColor.colorWithSVGString(
-      "#1E1D1C"
-    ).newMutableCounterpart();
+    flowBackgroundColor =
+      MSImmutableColor.colorWithSVGString("#1E1D1C").newMutableCounterpart();
     primaryTextColor = MSImmutableColor.colorWithSVGString("#FFFFFF");
     secondaryTextColor = MSImmutableColor.colorWithSVGString("#9B9B9B");
   } else {
-    flowBackgroundColor = MSImmutableColor.colorWithSVGString(
-      "#FFFFFF"
-    ).newMutableCounterpart();
+    flowBackgroundColor =
+      MSImmutableColor.colorWithSVGString("#FFFFFF").newMutableCounterpart();
     primaryTextColor = MSImmutableColor.colorWithSVGString("#121212");
     secondaryTextColor = MSImmutableColor.colorWithSVGString("#999999");
   }
@@ -1710,16 +1717,18 @@ var generateFlowWithSettings = function (
 
     for (var i = 0; i < linkLayersCount; i++) {
       linkLayer = linkLayers.objectAtIndex(i);
-      destinationArtboardID = context.command.valueForKey_onLayer_forPluginIdentifier(
-        "destinationArtboardID",
-        linkLayer,
-        kPluginDomain
-      );
-      sharedBorderStyleID = context.command.valueForKey_onLayer_forPluginIdentifier(
-        "sharedBorderStyleID",
-        linkLayer,
-        kPluginDomain
-      );
+      destinationArtboardID =
+        context.command.valueForKey_onLayer_forPluginIdentifier(
+          "destinationArtboardID",
+          linkLayer,
+          kPluginDomain
+        );
+      sharedBorderStyleID =
+        context.command.valueForKey_onLayer_forPluginIdentifier(
+          "sharedBorderStyleID",
+          linkLayer,
+          kPluginDomain
+        );
 
       destinationArtboard = sourcePage
         .artboards()
@@ -1801,11 +1810,12 @@ var generateFlowWithSettings = function (
             linkLayer.parentArtboard().absoluteRect().rect()
           );
 
-          sharedBorderStyleID = context.command.valueForKey_onLayer_forPluginIdentifier(
-            "sharedBorderStyleID",
-            linkLayer,
-            kPluginDomain
-          );
+          sharedBorderStyleID =
+            context.command.valueForKey_onLayer_forPluginIdentifier(
+              "sharedBorderStyleID",
+              linkLayer,
+              kPluginDomain
+            );
 
           connection = {
             linkRect: linkRect,
@@ -2223,26 +2233,30 @@ var updateFlow = function (context) {
     currentArtboard,
     kPluginDomain
   );
-  var descriptionLabelID = context.command.valueForKey_onLayer_forPluginIdentifier(
-    "descriptionLayerID",
-    currentArtboard,
-    kPluginDomain
-  );
-  var keepFlowPageOrganized = context.command.valueForKey_onLayer_forPluginIdentifier(
-    "keepFlowPageOrganized",
-    currentArtboard,
-    kPluginDomain
-  );
-  var includePrototypingConnections = context.command.valueForKey_onLayer_forPluginIdentifier(
-    "includePrototypingConnections",
-    currentArtboard,
-    kPluginDomain
-  );
-  var shouldNumberScreens = context.command.valueForKey_onLayer_forPluginIdentifier(
-    "shouldNumberScreens",
-    currentArtboard,
-    kPluginDomain
-  );
+  var descriptionLabelID =
+    context.command.valueForKey_onLayer_forPluginIdentifier(
+      "descriptionLayerID",
+      currentArtboard,
+      kPluginDomain
+    );
+  var keepFlowPageOrganized =
+    context.command.valueForKey_onLayer_forPluginIdentifier(
+      "keepFlowPageOrganized",
+      currentArtboard,
+      kPluginDomain
+    );
+  var includePrototypingConnections =
+    context.command.valueForKey_onLayer_forPluginIdentifier(
+      "includePrototypingConnections",
+      currentArtboard,
+      kPluginDomain
+    );
+  var shouldNumberScreens =
+    context.command.valueForKey_onLayer_forPluginIdentifier(
+      "shouldNumberScreens",
+      currentArtboard,
+      kPluginDomain
+    );
 
   var flowName = "";
   if (titleLabelID) {
@@ -2358,7 +2372,10 @@ var sharedLayerStylesForContext = function (context) {
 
 var redrawConnections = function (context) {
   var doc = context.document || context.actionContext.document;
-  var selectedLayers = doc.selectedLayers().layers();
+  var selectedLayers =
+    sketchVersion < sketchVersion81
+      ? doc.selectedLayers().layers()
+      : doc.selectedLayers();
 
   sketchVersion = getVersionNumberFromString(
     NSBundle.mainBundle().objectForInfoDictionaryKey(
@@ -2399,16 +2416,18 @@ var redrawConnections = function (context) {
   }
 
   while ((linkLayer = loop.nextObject())) {
-    destinationArtboardID = context.command.valueForKey_onLayer_forPluginIdentifier(
-      "destinationArtboardID",
-      linkLayer,
-      kPluginDomain
-    );
-    sharedBorderStyleID = context.command.valueForKey_onLayer_forPluginIdentifier(
-      "sharedBorderStyleID",
-      linkLayer,
-      kPluginDomain
-    );
+    destinationArtboardID =
+      context.command.valueForKey_onLayer_forPluginIdentifier(
+        "destinationArtboardID",
+        linkLayer,
+        kPluginDomain
+      );
+    sharedBorderStyleID =
+      context.command.valueForKey_onLayer_forPluginIdentifier(
+        "sharedBorderStyleID",
+        linkLayer,
+        kPluginDomain
+      );
 
     destinationArtboard = doc
       .currentPage()
@@ -2509,12 +2528,12 @@ var drawConnections = function (
       NSUserDefaults.standardUserDefaults().objectForKey(kMagnetsTypeKey) ||
       "nsew",
     connectionLayers = [],
-    hitAreaColor = MSImmutableColor.colorWithSVGString(
-      "#000000"
-    ).newMutableCounterpart(),
-    hitAreaBorderColor = MSImmutableColor.colorWithSVGString(
-      flowIndicatorColor
-    ).newMutableCounterpart(),
+    hitAreaColor =
+      MSImmutableColor.colorWithSVGString("#000000").newMutableCounterpart(),
+    hitAreaBorderColor =
+      MSImmutableColor.colorWithSVGString(
+        flowIndicatorColor
+      ).newMutableCounterpart(),
     arrowRotation = 0,
     arrowOffsetX = 0,
     shouldUseMarkers = sketchVersion >= sketchVersion51,
