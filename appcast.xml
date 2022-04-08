@@ -6,6 +6,17 @@
     <description>Generate flow diagrams from Artboards in Sketch</description>
     <language>en</language>
     <item>
+      <title>UserFlows 2.3.8</title>
+      <description>
+        <![CDATA[
+          <ul>
+            <li>Sketch 81+ Compatibility.</li>
+          </ul>
+        ]]>
+      </description>
+      <enclosure url="https://github.com/abynim/UserFlows/archive/v2.zip" sparkle:version="2.3.8" />
+    </item>
+    <item>
       <title>UserFlows 2.3.7</title>
       <description>
         <![CDATA[
