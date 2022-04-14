@@ -1,7 +1,7 @@
 {
   "description": "Generate user-flow diagrams from artboards in Sketch.",
   "disableCocoaScriptPreprocessor": true,
-  "version": "2.3.8",
+  "version": "2.3.9",
   "author": "Aby Nimbalkar",
   "commands": [
     {
